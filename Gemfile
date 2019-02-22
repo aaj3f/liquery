@@ -38,6 +38,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise'
 gem 'nokogiri'
 gem 'pry'
+gem 'thin'
 require 'open-uri'
 require 'json'
 
