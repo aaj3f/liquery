@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_21_153159) do
+ActiveRecord::Schema.define(version: 2019_02_22_160332) do
 
   create_table "drinks", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "preparation"
   end
 
   create_table "flavor_profiles", force: :cascade do |t|
@@ -38,6 +39,7 @@ ActiveRecord::Schema.define(version: 2019_02_21_153159) do
     t.float "size"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "note"
     t.index ["drink_id"], name: "index_measures_on_drink_id"
     t.index ["ingredient_id"], name: "index_measures_on_ingredient_id"
   end

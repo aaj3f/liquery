@@ -5,7 +5,25 @@ class DrinkScraperJob
 
   def initialize
     x = self.wikipedia_scraper({}, "https://en.wikipedia.org/wiki/List_of_IBA_official_cocktails")
-    binding.pry
+    x.each do |name, att_hash|
+      drink = Drink.find_or_create_by(name: name, preparation: att_hash['preparation'])
+      att_hash['ingredients'].map {|ing_string| ing_string.match(/(dash|\d?\sdashes|\d+\s?cl|of|\d\s?oz|\d|parts?\)|cl\sgin)\s\(?([\w\sè']+?)\)?$/i)}.each do |ing_match|
+        if ing_match && ing_match[2]
+          ing = Ingredient.find_or_create_by(name: ing_match[2].downcase)
+          # binding.pry
+          if ing_match[1].match?(/cl|oz/)
+            drink.measures.create(ingredient_id: ing.id, size: ing_match[1].to_f)
+          else
+            # binding.pry
+            drink.measures.create(ingredient_id: ing.id, note: ing_match[0])
+          end
+        end
+      end
+      att_hash['ingredients'].select {|ing_string| !ing_string.match?(/(dash|\d?\sdashes|\d+\s?cl|of|\d\s?oz|\d|parts?\)|cl\sgin)\s\(?([\w\sè']+?)\)?$/i)}.each do |ing_no_match|
+        ing = Ingredient.find_or_create_by(name: ing_no_match.downcase)
+        drink.measures.create(ingredient_id: ing.id, note: ing_no_match)
+      end
+    end
   end
 
   def wikipedia_scraper(creation_hash, wiki_url)
