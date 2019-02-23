@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :drinks, only: %i(index show)
+  resources :drinks do
+    resources :measures, only: %i(edit update)
+  end
   devise_for :users
   resources :admin do
     resources :drinks

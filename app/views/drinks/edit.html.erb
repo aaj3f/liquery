@@ -1,0 +1,5 @@
+<%= form_for @drink do |f| %>
+  <%= f.fields_for :measures, @drink.measures do |measures_fields| %>
+    
+  <% end %>
+<% end %>

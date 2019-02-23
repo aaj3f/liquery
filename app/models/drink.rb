@@ -4,4 +4,26 @@ class Drink < ApplicationRecord
   has_many :measures
   has_many :ingredients, through: :measures
   has_many :flavor_profiles, through: :ingredients
+  # accepts_nested_attributes_for :ingredients, reject_if: proc { |attributes| attributes['name'].blank? }
+  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :preparation, presence: true
+  validate :must_have_at_least_one_ingredient
+
+  def must_have_at_least_one_ingredient
+    errors.add(:ingredients, "must exist!") if self.ingredients.empty?
+  end
+
+  def ingredients_attributes=(ingredients_attributes)
+    ingredients_attributes.values.each do |ingredient_attributes|
+      unless Ingredient.find_by(name: ingredient_attributes[:name]) || ingredient_attributes[:name].blank?
+        ingredient = Ingredient.create(name: ingredient_attributes[:name])
+        ingredients << ingredient
+      end
+    end
+  end
+
+  def measures_attributes=(measures_attributes)
+    binding.pry
+  end
+
 end

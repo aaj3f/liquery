@@ -1,0 +1,23 @@
+<%= form_for @drink do |f| %>
+  <%= f.label :name %>
+  <%= f.text_field :name %><br>
+
+  <%= f.collection_check_boxes :ingredient_ids, @ingredients, :id, :name  %><br>
+
+  <%= f.fields_for :ingredients, @new_ingredients do |ingredient_fields| %>
+    <%= ingredient_fields.label :name %>
+    <%= ingredient_fields.text_field :name %><br>
+    <!--  #ingredient_fields.collection_select :flavor_profile, FlavorProfile.all, :id, :name -->
+  <% end %><br>
+
+  <%= f.label :preparation %>
+  <%= f.text_area :preparation %><br>
+
+  <%= f.submit %>
+<% end %>
+
+<ul>
+<% @drink.errors.full_messages.each do |error| %>
+  <li><%= error %></li>
+<% end if @drink.errors.present? %>
+</ul>
