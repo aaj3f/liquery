@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_22_203857) do
+ActiveRecord::Schema.define(version: 2019_02_23_165829) do
 
   create_table "drinks", force: :cascade do |t|
     t.string "name"
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 2019_02_22_203857) do
     t.float "size"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "note"
+    t.string "measurement_type"
     t.index ["drink_id"], name: "index_measures_on_drink_id"
     t.index ["ingredient_id"], name: "index_measures_on_ingredient_id"
   end

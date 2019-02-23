@@ -37,7 +37,21 @@ class DrinksController < ApplicationController
     @drink = Drink.find_by_id(params[:id])
   end
 
+  def update
+    binding.pry
+    @drink = Drink.find_by_id(params[:id])
+    if @drink && @drink.update(measure_params)
+      redirect_to drink_path(@drink)
+    else
+      render 'drinks/edits'
+    end
+  end
+
   private
+
+  def measure_params
+    params.require(:drink).permit(measures_attributes: [:size, :measurement_type, :id])
+  end
 
   def drink_params
     params.require(:drink).permit(:name, :preparation, ingredient_ids: [], ingredients_attributes: [:name])

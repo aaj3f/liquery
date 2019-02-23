@@ -1,5 +1,12 @@
 <%= form_for @drink do |f| %>
+  <h2><%= @drink.name %></h2>
   <%= f.fields_for :measures, @drink.measures do |measures_fields| %>
-    
+    <p><%= measures_fields.object.ingredient.name.titleize %>:
+      <%= measures_fields.label :size %>
+      <%= measures_fields.number_field :size, placeholder: "1 if size unknown", step: 0.25 %> (
+      <%= measures_fields.label :measurement_type, "Qualifier: " %>
+      <%= measures_fields.select :measurement_type, options_for_select(["cl", "oz", "part(s)", "(just a dash)", "(optional)"]) %>
+      )</p>
   <% end %>
+  <%= f.submit %>
 <% end %>
