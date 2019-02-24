@@ -42,7 +42,7 @@ class DrinksController < ApplicationController
   end
 
   def drink_params
-    params.require(:drink).permit(:name, :preparation, ingredient_ids: [], ingredients_attributes: [:name])
+    params.require(:drink).permit(:name, :preparation, :image, ingredient_ids: [], ingredients_attributes: [:name])
   end
 
   def is_admin?

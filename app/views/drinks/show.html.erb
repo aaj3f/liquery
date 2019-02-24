@@ -1,3 +1,5 @@
+<%= image_tag "#{@drink.image}", alt: "#{@drink.name}" if @drink.image.present %>
+<br>
 <h1><%= @drink.name %></h1>
 <h3>Ingredients:</h3>
 <% @drink.measures.each do |m| %>
