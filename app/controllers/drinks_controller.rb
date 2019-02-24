@@ -4,7 +4,7 @@ class DrinksController < ApplicationController
   def new
     @drink = Drink.new
     @ingredients = Ingredient.all.sort
-    @new_ingredients = 5.times.with_object([]) {|i, array| array << Ingredient.new}
+    @new_ingredients = 10.times.with_object([]) {|i, array| array << Ingredient.new}
   end
 
   def create
@@ -13,24 +13,13 @@ class DrinksController < ApplicationController
       redirect_to edit_drink_path(@drink)
     else
       @ingredients = Ingredient.all.sort
-      @new_ingredients = 5.times.with_object([]) {|i, array| array << Ingredient.new}
+      @new_ingredients = 10.times.with_object([]) {|i, array| array << Ingredient.new}
       render 'drinks/new'
     end
-    # params = {
-    #   'drink' => {
-    #     'name' => "A NAME",
-    #     'measures' => {
-    #       'bourbon' => 1.5,
-    #       'sweet vermouth' => 1.0,
-    #       'bitters' => 0.0
-    #     },
-    #     'preparation' => "A STRING"
-    #   }
-    # }
   end
 
   def show
-
+    @drink = Drink.find_by_id(params[:id])
   end
 
   def edit
@@ -38,7 +27,6 @@ class DrinksController < ApplicationController
   end
 
   def update
-    binding.pry
     @drink = Drink.find_by_id(params[:id])
     if @drink && @drink.update(measure_params)
       redirect_to drink_path(@drink)
@@ -50,7 +38,7 @@ class DrinksController < ApplicationController
   private
 
   def measure_params
-    params.require(:drink).permit(measures_attributes: [:size, :measurement_type, :id])
+    params.require(:drink).permit(:measures_attributes => [:size, :measurement_type, :id, :ingredient_attributes => [:flavor_profile_id, :id]])
   end
 
   def drink_params

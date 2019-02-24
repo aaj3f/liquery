@@ -23,7 +23,9 @@ class Drink < ApplicationRecord
   end
 
   def measures_attributes=(measures_attributes)
-    binding.pry
+    measures_attributes.values.each do |measure_attributes|
+      m = Measure.find_by_id(measure_attributes[:id]).update(measure_attributes)
+    end
   end
 
 end
