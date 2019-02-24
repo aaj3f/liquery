@@ -6,3 +6,5 @@
 <p><%= m.size %> <%= m.measurement_type %> of <%= m.ingredient.name %><%= " <<lends to a #{m.ingredient.flavor_profile.name.downcase} flavor profile>>" if m.ingredient.flavor_profile %></p>
 <% end %>
 <p>Preparation: <%= @drink.preparation %></p>
+<br>
+<%= link_to "Back to New Drink Form", new_drink_path if current_user.admin_access %>

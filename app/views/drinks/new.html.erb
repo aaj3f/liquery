@@ -2,7 +2,9 @@
   <%= f.label :name %>
   <%= f.text_field :name %><br>
 
-  <%= f.collection_check_boxes :ingredient_ids, @ingredients, :id, :name  %><br>
+  <%= f.collection_check_boxes(:ingredient_ids, @ingredients, :id, :name) do |b| %>
+    <%= b.label(class: "check_box") { b.check_box + b.text } %>
+  <% end %><br>
 
   <%= f.fields_for :ingredients, @new_ingredients do |ingredient_fields| %>
     <%= ingredient_fields.label :name %>
