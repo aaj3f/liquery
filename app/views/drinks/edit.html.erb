@@ -5,7 +5,7 @@
       <%= measures_fields.label :size %>
       <%= measures_fields.number_field :size, placeholder: "1 if size unknown", step: 0.25 %> (
       <%= measures_fields.label :measurement_type, "Qualifier: " %>
-      <%= measures_fields.select :measurement_type, options_for_select(["cl", "oz", "part(s)", "(just a dash)", "(optional)"]) %>
+      <%= measures_fields.select :measurement_type, options_for_select(["cl", "oz", "part(s)", "dash(es)", "(optional)", "unit(s)"]) %>
       )    <%= measures_fields.fields_for :ingredient, measures_fields.object.ingredient do |ingredient_field| %>
               <%= ingredient_field.label :flavor_profile_id, "Select a flavor profile if this ingredient produces it: " %>
               <%= ingredient_field.collection_select :flavor_profile_id, FlavorProfile.all, :id, :name, include_blank: true %>

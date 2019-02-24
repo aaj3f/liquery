@@ -3,7 +3,7 @@ class DrinksController < ApplicationController
 
   def new
     @drink = Drink.new
-    @ingredients = Ingredient.all.sort
+    @ingredients = Ingredient.all.sort_by {|i| i.name }
     @new_ingredients = 10.times.with_object([]) {|i, array| array << Ingredient.new}
   end
 
