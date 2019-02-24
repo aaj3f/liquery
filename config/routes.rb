@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get 'welcome/index'
+  root 'welcome#index'
+
   resources :drinks do
     resources :measures, only: %i(edit update)
   end
