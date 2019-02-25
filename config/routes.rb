@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'quiz/question_one'
+  get 'quiz/answer_one'
+  get 'quiz/question_two'
+  get 'quiz/answer_two'
+  get 'quiz/question_three'
+  get 'quiz/answer_three'
   get 'welcome/index'
   root 'welcome#index'
 
