@@ -17,3 +17,30 @@
 //= require popper
 //= require bootstrap
 //= require_tree .
+
+// $(document).ready(function() {
+//   //change colour when radio is selected
+//   $('.pricing input:radio').change(function() {
+//     // Only remove the class in the specific `box` that contains the radio
+//     $('div.highlight').removeClass('highlight');
+//     $(this).closest('.card').addClass('highlight');
+//   });
+// });
+
+$(document).ready(function() {
+   $(".pricing .card").on("click",function() {
+        if($(this).find('input[value=1]').is(':checked')) {
+          $(this).closest('.card').removeClass('highlight-red');
+          $(this).closest('.card').addClass('highlight-green');
+        }
+    });
+});
+
+$(document).ready(function() {
+   $(".pricing .card").on("click",function() {
+        if($(this).find('input[value=-1]').is(':checked')) {
+          $(this).closest('.card').removeClass('highlight-green');
+          $(this).closest('.card').addClass('highlight-red');
+        }
+    });
+});

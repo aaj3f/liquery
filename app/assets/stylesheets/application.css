@@ -152,6 +152,30 @@ div.inner-card-text h6 {
   margin: 1.5rem 0;
 }
 
+.pricing input[type="radio"] {
+  display: none;
+}
+
+.pricing input[value="1"]:checked {
+  background-color: green
+}
+
+.pricing .card-body img {
+  display: inline-block;
+  max-width: 3em;
+  max-height: 3em;
+  margin: 0 auto;
+}
+/*
+.pricing a.btn {
+  display: inline-block;
+  max-width: 4em;
+  max-height: 4em;
+  margin: 0 auto;
+  line-height: normal;
+  vertical-align: middle;
+} */
+
 .pricing .card-title {
   margin: 0.5rem 0;
   font-size: 0.9rem;
@@ -184,6 +208,14 @@ div.inner-card-text h6 {
   padding: 1rem;
   opacity: 0.7;
   transition: all 0.2s;
+}
+
+.highlight-green {
+  background-color: green;
+}
+
+.highlight-red {
+  background-color: red;
 }
 
 /* Hover Effects on Card */

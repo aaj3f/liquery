@@ -21,7 +21,11 @@
                   <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Free Subdomain</li>
                   <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Monthly Status Reports</li>
                 </ul> -->
-                <a href="#" class="btn btn-block btn-primary text-uppercase">Button</a>
+                <div class="row">
+                  <%= collection_radio_buttons(drink, :rating, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
+                    <%= b.label(class: "btn") { b.radio_button + image_tag(b.text+'.png') } %>
+                  <% end %>
+                </div>
               </div>
             </div>
           </div>
@@ -30,3 +34,8 @@
     <% end %>
   </div>
 </section>
+
+<% if current_user = "impossible" %>
+<a href="#" class="btn btn-success text-uppercase"><%= image_tag("thumbs-up.png") %></a>
+<a href="#" class="btn btn-danger text-uppercase"><%= image_tag("thumbs-down.png") %></a>
+<% end %>
