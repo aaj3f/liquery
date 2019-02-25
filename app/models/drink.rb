@@ -9,6 +9,10 @@ class Drink < ApplicationRecord
   validates :preparation, presence: true
   validate :must_have_at_least_one_ingredient
 
+  def self.test_drinks
+    where("test_drink = 1")
+  end
+
   def must_have_at_least_one_ingredient
     errors.add(:ingredients, "must exist!") if self.ingredients.empty?
   end

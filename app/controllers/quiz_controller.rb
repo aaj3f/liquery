@@ -1,5 +1,7 @@
 class QuizController < ApplicationController
   def question_one
+    @user = User.new
+    @drinks = Drink.test_drinks
   end
 
   def answer_one
