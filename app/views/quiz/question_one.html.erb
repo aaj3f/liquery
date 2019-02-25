@@ -1,14 +1,15 @@
 <section class="pricing py-5">
+  <%= form_tag quiz_answer_one_path, method: :post do |f| %>
   <div class="container">
-    <% @drinks.each_slice(6) do |drinks| %>
+    <% @ratings.each_slice(6) do |ratings| %>
       <div class="row">
-        <% drinks.each do |drink| %>
+        <% ratings.each do |rating| %>
           <div class="col-md-2 ml-md-auto mr-md-auto">
             <div class="card mb-5">
               <div class="card-body">
                 <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
                 <div class="inner-card-text">
-                  <span><h6 class="text-center"><%= drink.name %></h6></span>
+                  <span><h6 class="text-center"><%= rating.drink.name %></h6></span>
                 </div>
                 <hr>
                 <!-- <ul class="fa-ul">
@@ -22,9 +23,10 @@
                   <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Monthly Status Reports</li>
                 </ul> -->
                 <div class="row">
-                  <%= collection_radio_buttons(drink, :rating, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
-                    <%= b.label(class: "btn") { b.radio_button + image_tag(b.text+'.png') } %>
+                  <%= collection_radio_buttons(rating.id, :score, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
+                  <%= b.label(class: "btn") { b.radio_button + image_tag(b.text+'.png') } %>
                   <% end %>
+
                 </div>
               </div>
             </div>
@@ -33,9 +35,13 @@
       </div>
     <% end %>
   </div>
+  <div class="container submit-container">
+    <%= submit_tag "Finished? Let's move to the next question!", url: quiz_answer_one_path, class: "btn btn-lg btn-success" %>
+  </div>
+  <% end %>
 </section>
 
-<% if current_user = "impossible" %>
+<% if current_user == "impossible" %>
 <a href="#" class="btn btn-success text-uppercase"><%= image_tag("thumbs-up.png") %></a>
 <a href="#" class="btn btn-danger text-uppercase"><%= image_tag("thumbs-down.png") %></a>
 <% end %>
