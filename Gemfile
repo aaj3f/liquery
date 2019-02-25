@@ -39,6 +39,8 @@ gem 'devise'
 gem 'nokogiri'
 gem 'pry'
 gem 'thin'
+gem 'bootstrap'
+gem 'jquery-rails'
 require 'open-uri'
 require 'json'
 
