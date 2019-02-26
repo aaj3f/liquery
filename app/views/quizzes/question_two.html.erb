@@ -1,2 +1,85 @@
-<h1>Quiz#question_two</h1>
-<p>Find me in app/views/quiz/question_two.html.erb</p>
+<section class="pricing py-5">
+  <%= form_for @quiz, url: quizzes_answer_two_path do |f| %>
+
+  <div class="container">
+
+    <div class="row">
+      <!-- Pro Tier -->
+      <div class="col-md-4 offset-md-4">
+        <div class="card mb-5">
+          <div class="card-body">
+            <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
+            <div class="inner-card-text">
+              <input id="quiz_flavor_profile_id_1" type="radio" name="quiz[flavor_profile_id]" value="1">
+              <label for="quiz_flavor_profile_id_1" ><h3 class="text-center"><%= @flavor_profiles[0].name %>
+                </h3></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Pro Tier -->
+      <div class="col-md-4 offset-md-2">
+        <div class="card mb-5">
+          <div class="card-body">
+            <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
+            <div class="inner-card-text">
+              <input id="quiz_flavor_profile_id_2" type="radio" name="quiz[flavor_profile_id]" value="2">
+              <label for="quiz_flavor_profile_id_2" ><h3 class="text-center"><%= @flavor_profiles[1].name %>
+                </h3></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card mb-5">
+          <div class="card-body">
+            <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
+            <div class="inner-card-text">
+              <input id="quiz_flavor_profile_id_3" type="radio" name="quiz[flavor_profile_id]" value="3">
+              <label for="quiz_flavor_profile_id_3" ><h3 class="text-center"><%= @flavor_profiles[2].name %>
+                </h3></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Pro Tier -->
+      <div class="col-md-4 offset-md-1">
+        <div class="card mb-5">
+          <div class="card-body">
+            <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
+            <div class="inner-card-text">
+              <input id="quiz_flavor_profile_id_4" type="radio" name="quiz[flavor_profile_id]" value="4">
+              <label for="quiz_flavor_profile_id_4" ><h3 class="text-center"><%= @flavor_profiles[3].name %>
+                </h3></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 offset-md-2">
+        <div class="card mb-5">
+          <div class="card-body">
+            <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
+            <div class="inner-card-text">
+              <input id="quiz_flavor_profile_id_5" type="radio" name="quiz[flavor_profile_id]" value="5">
+              <label for="quiz_flavor_profile_id_5" ><h3 class="text-center"><%= @flavor_profiles[4].name %>
+                </h3></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container submit-container">
+      <%= f.submit "Finished? Let's move to the next question!", class: "btn btn-lg btn-success" %>
+    </div>
+  </div>
+  <% end %>
+</section>

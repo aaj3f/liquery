@@ -44,3 +44,12 @@ $(document).ready(function() {
         }
     });
 });
+
+$(document).ready(function() {
+   $(".pricing .card").on("click",function() {
+        if($(this).find('input[name=quiz[flavor_profile_id]]').is(':checked')) {
+          $(this).closest('.highlight-green').removeClass('highlight-green');
+          $(this).closest('.card').addClass('highlight-green');
+        }
+    });
+});

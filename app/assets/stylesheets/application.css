@@ -148,6 +148,13 @@ div.inner-card-text h6 {
   margin-bottom: 0;
 }
 
+div.inner-card-text h3 {
+  display: inline-block;
+  margin-bottom: 0;
+  line-height: normal;
+  vertical-align: middle;
+}
+
 .pricing hr {
   margin: 1.5rem 0;
 }
