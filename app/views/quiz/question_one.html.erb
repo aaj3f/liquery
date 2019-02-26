@@ -1,42 +1,12 @@
 <section class="pricing py-5">
-  <%= form_tag quiz_answer_one_path, method: :post do |f| %>
+  <%= form_for @user, url: quiz_answer_one_path, method: :post do |f| %>
   <div class="container">
-    <% @ratings.each_slice(6) do |ratings| %>
       <div class="row">
-        <% ratings.each do |rating| %>
-          <div class="col-md-2 ml-md-auto mr-md-auto">
-            <div class="card mb-5">
-              <div class="card-body">
-                <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
-                <div class="inner-card-text">
-                  <span><h6 class="text-center"><%= rating.drink.name %></h6></span>
-                </div>
-                <hr>
-                <!-- <ul class="fa-ul">
-                  <li><span class="fa-li"><i class="fas fa-check"></i></span>Single User</li>
-                  <li><span class="fa-li"><i class="fas fa-check"></i></span>5GB Storage</li>
-                  <li><span class="fa-li"><i class="fas fa-check"></i></span>Unlimited Public Projects</li>
-                  <li><span class="fa-li"><i class="fas fa-check"></i></span>Community Access</li>
-                  <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Unlimited Private Projects</li>
-                  <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Dedicated Phone Support</li>
-                  <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Free Subdomain</li>
-                  <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Monthly Status Reports</li>
-                </ul> -->
-                <div class="row">
-                  <%= collection_radio_buttons(rating.id, :score, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
-                  <%= b.label(class: "btn") { b.radio_button + image_tag(b.text+'.png') } %>
-                  <% end %>
-
-                </div>
-              </div>
-            </div>
-          </div>
-        <% end %>
+        <%= render partial: 'rating', collection: @user.ratings, locals: {f: f} %>
       </div>
-    <% end %>
   </div>
   <div class="container submit-container">
-    <%= submit_tag "Finished? Let's move to the next question!", url: quiz_answer_one_path, class: "btn btn-lg btn-success" %>
+    <%= f.submit "Finished? Let's move to the next question!", class: "btn btn-lg btn-success" %>
   </div>
   <% end %>
 </section>

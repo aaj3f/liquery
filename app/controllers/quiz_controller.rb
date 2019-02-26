@@ -1,8 +1,8 @@
 class QuizController < ApplicationController
   def question_one
-    @user = User.new
+    @user = current_user
     @drinks = Drink.test_drinks
-    @ratings = @drinks.map {|d| d.ratings.create }
+    
   end
 
   def answer_one
