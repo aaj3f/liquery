@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_26_013911) do
+ActiveRecord::Schema.define(version: 2019_02_26_155219) do
 
   create_table "drinks", force: :cascade do |t|
     t.string "name"
@@ -44,6 +44,16 @@ ActiveRecord::Schema.define(version: 2019_02_26_013911) do
     t.string "measurement_type"
     t.index ["drink_id"], name: "index_measures_on_drink_id"
     t.index ["ingredient_id"], name: "index_measures_on_ingredient_id"
+  end
+
+  create_table "quiz_ratings", force: :cascade do |t|
+    t.integer "drink_id"
+    t.integer "quiz_id"
+    t.integer "score"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["drink_id"], name: "index_quiz_ratings_on_drink_id"
+    t.index ["quiz_id"], name: "index_quiz_ratings_on_quiz_id"
   end
 
   create_table "quizzes", force: :cascade do |t|

@@ -3,7 +3,7 @@
     <div class="card-body">
       <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
       <div class="inner-card-text">
-        <span><h6 class="text-center"><%= rating.drink.name %></h6></span>
+        <span><h6 class="text-center"><%= quiz_rating.drink.name %></h6></span>
       </div>
       <hr>
       <!-- <ul class="fa-ul">
@@ -17,9 +17,9 @@
         <li class="text-muted"><span class="fa-li"><i class="fas fa-times"></i></span>Monthly Status Reports</li>
       </ul> -->
       <div class="row">
-        <%= f.collection_radio_buttons(:rating_ids, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
-        <%= b.label(class: "btn") { b.radio_button + image_tag(b.text+'.png') } %>
-        <% end %>
+          <%= rating_fields.collection_radio_buttons(:score, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
+          <%= b.label(class: "btn") { b.radio_button + image_tag(b.text+'.png') } %>
+          <% end %>
 
       </div>
     </div>
