@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   get 'quizzes/question_one'
   post 'quizzes/answer_one'
   get 'quizzes/question_two'
-  post 'quizzes/answer_two'
+  patch 'quizzes/answer_two'
   get 'quizzes/question_three'
   post 'quizzes/answer_three'
 

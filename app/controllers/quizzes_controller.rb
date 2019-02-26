@@ -20,6 +20,7 @@ class QuizzesController < ApplicationController
   end
 
   def answer_two
+    binding.pry
   end
 
   def question_three

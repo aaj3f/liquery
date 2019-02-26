@@ -83,3 +83,12 @@
   </div>
   <% end %>
 </section>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+     $(".pricing .card label").on("click",function() {
+          $('.card input:checked').not(this).closest('.card').css("background-color", "white");
+          $(this).closest('.card').css("background-color", "green");
+      });
+  });
+</script>

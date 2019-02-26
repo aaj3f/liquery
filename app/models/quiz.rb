@@ -1,6 +1,6 @@
 class Quiz < ApplicationRecord
   belongs_to :user
-  belongs_to :flavor_profile
+  belongs_to :flavor_profile, optional: true
   has_many :quiz_ratings
   has_many :drinks, through: :quiz_ratings
 
