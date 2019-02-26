@@ -1,8 +1,8 @@
-class QuizController < ApplicationController
+class QuizzesController < ApplicationController
   def question_one
     @user = current_user
     @drinks = Drink.test_drinks
-    
+
   end
 
   def answer_one

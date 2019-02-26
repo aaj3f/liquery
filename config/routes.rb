@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
-  get 'quiz/question_one'
-  post 'quiz/answer_one'
-  get 'quiz/question_two'
-  post 'quiz/answer_two'
-  get 'quiz/question_three'
-  post 'quiz/answer_three'
+  get 'quizzes/question_one'
+  post 'quizzes/answer_one'
+  get 'quizzes/question_two'
+  post 'quizzes/answer_two'
+  get 'quizzes/question_three'
+  post 'quizzes/answer_three'
 
   get 'welcome/index'
   root 'welcome#index'
