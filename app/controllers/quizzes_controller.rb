@@ -8,10 +8,15 @@ class QuizzesController < ApplicationController
   end
 
   def answer_one
-    binding.pry
+    @user = current_user
+    @quiz = @user.quizzes.create
+    @quiz.update(answer_one_params)
+    redirect_to quizzes_question_two_path
   end
 
   def question_two
+    @quiz = current_user.quizzes.last
+    
   end
 
   def answer_two
