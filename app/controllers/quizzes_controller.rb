@@ -16,7 +16,7 @@ class QuizzesController < ApplicationController
 
   def question_two
     @quiz = current_user.quizzes.last
-    
+    @flavor_profiles = FlavorProfile.all
   end
 
   def answer_two
