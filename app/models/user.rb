@@ -11,4 +11,24 @@ class User < ApplicationRecord
   def ratings_attributes=(ratings_attributes)
     binding.pry
   end
+
+  def liked_drinks
+    Drink.joins(:users).where(users: { id: self.id }).group("drinks.id").having(ratings: { score: 1 })
+  end
+
+  def disliked_drinks
+    Drink.joins(:users).where(users: { id: self.id }).group("drinks.id").having(ratings: { score: -1 })
+  end
+
+  def recommended_drinks
+    Drink.joins(:users).where(users: { id: self.id }).group("drinks.id").having(ratings: { recommended: true })
+  end
+
+  def liked_ingredients
+    Ingredient.joins(drinks: :users).where(users: { id: self.id }).group("ingredients.id").having(ratings: { score: 1 })
+  end
+
+  def disliked_ingredients
+    Ingredient.joins(drinks: :users).where(users: { id: self.id }).group("ingredients.id").having(ratings: { score: -1 })
+  end
 end

@@ -10,25 +10,44 @@ class Quiz < ApplicationRecord
     end
   end
 
-  def build_ratings_for_current_user
+  def build_ratings_for(current_user)
     self.quiz_ratings.each do |qr|
-      self.user.ratings.where("ratings.drink_id = ?", qr.drink_id).first_or_create(score: qr.score, drink_id: qr.drink_id)
+      current_user.ratings.where("ratings.drink_id = ?", qr.drink_id).first_or_create.update(score: qr.score, drink_id: qr.drink_id)
     end
+    current_user.save
   end
 
   def recommend_drink
-    binding.pry
-    # self.use_previous_ratings ? self.recommend_with_ratings : self.recommend_without_ratings
+    self.use_previous_ratings ? self.recommend_with_ratings : self.recommend_without_ratings
   end
 
   def recommend_with_ratings
+    liked_drinks = self.user.liked_drinks
+    disliked_drinks = self.user.disliked_drinks
+    previously_recommended_drinks = self.user.recommended_drinks
+    liked_ingredients = self.user.liked_ingredients
+    disliked_ingredients = self.user.disliked_ingredients
+    drinks_to_reject = liked_drinks + disliked_drinks + previously_recommended_drinks
+    unrated_drinks = Drink.all.reject {|d| drinks_to_reject.include?(d) }
+    drinks_of_chosen_profile = unrated_drinks.select {|d| d.flavor_profile_ids.include?(self.flavor_profile_id) }
+    scored_results = drinks_of_chosen_profile.group_by {|d| (d.ingredients & liked_ingredients).size }
+    recommendation = scored_results[scored_results.keys.max].sample
+    self.user.ratings.where("ratings.drink_id = ?", recommendation.id).first_or_create.update(recommended: true, drink_id: recommendation.id)
+    self.user.save
+    recommendation
   end
 
   def recommend_without_ratings
-    liked_drinks = Drink.joins(:quizzes).where(quizzes: { id: self.id }).group("drinks.id").having(quiz_ratings: { score: 1 }).pluck(:name)
-    disliked_drinks = Drink.joins(:quizzes).where(quizzes: { id: self.id }).group("drinks.id").having(quiz_ratings: { score: -1 }).pluck(:name)
-    liked_ingredients = Ingredient.joins(drinks: :quizzes).where(quizzes: { id: self.id }).group("ingredients.id").having(quiz_ratings: { score: 1 }).pluck(:name)
-    disliked_ingredients = Ingredient.joins(drinks: :quizzes).where(quizzes: { id: self.id }).group("ingredients.id").having(quiz_ratings: { score: -1 }).pluck(:name)
-    
+    liked_drinks = Drink.joins(:quizzes).where(quizzes: { id: self.id }).group("drinks.id").having(quiz_ratings: { score: 1 })
+    disliked_drinks = Drink.joins(:quizzes).where(quizzes: { id: self.id }).group("drinks.id").having(quiz_ratings: { score: -1 })
+    liked_ingredients = Ingredient.joins(drinks: :quizzes).where(quizzes: { id: self.id }).group("ingredients.id").having(quiz_ratings: { score: 1 })
+    disliked_ingredients = Ingredient.joins(drinks: :quizzes).where(quizzes: { id: self.id }).group("ingredients.id").having(quiz_ratings: { score: -1 })
+    unrated_drinks = Drink.all.reject {|d| (liked_drinks + disliked_drinks).include?(d) }
+    drinks_of_chosen_profile = unrated_drinks.select {|d| d.flavor_profile_ids.include?(self.flavor_profile_id) }
+    scored_results = drinks_of_chosen_profile.group_by {|d| (d.ingredients & liked_ingredients).size }
+    recommendation = scored_results[scored_results.keys.max].sample
+    self.user.ratings.where("ratings.drink_id = ?", recommendation.id).first_or_create.update(recommended: true, drink_id: recommendation.id)
+    self.user.save
+    recommendation
   end
 end
