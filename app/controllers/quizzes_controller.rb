@@ -23,7 +23,7 @@ class QuizzesController < ApplicationController
     @user = current_user
     @quiz = current_user.quizzes.last
     @quiz.update(answer_two_params)
-    redirect_to quizzes_results_path
+    redirect_to quizzes_question_three_path
   end
 
   def question_three
@@ -35,6 +35,9 @@ class QuizzesController < ApplicationController
   end
 
   def answer_three
+    @quiz = current_user.quizzes.last
+    @quiz.update(answer_three_params)
+    redirect_to quizzes_results_path
   end
 
   def results
@@ -52,5 +55,9 @@ class QuizzesController < ApplicationController
 
   def answer_two_params
     params.require(:quiz).permit(:flavor_profile_id)
+  end
+
+  def answer_three_params
+    params.require(:quiz).permit(:use_previous_ratings)
   end
 end

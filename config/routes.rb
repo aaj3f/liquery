@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   get 'quizzes/question_two'
   patch 'quizzes/answer_two'
   get 'quizzes/question_three'
-  post 'quizzes/answer_three'
+  patch 'quizzes/answer_three'
   get 'quizzes/results'
 
   get 'welcome/index'

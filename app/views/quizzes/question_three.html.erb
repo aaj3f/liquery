@@ -1,2 +1,64 @@
-<h1>Quiz#question_three</h1>
-<p>Find me in app/views/quiz/question_three.html.erb</p>
+<section class="pricing py-5">
+  <%= form_for @quiz, url: quizzes_answer_three_path do |f| %>
+
+  <div class="container">
+
+    <div class="row mt-5 mb-5">
+      <!-- Pro Tier -->
+      <div class="col-md-8 offset-md-2">
+        <!-- <div class="card mb-5">
+          <div class="card-body"> -->
+            <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
+            <div class="inner-card-text">
+              <h2 class="text-center text-white">Would you like us to consider your previous drink preferences for this quiz?
+                </h2>
+            </div>
+          <!-- </div>
+        </div> -->
+      </div>
+    </div>
+
+    <div class="row my-5">
+      <!-- Pro Tier -->
+      <div class="col-md-4 offset-md-1">
+        <div class="card mb-5">
+          <div class="card-body">
+            <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
+            <div class="inner-card-text">
+              <input id="quiz_use_previous_ratings_1" type="radio" name="quiz[use_previous_ratings]" value="1">
+              <label for="quiz_use_previous_ratings_1" ><h3 class="text-center">Yes, use them.
+                </h3></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 offset-md-2">
+        <div class="card mb-5" style="background-color:green;">
+          <div class="card-body">
+            <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
+            <div class="inner-card-text">
+              <input id="quiz_use_previous_ratings_0" type="radio" name="quiz[use_previous_ratings]" value="0" checked>
+              <label for="quiz_use_previous_ratings_0" ><h3 class="text-center">No, let's start fresh.
+                </h3></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container submit-container">
+      <%= f.submit "Finished? Let's move to the next question!", class: "btn btn-lg btn-success" %>
+    </div>
+  </div>
+  <% end %>
+</section>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+     $(".pricing .card label").on("click",function() {
+          $('.card input:checked').not(this).closest('.card').css("background-color", "white");
+          $(this).closest('.card').css("background-color", "green");
+      });
+  });
+</script>
