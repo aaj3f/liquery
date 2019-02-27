@@ -11,7 +11,7 @@
                 <span><h6 class="text-center"><%= rating_fields.object.drink.name %></h6></span>
               </div>
               <hr>
-              
+
               <div class="row">
                   <%= rating_fields.hidden_field :drink_id %>
                   <%= rating_fields.collection_radio_buttons(:score, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
@@ -31,10 +31,7 @@
   <% end %>
 </section>
 
-<% if current_user == "impossible" %>
-<a href="#" class="btn btn-success text-uppercase"><%= image_tag("thumbs-up.png") %></a>
-<a href="#" class="btn btn-danger text-uppercase"><%= image_tag("thumbs-down.png") %></a>
-<% end %>
+
 
 <script type="text/javascript">
   $(document).ready(function() {

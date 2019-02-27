@@ -10,11 +10,11 @@ class Quiz < ApplicationRecord
     end
   end
 
-  def build_ratings_for(current_user)
+  def build_ratings_for_current_user
     self.quiz_ratings.each do |qr|
-      current_user.ratings.where("ratings.drink_id = ?", qr.drink_id).first_or_create.update(score: qr.score, drink_id: qr.drink_id)
+      self.user.ratings.where("ratings.drink_id = ?", qr.drink_id).first_or_create.update(score: qr.score, drink_id: qr.drink_id)
     end
-    current_user.save
+
   end
 
   def recommend_drink

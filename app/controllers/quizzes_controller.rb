@@ -43,7 +43,7 @@ class QuizzesController < ApplicationController
   def results
     @user = current_user
     @quiz = current_user.quizzes.last
-    @quiz.build_ratings_for(current_user)
+    @quiz.build_ratings_for_current_user
     @drink = @quiz.recommend_drink
   end
 
