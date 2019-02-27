@@ -27,6 +27,11 @@ class QuizzesController < ApplicationController
   end
 
   def question_three
+    if current_user && current_user.ratings.present?
+      @quiz = current_user.quizzes.last
+    else
+      redirect_to quizzes_results_path
+    end
   end
 
   def answer_three
@@ -36,6 +41,7 @@ class QuizzesController < ApplicationController
     @user = current_user
     @quiz = current_user.quizzes.last
     @quiz.build_ratings_for_current_user
+    @drink = @quiz.recommend_drink
   end
 
   private

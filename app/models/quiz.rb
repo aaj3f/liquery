@@ -11,10 +11,12 @@ class Quiz < ApplicationRecord
   end
 
   def build_ratings_for_current_user
-    binding.pry
     self.quiz_ratings.each do |qr|
       self.user.ratings.where("ratings.drink_id = ?", qr.drink_id).first_or_create(score: qr.score, drink_id: qr.drink_id)
     end
+  end
+
+  def recommend_drink
     binding.pry
   end
 end
