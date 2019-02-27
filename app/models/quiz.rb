@@ -18,5 +18,17 @@ class Quiz < ApplicationRecord
 
   def recommend_drink
     binding.pry
+    # self.use_previous_ratings ? self.recommend_with_ratings : self.recommend_without_ratings
+  end
+
+  def recommend_with_ratings
+  end
+
+  def recommend_without_ratings
+    liked_drinks = Drink.joins(:quizzes).where(quizzes: { id: self.id }).group("drinks.id").having(quiz_ratings: { score: 1 }).pluck(:name)
+    disliked_drinks = Drink.joins(:quizzes).where(quizzes: { id: self.id }).group("drinks.id").having(quiz_ratings: { score: -1 }).pluck(:name)
+    liked_ingredients = Ingredient.joins(drinks: :quizzes).where(quizzes: { id: self.id }).group("ingredients.id").having(quiz_ratings: { score: 1 }).pluck(:name)
+    disliked_ingredients = Ingredient.joins(drinks: :quizzes).where(quizzes: { id: self.id }).group("ingredients.id").having(quiz_ratings: { score: -1 }).pluck(:name)
+    
   end
 end
