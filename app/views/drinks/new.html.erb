@@ -9,7 +9,6 @@
   <%= f.fields_for :ingredients, @new_ingredients do |ingredient_fields| %>
     <%= ingredient_fields.label :name %>
     <%= ingredient_fields.text_field :name %><br>
-    <!--  #ingredient_fields.collection_select :flavor_profile, FlavorProfile.all, :id, :name -->
   <% end %><br>
 
   <%= f.label :preparation %>

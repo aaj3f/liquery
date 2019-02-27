@@ -10,11 +10,9 @@ class DrinkScraperJob
       att_hash['ingredients'].map {|ing_string| ing_string.match(/(dash|\d?\sdashes|\d+\s?cl|of|\d\s?oz|\d|parts?\)|cl\sgin)\s\(?([\w\sè']+?)\)?$/i)}.each do |ing_match|
         if ing_match && ing_match[2]
           ing = Ingredient.find_or_create_by(name: ing_match[2].downcase)
-          # binding.pry
           if ing_match[1].match?(/cl|oz/)
             drink.measures.create(ingredient_id: ing.id, size: ing_match[1].to_f)
           else
-            # binding.pry
             drink.measures.create(ingredient_id: ing.id, note: ing_match[0])
           end
         end
@@ -40,7 +38,6 @@ class DrinkScraperJob
       if doc.css("table.infobox").size > 1
 
         doc.css("table.infobox").select {|node| node.text.match?("IBA official") }.each.with_index do |node, index|
-          # binding.pry if node.css("tr").find {|inner_node| inner_node.css("th").text.match?("IBA specified") }.css("td ul li").map {|inner_node| inner_node.text}.empty?
           name = node.css("caption").children.text
           hash[name] ||= {
             'image' => "https:" + (node.css("a.image img").select {|inner_node| inner_node.attributes['width'].value.to_i > 100}.first&.attributes&.[]('src')&.value || doc.css("a.image img").select {|node| node.attributes['width'].value.to_i > 100}.first&.attributes&.[]('src')&.value || DEFAULT_COCKTAIL_URL),
@@ -49,17 +46,11 @@ class DrinkScraperJob
             'preparation' => node.css("tr").find {|inner_node| inner_node.css("th").text.match?("Preparation") }.css("td").first.text
           }
           puts hash.keys.last
-          # hash['image'] = "https:" + (node.css("a.image img").select {|inner_node| inner_node.attributes['width'].value.to_i > 100}.first&.attributes&.[]('src')&.value || doc.css("a.image img").select {|node| node.attributes['width'].value.to_i > 100}.first.attributes['src'].value)
-          # hash['primary_alochols'] (array)= node.css("tr").find {|node| node.css("th").text.match?("Primary alcohol") }.css("li a").map {|node| node.text}
-          # hash['ingredients'] (array)= node.css("tr").find {|inner_node| inner_node.css("th").text.match?("IBA specified") }.css("td ul li").map {|inner_node| inner_node.text}
-          # hash['preparation'] (string)= node.css("tr").find {|inner_node| inner_node.css("th").text.match?("Preparation") }.css("td").first.text
 
         end
 
       else
         name = doc.css("table.infobox caption").first.children.text
-        # binding.pry if inner_doc.css("tr").find {|node| node.css("th").text.match?("IBA") }.css("td ul li").map {|node| node.text}.empty?
-        # binding.pry unless doc.css("a.image img").select {|node| node.attributes['width'].value.to_i > 100}.first&.attributes&.[]('src')&.value
         hash[name] ||= {
           'image' => "https:" + (doc.css("a.image img").select {|node| node.attributes['width'].value.to_i > 100}.first&.attributes&.[]('src')&.value || DEFAULT_COCKTAIL_URL),
           'primary_alcohols' => inner_doc.css("tr").find {|node| node.css("th").text.match?("Primary alcohol") }.css("li a").map {|node| node.text},
@@ -68,13 +59,6 @@ class DrinkScraperJob
         } unless name.match?("colada")
         puts hash.keys.last
       end
-
-
-      #name = doc.css("table.infobox caption").first.children.text
-      #image = "https:" + doc.css("a.image img").select {|node| node.attributes['width'].value.to_i > 100}.first.attributes['src'].value
-      #primary_alochols (array)= inner_doc.css("tr").find {|node| node.css("th").text.match?("Primary alcohol") }.css("li a").map {|node| node.text}
-      #ingredients (array)= inner_doc.css("tr").find {|node| node.css("th").text.match?("IBA specified") }.css("td ul li").map {|node| node.text}
-      #preparation (string)= inner_doc.css("tr").find {|node| node.css("th").text.match?("Preparation") }.css("td").first.text
 
     end
 
