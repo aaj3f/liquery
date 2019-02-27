@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   patch 'quizzes/answer_two'
   get 'quizzes/question_three'
   post 'quizzes/answer_three'
+  get 'quizzes/results'
 
   get 'welcome/index'
   root 'welcome#index'

@@ -1,6 +1,10 @@
 class DrinksController < ApplicationController
   before_action :is_admin?, only: %i(new create edit update)
 
+  def index
+    
+  end
+
   def new
     @drink = Drink.new
     @ingredients = Ingredient.all.sort_by {|i| i.name }

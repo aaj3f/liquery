@@ -44,3 +44,24 @@
 <a href="#" class="btn btn-success text-uppercase"><%= image_tag("thumbs-up.png") %></a>
 <a href="#" class="btn btn-danger text-uppercase"><%= image_tag("thumbs-down.png") %></a>
 <% end %>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+     $(".pricing .card").on("click",function() {
+          if($(this).find('input[value=1]').is(':checked')) {
+            $(this).closest('.card').removeClass('highlight-red');
+            $(this).closest('.card').addClass('highlight-green');
+          }
+      });
+  });
+
+  $(document).ready(function() {
+     $(".pricing .card").on("click",function() {
+          if($(this).find('input[value=-1]').is(':checked')) {
+            $(this).closest('.card').removeClass('highlight-green');
+            $(this).closest('.card').addClass('highlight-red');
+          }
+      });
+  });
+
+</script>

@@ -26,21 +26,3 @@
 //     $(this).closest('.card').addClass('highlight');
 //   });
 // });
-
-$(document).ready(function() {
-   $(".pricing .card").on("click",function() {
-        if($(this).find('input[value=1]').is(':checked')) {
-          $(this).closest('.card').removeClass('highlight-red');
-          $(this).closest('.card').addClass('highlight-green');
-        }
-    });
-});
-
-$(document).ready(function() {
-   $(".pricing .card").on("click",function() {
-        if($(this).find('input[value=-1]').is(':checked')) {
-          $(this).closest('.card').removeClass('highlight-green');
-          $(this).closest('.card').addClass('highlight-red');
-        }
-    });
-});

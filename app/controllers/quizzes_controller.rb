@@ -20,7 +20,10 @@ class QuizzesController < ApplicationController
   end
 
   def answer_two
-    binding.pry
+    @user = current_user
+    @quiz = current_user.quizzes.last
+    @quiz.update(answer_two_params)
+    redirect_to quizzes_results_path
   end
 
   def question_three
@@ -29,9 +32,19 @@ class QuizzesController < ApplicationController
   def answer_three
   end
 
+  def results
+    @user = current_user
+    @quiz = current_user.quizzes.last
+    @quiz.build_ratings_for_current_user
+  end
+
   private
 
   def answer_one_params
     params.require(:quiz).permit(:quiz_ratings_attributes => [:drink_id, :score])
+  end
+
+  def answer_two_params
+    params.require(:quiz).permit(:flavor_profile_id)
   end
 end
