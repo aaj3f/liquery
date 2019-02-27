@@ -41,6 +41,8 @@ gem 'pry'
 gem 'thin'
 gem 'bootstrap'
 gem 'jquery-rails'
+gem 'omniauth'
+gem 'omniauth-facebook'
 require 'open-uri'
 require 'json'
 
