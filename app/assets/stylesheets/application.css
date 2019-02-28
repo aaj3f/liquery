@@ -148,6 +148,7 @@ div.results-img img {
   max-height: 18em;
   width: auto;
   height: auto;
+  border-radius: 1em;
 }
 
 .drink-list img {
