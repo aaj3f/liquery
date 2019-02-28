@@ -138,6 +138,11 @@ section.pricing {
   color: inherit;
 }
 
+.drink-list a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .pricing div.inner-card-text {
   min-height: 38px;
   line-height: 38px;
