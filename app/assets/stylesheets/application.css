@@ -158,6 +158,11 @@ div.results-img img {
   max-height: 150%;
 }
 
+img.show-img {
+  border-radius: 1em;
+}
+
+
 .pricing div.inner-card-text {
   min-height: 38px;
   line-height: 38px;
