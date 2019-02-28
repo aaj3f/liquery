@@ -28,6 +28,7 @@ class DrinksController < ApplicationController
       @drink = Drink.find_by_id(params[:id])
     else
       redirect_to root_path
+    end
   end
 
   def edit
@@ -56,4 +57,5 @@ class DrinksController < ApplicationController
   def is_admin?
     return head(:forbidden) unless user_signed_in? && current_user.admin_access
   end
+
 end

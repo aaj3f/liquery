@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users, :controllers => { :omniauth_callbacks => "callbacks" }
 
+  resources :users, only: %i(show)
+
   get 'quizzes/question_one'
   post 'quizzes/answer_one'
   get 'quizzes/question_two'
