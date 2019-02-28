@@ -2,8 +2,8 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => { :omniauth_callbacks => "callbacks" }
 
   resources :users, only: %i(show) do
-    resources :drinks, only: %i(index show)
     member do
+      get 'liked_drinks'
       get 'recommended_drinks'
     end
   end

@@ -22,6 +22,7 @@
     <div class="row my-2">
       <!-- Pro Tier -->
       <div class="col-md-6 offset-md-3">
+        <a href="<%= liked_drinks_user_path(current_user) %>">
         <div class="card mb-5">
           <div class="card-body">
             <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
@@ -31,11 +32,13 @@
             </div>
           </div>
         </div>
+        </a>
       </div>
     </div>
 
     <div class="row my-2">
       <div class="col-md-6 offset-md-6">
+        <a href="<%= recommended_drinks_user_path(current_user) %>">
         <div class="card mb-5">
           <div class="card-body">
             <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
@@ -45,6 +48,23 @@
             </div>
           </div>
         </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="row my-2">
+      <div class="col-md-4 offset-md-4">
+        <a href="<%= quizzes_question_one_path %>">
+        <div class="card mb-5 bg-dark">
+          <div class="card-body">
+            <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
+            <div class="inner-card-text">
+              <h3 class="text-center text-white">Or Take Our Quiz Again!
+                </h3>
+            </div>
+          </div>
+        </div>
+        </a>
       </div>
     </div>
 

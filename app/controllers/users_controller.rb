@@ -1,10 +1,24 @@
 class UsersController < ApplicationController
+  before_action :authenticate_user!
+  before_action :find_user
 
   def show
+
+  end
+
+  def liked_drinks
+    @drinks = @user.liked_drinks
+  end
+
+  def recommended_drinks
+    @drinks = @user.recommended_drinks
+  end
+
+  private
+
+  def find_user
     @user = User.find_by_id(params[:id])
-    if @user && @user == current_user
-      @liked_drinks, @recommended_drinks, @disliked_drinks = @user.liked_drinks, @user.recommended_drinks, @user.disliked_drinks
-    end
+    return head(:forbidden) unless @user && @user == current_user
   end
 
 end

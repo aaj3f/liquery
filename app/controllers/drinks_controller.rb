@@ -3,7 +3,7 @@ class DrinksController < ApplicationController
   before_action :is_admin?, only: %i(new create edit update)
 
   def index
-    render 'drinks/index'
+    @drinks = Drink.all
   end
 
   def new
