@@ -123,6 +123,7 @@ Resources */
 section.pricing {
   background: #007bff;
   background: linear-gradient(to right, #0062E6, #33AEFF);
+  min-height: 95vh;
 }
 
 .pricing .card {
@@ -130,6 +131,11 @@ section.pricing {
   border-radius: 1rem;
   transition: all 0.2s;
   box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+}
+
+.pricing a {
+  text-decoration: none;
+  color: inherit;
 }
 
 .pricing div.inner-card-text {

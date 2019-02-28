@@ -41,4 +41,5 @@ class User < ApplicationRecord
   def disliked_ingredients
     Ingredient.joins(drinks: :users).where(users: { id: self.id }).group("ingredients.id").having(ratings: { score: -1 })
   end
+
 end
