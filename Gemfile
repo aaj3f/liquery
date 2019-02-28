@@ -43,6 +43,7 @@ gem 'bootstrap'
 gem 'jquery-rails'
 gem 'omniauth'
 gem 'omniauth-facebook'
+gem 'dotenv-rails'
 require 'open-uri'
 require 'json'
 

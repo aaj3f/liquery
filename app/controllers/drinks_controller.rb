@@ -3,7 +3,7 @@ class DrinksController < ApplicationController
   before_action :is_admin?, only: %i(new create edit update)
 
   def index
-
+    render 'drinks/index'
   end
 
   def new
@@ -24,7 +24,10 @@ class DrinksController < ApplicationController
   end
 
   def show
-    @drink = Drink.find_by_id(params[:id])
+    if params[:id]
+      @drink = Drink.find_by_id(params[:id])
+    else
+      redirect_to root_path
   end
 
   def edit
