@@ -10,14 +10,14 @@
 
               <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
 
-              <% unless flash.empty? %>
+              <% if flash["alert"] %>
                 <ul>
                   <% flash.each do |name, msg| %>
                     <li class="text-danger"><%= msg %></li>
                   <% end %>
                 </ul>
               <% end %>
-              
+
                 <div class="field form-label-group">
                   <%= f.label :email %><br />
                   <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
