@@ -143,6 +143,14 @@ section.pricing {
   color: inherit;
 }
 
+
+.drink-list img {
+  min-width: 100%;
+  max-width: 150%;
+  min-height: 100%;
+  max-height: 150%;
+}
+
 .pricing div.inner-card-text {
   min-height: 38px;
   line-height: 38px;
