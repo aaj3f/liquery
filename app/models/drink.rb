@@ -34,4 +34,8 @@ class Drink < ApplicationRecord
     end
   end
 
+  def list_ingredients
+    self.ingredients.map {|i| i.name}.join(", ")
+  end
+
 end

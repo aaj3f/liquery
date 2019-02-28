@@ -7,11 +7,13 @@ class UsersController < ApplicationController
   end
 
   def liked_drinks
-    @drinks = @user.liked_drinks
+    @drinks = @user.liked_drinks.sort
+    @header = "Drinks You Like"
   end
 
   def recommended_drinks
-    @drinks = @user.recommended_drinks
+    @drinks = @user.recommended_drinks.sort
+    @header = "Drinks We Recommend"
   end
 
   private

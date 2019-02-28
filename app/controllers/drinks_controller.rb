@@ -3,7 +3,8 @@ class DrinksController < ApplicationController
   before_action :is_admin?, only: %i(new create edit update)
 
   def index
-    @drinks = Drink.all
+    @drinks = Drink.all.sort
+    @header = "Drinks Index"
   end
 
   def new
