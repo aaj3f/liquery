@@ -31,10 +31,11 @@ class Quiz < ApplicationRecord
     unrated_drinks = Drink.all.reject {|d| drinks_to_reject.include?(d) }
     drinks_of_chosen_profile = unrated_drinks.select {|d| d.flavor_profile_ids.include?(self.flavor_profile_id) }
     scored_results = drinks_of_chosen_profile.group_by {|d| (d.ingredients & liked_ingredients).size }
+    score = scored_results.keys.max
     recommendation = scored_results[scored_results.keys.max].sample
     self.user.ratings.where("ratings.drink_id = ?", recommendation.id).first_or_create.update(recommended: true, drink_id: recommendation.id)
     self.user.save
-    recommendation
+    [recommendation, score]
   end
 
   def recommend_without_ratings
@@ -45,9 +46,10 @@ class Quiz < ApplicationRecord
     unrated_drinks = Drink.all.reject {|d| (liked_drinks + disliked_drinks).include?(d) }
     drinks_of_chosen_profile = unrated_drinks.select {|d| d.flavor_profile_ids.include?(self.flavor_profile_id) }
     scored_results = drinks_of_chosen_profile.group_by {|d| (d.ingredients & liked_ingredients).size }
+    score = scored_results.keys.max
     recommendation = scored_results[scored_results.keys.max].sample
     self.user.ratings.where("ratings.drink_id = ?", recommendation.id).first_or_create.update(recommended: true, drink_id: recommendation.id)
     self.user.save
-    recommendation
+    [recommendation, score]
   end
 end

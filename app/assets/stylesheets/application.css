@@ -143,6 +143,12 @@ section.pricing {
   color: inherit;
 }
 
+div.results-img img {
+  max-width: 18em;
+  max-height: 18em;
+  width: auto;
+  height: auto;
+}
 
 .drink-list img {
   min-width: 100%;

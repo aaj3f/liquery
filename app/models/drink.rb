@@ -42,4 +42,14 @@ class Drink < ApplicationRecord
     self.name.chars.first.match?(/[aeiou]/i) ? "an" : "a"
   end
 
+  def results_message(score)
+    if score <= 2
+      "It's not perfect, but we were able to find a drink that matches a couple of the ingredients & drink palates you seem to like."
+    elsif score <= 4
+      "This drink matches several of the ingredients you seem to enjoy. We're pretty sure you'll love it!"
+    else
+      "Whooo doggy! This drink is right up your alley, with several ingredients in common with your preferred palate!"
+    end
+  end
+
 end

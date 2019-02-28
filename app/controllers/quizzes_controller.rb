@@ -1,6 +1,6 @@
 class QuizzesController < ApplicationController
   before_action :authenticate_user!
-  
+
   def question_one
     @user = current_user
     @drinks = Drink.test_drinks
@@ -46,7 +46,7 @@ class QuizzesController < ApplicationController
     @user = current_user
     @quiz = current_user.quizzes.last
     @quiz.build_ratings_for_current_user
-    @drink = @quiz.recommend_drink
+    @drink, @score = @quiz.recommend_drink
   end
 
   private
