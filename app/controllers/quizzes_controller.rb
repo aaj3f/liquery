@@ -1,4 +1,6 @@
 class QuizzesController < ApplicationController
+  before_action :authenticate_user!
+  
   def question_one
     @user = current_user
     @drinks = Drink.test_drinks
