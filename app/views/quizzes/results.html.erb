@@ -14,18 +14,17 @@
 
     <div class="row mt-5 mb-5">
       <!-- Pro Tier -->
-      <div class="col-md-8 offset-md-2">
-        <!-- <div class="card mb-5">
-          <div class="card-body"> -->
-            <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
-            <div class="inner-card-text">
-              <h2 class="text-center text-white">We recommend a
-                </h2>
-                <h1 class="text-center" style="color:#F4A00F;"><%= @drink.name %></h1>
-                <h3 class="text-center text-white">It matches your preferences perfectly!</h3>
-            </div>
-          <!-- </div>
-        </div> -->
+      <div class="col-md-4 offset-md-4">
+
+        <div class="card text-center">
+          <h3 class="card-header">We recommend <%= @drink.article %></h3>
+          <img class="card-img-top" src="<%= @drink.image %>" alt="<%= @drink.name %>">
+          <div class="card-body">
+            <h2 class="card-text"><%= @drink.name %></h2>
+            <p class="card-text"></p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

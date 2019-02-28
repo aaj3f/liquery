@@ -38,4 +38,8 @@ class Drink < ApplicationRecord
     self.ingredients.map {|i| i.name}.join(", ")
   end
 
+  def article
+    self.name.chars.first.match?(/[aeiou]/i) ? "an" : "a"
+  end
+
 end
