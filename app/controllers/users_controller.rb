@@ -6,6 +6,11 @@ class UsersController < ApplicationController
 
   end
 
+  def update
+    drink_id = current_user.add_liked_drink(params)
+    redirect_to drink_path(drink_id)
+  end
+
   def liked_drinks
     @drinks = @user.liked_drinks.sort
     @header = "Drinks You Like"

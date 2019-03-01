@@ -27,6 +27,7 @@ class DrinksController < ApplicationController
   def show
     if params[:id]
       @drink = Drink.find_by_id(params[:id])
+      @rating = @drink.ratings.create(user_id: current_user.id) unless current_user.liked_drinks.include?(@drink)
     else
       redirect_to root_path
     end

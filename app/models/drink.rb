@@ -11,6 +11,10 @@ class Drink < ApplicationRecord
   validates :preparation, presence: true
   validate :must_have_at_least_one_ingredient
 
+  def ratings_attributes=(ratings_attributes)
+
+  end
+
   def self.test_drinks
     where("test_drink = 1")
   end

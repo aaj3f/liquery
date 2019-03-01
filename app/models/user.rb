@@ -42,4 +42,11 @@ class User < ApplicationRecord
     Ingredient.joins(drinks: :users).where(users: { id: self.id }).group("ingredients.id").having(ratings: { score: -1 })
   end
 
+  def add_liked_drink(attributes)
+    drink_id = attributes.keys.find {|k| k.match(/^\d+$/)}.to_i
+    self.ratings.where(drink_id: drink_id).first_or_create.update(score: 1)
+    self.save
+    drink_id
+  end
+
 end
