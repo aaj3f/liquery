@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_28_015636) do
+ActiveRecord::Schema.define(version: 2019_03_01_145005) do
 
   create_table "drinks", force: :cascade do |t|
     t.string "name"
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(version: 2019_02_28_015636) do
     t.datetime "updated_at", null: false
     t.integer "flavor_profile_id"
     t.boolean "use_previous_ratings", default: false
+    t.integer "recommendation"
     t.index ["user_id"], name: "index_quizzes_on_user_id"
   end
 
