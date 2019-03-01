@@ -10,6 +10,10 @@ class Quiz < ApplicationRecord
     end
   end
 
+  def drink_recommendation
+    Drink.where("drinks.id = ?", self.recommendation).first
+  end
+
   def build_ratings_for_current_user
     self.quiz_ratings.each do |qr|
       self.user.ratings.where("ratings.drink_id = ?", qr.drink_id).first_or_create.update(score: qr.score, drink_id: qr.drink_id)
@@ -32,10 +36,10 @@ class Quiz < ApplicationRecord
     drinks_of_chosen_profile = unrated_drinks.select {|d| d.flavor_profile_ids.include?(self.flavor_profile_id) }
     scored_results = drinks_of_chosen_profile.group_by {|d| (d.ingredients & liked_ingredients).size }
     score = scored_results.keys.max
-    recommendation = scored_results[scored_results.keys.max].sample
-    self.user.ratings.where("ratings.drink_id = ?", recommendation.id).first_or_create.update(recommended: true, drink_id: recommendation.id)
+    self.update(recommendation: scored_results[scored_results.keys.max].sample.id)
+    self.user.ratings.where("ratings.drink_id = ?", self.recommendation).first_or_create.update(recommended: true, drink_id: self.recommendation)
     self.user.save
-    [recommendation, score]
+    [self.drink_recommendation, score]
   end
 
   def recommend_without_ratings
@@ -47,9 +51,9 @@ class Quiz < ApplicationRecord
     drinks_of_chosen_profile = unrated_drinks.select {|d| d.flavor_profile_ids.include?(self.flavor_profile_id) }
     scored_results = drinks_of_chosen_profile.group_by {|d| (d.ingredients & liked_ingredients).size }
     score = scored_results.keys.max
-    recommendation = scored_results[scored_results.keys.max].sample
-    self.user.ratings.where("ratings.drink_id = ?", recommendation.id).first_or_create.update(recommended: true, drink_id: recommendation.id)
+    self.update(recommendation: scored_results[scored_results.keys.max].sample.id)
+    self.user.ratings.where("ratings.drink_id = ?", self.recommendation).first_or_create.update(recommended: true, drink_id: self.recommendation)
     self.user.save
-    [recommendation, score]
+    [self.drink_recommendation, score]
   end
 end

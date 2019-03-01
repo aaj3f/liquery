@@ -65,11 +65,16 @@
     if (hideOrshow == 'hide') document.getElementById('ac-wrapper').style.display = "none";
     else document.getElementById('ac-wrapper').removeAttribute('style');
 }
-window.onload = function () {
+// window.onload = function () {
+//     setTimeout(function () {
+//         PopUp('show');
+//     }, 1000);
+// }
+  $(document).ready(function () {
     setTimeout(function () {
-        PopUp('show');
+      PopUp('show');
     }, 1000);
-}
+  })
 
   $(document).ready(function() {
      $(".pricing .card").on("click",function() {

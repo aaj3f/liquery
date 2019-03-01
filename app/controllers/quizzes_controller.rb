@@ -45,8 +45,12 @@ class QuizzesController < ApplicationController
   def results
     @user = current_user
     @quiz = current_user.quizzes.last
-    @quiz.build_ratings_for_current_user
-    @drink, @score = @quiz.recommend_drink
+    if @quiz.recommendation
+      redirect_to drink_path(@quiz.drink_recommendation)
+    else
+      @quiz.build_ratings_for_current_user
+      @drink, @score = @quiz.recommend_drink
+    end
   end
 
   private
