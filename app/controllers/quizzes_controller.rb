@@ -2,16 +2,14 @@ class QuizzesController < ApplicationController
   before_action :authenticate_user!
 
   def question_one
-    @user = current_user
     @drinks = Drink.test_drinks
-    @quiz = @user.quizzes.build
+    @quiz = current_user.quizzes.build
     @drinks.each {|d| @quiz.quiz_ratings.build(drink_id: d.id) }
     @quiz_ratings = @quiz.quiz_ratings
   end
 
   def answer_one
-    @user = current_user
-    @quiz = @user.quizzes.create
+    @quiz = current_user.quizzes.create
     @quiz.update(answer_one_params)
     redirect_to quizzes_question_two_path
   end
@@ -22,7 +20,6 @@ class QuizzesController < ApplicationController
   end
 
   def answer_two
-    @user = current_user
     @quiz = current_user.quizzes.last
     @quiz.update(answer_two_params)
     redirect_to quizzes_question_three_path

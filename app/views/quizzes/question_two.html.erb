@@ -101,7 +101,7 @@
     </div>
 
     <div class="container submit-container">
-      <%= f.submit "Finished? Let's move to the next question!", class: "btn btn-lg btn-success" %>
+      <%= f.submit "Finished? Let's move to the next question!", class: "btn btn-lg btn-success", disabled: "disabled" %>
     </div>
 
   </div>
@@ -115,4 +115,7 @@
           $(this).closest('.card').css("background-color", "green");
       });
   });
+
+$("input:radio").change(function () {$(".btn-success").prop("disabled", false);});
+
 </script>

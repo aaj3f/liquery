@@ -1,13 +1,14 @@
 <div id="ac-wrapper" style='display:none'>
     <div class="col-lg-6 offset-lg-3 d-flex mt-5" id="popup">
         <div class="popup-div text-center text-dark">
-             <div class="my-5"><h2>Heyo sis! You look thirsty!</h2></div>
-             <div class="mb-2"><h4>We're gonna get you a cocktail right quick,<br>We just need to ask a few questions first<br>so we can figure your drink out.</h4></div>
+             <div class="my-5"><h2><%= modal_header %></h2></div>
+             <div class="mb-2"><h4><%= modal_text %></h4></div>
             <div class="container submit-container my-5"><input class="btn btn-lg btn-info shadow" type="submit" name="submit" value="Okurrr??" onClick="PopUp('hide')" /></div>
         </div>
     </div>
 </div>
 
+<%= form_for @quiz, url: quizzes_answer_one_path, method: :post do |f| %>
 
 <section class="pricing py-5">
   <div class="container">
@@ -27,7 +28,6 @@
       </div>
     </div>
 
-    <%= form_for @quiz, url: quizzes_answer_one_path, method: :post do |f| %>
       <div class="row">
         <%= f.fields_for :quiz_ratings, @quiz_ratings do |rating_fields| %>
         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 ml-md-auto mr-md-auto">
@@ -53,10 +53,10 @@
       </div>
   </div>
   <div class="container submit-container">
-    <%= f.submit "Finished? Let's move to the next question!", class: "btn btn-lg btn-success shadow" %>
+    <%= f.submit "Finished? Let's move to the next question!", class: "btn btn-lg btn-success shadow", data: { disable_with: false } %>
   </div>
-  <% end %>
 </section>
+<% end %>
 
 
 

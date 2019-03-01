@@ -17,13 +17,14 @@
       <div class="col-md-6 offset-md-3">
 
         <div class="card text-center">
-          <h3 class="card-header">We recommend <%= @drink.article %>...</h3>
+          <h3 class="card-header">We recommend <%= drink_article %>...</h3>
           <div class="results-img mt-5 mb-3">
             <img class="card-img-top" src="<%= @drink.image %>" alt="<%= @drink.name %>">
           </div>
           <div class="card-body">
             <h2 class="card-text"><%= @drink.name %></h2>
             <p class="card-text"><%= @drink.results_message(@score) %></p>
+            <p class="card-text"><%= quiz_info %></p>
             <a href="<%= drink_path(@drink) %>" class="btn btn-primary text-white">Want to learn more about it?</a>
           </div>
         </div>
