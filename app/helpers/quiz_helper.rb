@@ -10,9 +10,9 @@ module QuizHelper
 
   def modal_text
     if current_user.ratings.present?
-      "We already have a sense for some of the drinks you tend to like.\nBut if you wanna give us some new information\nor update your likes and dislikes, go ahead bebe!!"
+      "We already have a sense for some of the drinks you tend to like. But if you wanna give us some new information or update your likes and dislikes, go ahead bebe!!"
     else
-      "We're gonna get you a cocktail right quick,\nWe just need to ask a few questions first\nso we can figure your drink out."
+      "We're gonna get you a cocktail pronto, we just need to ask a few questions first so we can figure your drink out."
     end
   end
 

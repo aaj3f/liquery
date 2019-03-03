@@ -1,24 +1,22 @@
-# README
+# Liquery
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Liquery is Ruby/Rails web app built to help its users better understand their preferences for cocktails & to discover new drinks they might enjoy.
 
-Things you may want to cover:
+## Objectives
 
-* Ruby version
+1. To practice building a deployable app with the Rails framework.
+2. To practice RESTful conventions within an MVC architectural structure.
+3. To write DRY front- and back-end code by way of design features such as partials, nested resources, & nested forms.
+4. To practice authenticating, validating and authorizing users, to protect their identity & the security of the app.
 
-* System dependencies
+## Contact
 
-* Configuration
+email: ajohnson.uva@gmail.com
 
-* Database creation
+## Contributing
 
-* Database initialization
+Bug reports and pull requests are welcome on GitHub at https://github.com/aaj3f/liquery. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
-* How to run the test suite
+## License
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+The project's code is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
