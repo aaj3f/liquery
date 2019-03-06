@@ -1,5 +1,6 @@
 class QuizzesController < ApplicationController
   before_action :authenticate_user!
+  before_action :find_quiz, only: %i(question_two answer_two question_three answer_three results)
 
   def question_one
     @drinks = Drink.test_drinks
@@ -15,33 +16,24 @@ class QuizzesController < ApplicationController
   end
 
   def question_two
-    @quiz = current_user.quizzes.last
     @flavor_profiles = FlavorProfile.all
   end
 
   def answer_two
-    @quiz = current_user.quizzes.last
     @quiz.update(answer_two_params)
     redirect_to quizzes_question_three_path
   end
 
   def question_three
-    if current_user && current_user.ratings.present?
-      @quiz = current_user.quizzes.last
-    else
-      redirect_to quizzes_results_path
-    end
+    redirect_to quizzes_results_path unless current_user.ratings.present?
   end
 
   def answer_three
-    @quiz = current_user.quizzes.last
     @quiz.update(answer_three_params)
     redirect_to quizzes_results_path
   end
 
   def results
-    @user = current_user
-    @quiz = current_user.quizzes.last
     if @quiz.recommendation
       redirect_to drink_path(@quiz.drink_recommendation)
     else
@@ -62,5 +54,9 @@ class QuizzesController < ApplicationController
 
   def answer_three_params
     params.require(:quiz).permit(:use_previous_ratings)
+  end
+
+  def find_quiz
+    @quiz = current_user.quizzes.last
   end
 end
