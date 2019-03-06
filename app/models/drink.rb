@@ -35,12 +35,6 @@ class Drink < ApplicationRecord
     end
   end
 
-  # def measures_attributes=(measures_attributes)
-  #   measures_attributes.values.each do |measure_attributes|
-  #     m = Measure.find_by_id(measure_attributes[:id]).update(measure_attributes)
-  #   end
-  # end
-
   def list_ingredients
     self.ingredients.map {|i| i.name}.join(", ")
   end
