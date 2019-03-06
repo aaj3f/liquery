@@ -42,7 +42,7 @@ class DrinksController < ApplicationController
     if @drink && @drink.update(measure_params)
       redirect_to drink_path(@drink)
     else
-      render 'drinks/edits'
+      render 'drinks/edit'
     end
   end
 

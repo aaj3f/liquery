@@ -7,6 +7,8 @@ class Drink < ApplicationRecord
   has_many :ingredients, through: :measures
   has_many :flavor_profiles, through: :ingredients
   # accepts_nested_attributes_for :ingredients, reject_if: proc { |attributes| attributes['name'].blank? }
+  accepts_nested_attributes_for :measures
+
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   validates :preparation, presence: true
   validate :must_have_at_least_one_ingredient
@@ -32,11 +34,11 @@ class Drink < ApplicationRecord
     end
   end
 
-  def measures_attributes=(measures_attributes)
-    measures_attributes.values.each do |measure_attributes|
-      m = Measure.find_by_id(measure_attributes[:id]).update(measure_attributes)
-    end
-  end
+  # def measures_attributes=(measures_attributes)
+  #   measures_attributes.values.each do |measure_attributes|
+  #     m = Measure.find_by_id(measure_attributes[:id]).update(measure_attributes)
+  #   end
+  # end
 
   def list_ingredients
     self.ingredients.map {|i| i.name}.join(", ")
