@@ -26,7 +26,7 @@ class DrinksController < ApplicationController
   end
 
   def show
-    @rating = @drink.ratings.create(user_id: current_user.id) unless current_user.liked_drinks.include?(@drink)
+    @rating = @drink.prepare_rating
   end
 
   def edit
@@ -47,16 +47,16 @@ class DrinksController < ApplicationController
     return head(:not_found) unless @drink
   end
 
+  def is_admin?
+    return head(:forbidden) unless user_signed_in? && current_user.admin_access
+  end
+
   def measure_params
     params.require(:drink).permit(:measures_attributes => [:size, :measurement_type, :id, :ingredient_attributes => [:flavor_profile_id, :id]])
   end
 
   def drink_params
     params.require(:drink).permit(:name, :preparation, :image, ingredient_ids: [], ingredients_attributes: [:name])
-  end
-
-  def is_admin?
-    return head(:forbidden) unless user_signed_in? && current_user.admin_access
   end
 
 end
