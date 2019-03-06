@@ -3,7 +3,6 @@ class UsersController < ApplicationController
   before_action :find_user
 
   def show
-
   end
 
   def update

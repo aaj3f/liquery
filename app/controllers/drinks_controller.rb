@@ -26,7 +26,7 @@ class DrinksController < ApplicationController
   end
 
   def show
-    @rating = @drink.prepare_rating
+    @rating = @drink.prepare_rating(current_user)
   end
 
   def edit
