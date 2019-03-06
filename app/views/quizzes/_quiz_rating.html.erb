@@ -1,18 +1,17 @@
 <div class="col-md-2 ml-md-auto mr-md-auto">
   <div class="card mb-5">
     <div class="card-body">
-      <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
       <div class="inner-card-text">
         <span><h6 class="text-center"><%= quiz_rating.drink.name %></h6></span>
       </div>
       <hr>
-      
+
       <div class="row">
           <%= rating_fields.collection_radio_buttons(:score, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
           <%= b.label(class: "btn") { b.radio_button + image_tag(b.text+'.png') } %>
           <% end %>
-
       </div>
+      
     </div>
   </div>
 </div>

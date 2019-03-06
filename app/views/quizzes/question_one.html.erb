@@ -14,42 +14,36 @@
   <div class="container">
 
     <div class="row mt-2 mb-5">
-      <!-- Pro Tier -->
       <div class="col-md-8 offset-md-2">
-        <!-- <div class="card mb-5">
-          <div class="card-body"> -->
-            <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
-            <div class="inner-card-text">
-              <h2 class="text-center text-white">If there are any drinks here you've already tried<br>let us know what you think of them!
-                </h2>
-            </div>
-          <!-- </div>
-        </div> -->
+        <div class="inner-card-text">
+          <h2 class="text-center text-white">If there are any drinks here you've already tried<br>let us know what you think of them!</h2>
+        </div>
       </div>
     </div>
 
-      <div class="row">
-        <%= f.fields_for :quiz_ratings, @quiz_ratings do |rating_fields| %>
-        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 ml-md-auto mr-md-auto">
-          <div class="card mb-5">
-            <div class="card-body">
-              <!-- <h5 class="card-title text-muted text-uppercase text-center">Free</h5> -->
-              <div class="inner-card-text">
-                <span><h6 class="text-center"><%= rating_fields.object.drink.name %></h6></span>
-              </div>
-              <hr>
-
-              <div class="row d-flex justify-content-center">
-                  <%= rating_fields.hidden_field :drink_id %>
-                  <%= rating_fields.collection_radio_buttons(:score, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
-                  <%= b.label(class: "btn") { b.radio_button + image_tag(b.text+'.png') } %>
-                  <% end %>
-              </div>
+    <div class="row">
+      <%= f.fields_for :quiz_ratings, @quiz_ratings do |rating_fields| %>
+      <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 ml-md-auto mr-md-auto">
+        <div class="card mb-5">
+          <div class="card-body">
+            <div class="inner-card-text">
+              <span><h6 class="text-center"><%= rating_fields.object.drink.name %></h6></span>
             </div>
+            <hr>
+
+            <div class="row d-flex justify-content-center">
+                <%= rating_fields.hidden_field :drink_id %>
+                <%= rating_fields.collection_radio_buttons(:score, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
+                <%= b.label(class: "btn") { b.radio_button + image_tag(b.text+'.png') } %>
+                <% end %>
+            </div>
+            
           </div>
         </div>
-        <% end %>
       </div>
+      <% end %>
+    </div>
+
   </div>
   <div class="container submit-container">
     <%= f.submit "Finished? Let's move to the next question!", class: "btn btn-lg btn-success shadow", data: { disable_with: false } %>

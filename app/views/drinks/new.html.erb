@@ -21,7 +21,7 @@
 <% end %>
 
 <ul>
-<% @drink.errors.full_messages.each do |error| %>
-  <li><%= error %></li>
-<% end if @drink.errors.present? %>
+  <% @drink.errors.full_messages.each do |error| %>
+    <li><%= error %></li>
+  <% end if @drink.errors.present? %>
 </ul>
