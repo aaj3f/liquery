@@ -23,18 +23,20 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <!-- <li class="nav-item active">
-              <a class="nav-link" href="#">Home
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
-            </li>
-          -->
             <% if current_user.admin_access %>
             <li class="nav-item">
               <%= link_to "Admin", new_drink_path, class: "nav-link" %>
+            </li>
+            <% end %>
+            <% if current_user.ratings.present? %>
+            <li class="nav-item">
+              <%= link_to "Home", user_path(current_user), class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Drinks", drinks_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Take the Quiz", quizzes_question_one_path, class: "nav-link" %>
             </li>
             <% end %>
             <li class="nav-item">
