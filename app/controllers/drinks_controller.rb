@@ -1,6 +1,7 @@
 class DrinksController < ApplicationController
   before_action :authenticate_user!
   before_action :is_admin?, only: %i(new create edit update destroy)
+  before_action :find_drink, only: %i(show edit update)
 
   def index
     @drinks = Drink.sort
@@ -25,21 +26,14 @@ class DrinksController < ApplicationController
   end
 
   def show
-    if params[:id]
-      @drink = Drink.find_by_id(params[:id])
-      @rating = @drink.ratings.create(user_id: current_user.id) unless current_user.liked_drinks.include?(@drink)
-    else
-      redirect_to root_path
-    end
+    @rating = @drink.ratings.create(user_id: current_user.id) unless current_user.liked_drinks.include?(@drink)
   end
 
   def edit
-    @drink = Drink.find_by_id(params[:id])
   end
 
   def update
-    @drink = Drink.find_by_id(params[:id])
-    if @drink && @drink.update(measure_params)
+    if @drink.update(measure_params)
       redirect_to drink_path(@drink)
     else
       render 'drinks/edit'
@@ -47,6 +41,11 @@ class DrinksController < ApplicationController
   end
 
   private
+
+  def find_drink
+    @drink = Drink.find_by_id(params[:id])
+    return head(:not_found) unless @drink
+  end
 
   def measure_params
     params.require(:drink).permit(:measures_attributes => [:size, :measurement_type, :id, :ingredient_attributes => [:flavor_profile_id, :id]])
