@@ -12,7 +12,7 @@ class Drink < ApplicationRecord
   validate :must_have_at_least_one_ingredient
 
   def ratings_attributes=(ratings_attributes)
-
+    binding.pry
   end
 
   def self.test_drinks

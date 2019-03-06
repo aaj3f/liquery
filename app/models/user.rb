@@ -4,7 +4,7 @@ class User < ApplicationRecord
   has_many :quiz_ratings, through: :quizzes
   has_many :drinks, through: :ratings
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  # :confirmable, :lockable, :timeoutable, :trackable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :omniauthable, :omniauth_providers => [:facebook]
 
