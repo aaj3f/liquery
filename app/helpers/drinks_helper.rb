@@ -5,6 +5,7 @@ module DrinksHelper
       "<button class=\"btn btn-success text-white\" disabled=\"disabled\">You\'ve liked this drink!</button>".html_safe
     else
       form_for current_user do |f|
+        f.hidden_field :drink_to_like, value: @drink.id
         f.submit "Like this Drink?", name: "#{@drink.id}", class: "btn btn-primary text-white"
       end
     end

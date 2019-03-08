@@ -20,7 +20,11 @@
               <p><strong>Preparation</strong></p>
               <p><%= @drink.preparation %></p>
           </div>
-          <%= like_or_liked %>
+          <%= form_for current_user do |f| %>
+            <%= f.hidden_field :drink_to_like, value: @drink.id %>
+            <%= f.submit "Like this Drink?", name: "#{@drink.id}", class: "btn btn-primary text-white" %>
+          <% end %>
+
         </div>
     </div>
   </div>

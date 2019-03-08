@@ -13,7 +13,6 @@ class Drink < ApplicationRecord
   validates :preparation, presence: true
   validate :must_have_at_least_one_ingredient
 
-
   def self.test_drinks
     where("test_drink = 1")
   end
@@ -21,6 +20,10 @@ class Drink < ApplicationRecord
   def self.sort
     order("drinks.name")
   end
+
+  # def self.bitter, self.bright, etc. --> scope methods would allow you to chain together
+  #
+  # end
 
   def prepare_rating(user)
     ratings.create(user_id: user.id) unless user.liked_drinks.include?(@drink)
