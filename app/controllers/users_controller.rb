@@ -6,8 +6,9 @@ class UsersController < ApplicationController
   end
 
   def update
-    drink_id = current_user.add_liked_drink(params)
-    redirect_to drink_path(drink_id)
+    drink = Drink.find_by_id(like_drink_params[:drink_to_like])
+    current_user.update(like_drink_params) if drink
+    redirect_to drink_path(drink)
   end
 
   def liked_drinks
@@ -21,6 +22,10 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def like_drink_params
+    params.require(:user).permit(:drink_to_like)
+  end
 
   def find_user
     @user = User.find_by_id(params[:id])

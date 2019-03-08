@@ -1,0 +1,4 @@
+<%= form_for current_user do |f| %>
+  <%= f.hidden_field :drink_to_like, value: drink.id %>
+  <%= f.submit "Like this Drink?", class: "btn btn-primary text-white" %>
+<% end %>

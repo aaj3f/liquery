@@ -23,7 +23,7 @@ class User < ApplicationRecord
   end
 
   def drink_to_like=(drink_id)
-    ratings.find_or_create_by(drink_id: drink_id).update(score: 1)
+    ratings.find_or_create_by(drink_id: drink_id.to_i).update(score: 1)
   end
 
   def ratings_attributes=(ratings_attributes)
