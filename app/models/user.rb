@@ -18,6 +18,14 @@ class User < ApplicationRecord
     end
   end
 
+  def drink_to_like
+
+  end
+
+  def drink_to_like=(drink_id)
+    ratings.find_or_create_by(drink_id: drink_id).update(score: 1)
+  end
+
   def ratings_attributes=(ratings_attributes)
     binding.pry
   end

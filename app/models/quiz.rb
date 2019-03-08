@@ -33,7 +33,7 @@ class Quiz < ApplicationRecord
     disliked_ingredients = self.user.disliked_ingredients
     drinks_to_reject = liked_drinks + disliked_drinks + previously_recommended_drinks
     unrated_drinks = Drink.all.reject {|d| drinks_to_reject.include?(d) }
-    drinks_of_chosen_profile = unrated_drinks.select {|d| d.flavor_profile_ids.include?(self.flavor_profile_id) }
+    drinks_of_chosen_profile = unrated_drinks.select {|d| d.flavor_profile_ids.include?(self.flavor_profile_id) } 
     scored_results = drinks_of_chosen_profile.group_by {|d| (d.ingredients & liked_ingredients).size }
     score = scored_results.keys.max
     self.update(recommendation: scored_results[scored_results.keys.max].sample.id)
