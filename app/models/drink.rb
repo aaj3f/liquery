@@ -25,9 +25,6 @@ class Drink < ApplicationRecord
   #
   # end
 
-  def prepare_rating(user)
-    ratings.create(user_id: user.id) unless user.liked_drinks.include?(@drink)
-  end
 
   def must_have_at_least_one_ingredient
     errors.add(:ingredients, "must exist!") if self.ingredients.empty?

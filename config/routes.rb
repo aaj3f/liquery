@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   #   resources :drinks, only %i(new)
   # end
 
+  resources :ratings, only: %i(create update)
+
   resources :drinks do
     resources :measures, only: %i(edit update)
     patch 'users/:user_id', to: 'users#update', as: 'user_update'

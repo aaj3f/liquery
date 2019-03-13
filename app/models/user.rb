@@ -18,6 +18,10 @@ class User < ApplicationRecord
     end
   end
 
+  def prepare_rating(drink)
+    ratings.where("ratings.drink_id = ?", drink.id).first_or_initialize(drink_id: drink.id)
+  end
+
   def drink_to_like
 
   end
