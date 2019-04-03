@@ -28,10 +28,7 @@
             <% end %>
             <% if current_user.ratings.present? %>
             <li class="nav-item">
-              <%= link_to "All Cocktails", drinks_path, class: "nav-link" %>
-            </li>
-            <li class="nav-item">
-              <%= link_to "Your Drinks", user_path(current_user), class: "nav-link" %>
+              <%= link_to "Explore Our Cocktails", drinks_path, class: "nav-link" %>
             </li>
             <li class="nav-item">
               <%= link_to "Take Another Quiz", quizzes_question_one_path, class: "nav-link" %>
