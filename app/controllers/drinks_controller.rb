@@ -5,7 +5,10 @@ class DrinksController < ApplicationController
 
   def index
     @drinks = Drink.sort
-    @header = "Drinks Index"
+    respond_to do |f|
+      f.html
+      f.json { render json: @drinks }
+    end
   end
 
   def new
