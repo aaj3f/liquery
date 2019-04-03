@@ -25,7 +25,7 @@
           let drinksRow = document.querySelector('#drinks-row')
           let drinkCol = `<div class="col-xl-3 col-md-6 mb-4" style="display:flex;justify-content:center;align-items:flex-end;">
             <div class="card border-0 shadow drink-list">
-              <a href="/drinks/${drink['id']}">
+              <a data-drinkId="${drink['id']}" data-toggle="modal" onclick="toggleModal(${drink['id']}); return false;">
                 <img src="${drink['image']}" class="card-img-top" alt="${drink['name']}">
                 <div class="card-body text-center">
                   <h5 class="card-title mb-0">${drink['name']}</h5>
