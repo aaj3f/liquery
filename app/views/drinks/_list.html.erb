@@ -1,8 +1,8 @@
 <header class="bg-primary text-center py-5">
   <div class="container">
-    <div class="row justify-content-around">
-      <button type="button" class="col-4 btn btn-outline-light btn-lg">Drinks You Like</button>
-      <button type="button" class="col-4 btn btn-outline-light btn-lg">Drinks We've Recommended</button>
+    <div id="sub-nav-row" class="row justify-content-around">
+      <button id="liked-drinks" type="button" class="col-4 btn btn-outline-light btn-lg" onclick="getLikedDrinks(); return false;">Drinks You Like</button>
+      <button id="recommended_drinks" type="button" class="col-4 btn btn-outline-light btn-lg" onclick="getRecommendedDrinks(); return false;">Drinks We've Recommended</button>
     </div>
   </div>
 </header>
@@ -14,3 +14,21 @@
     </div>
   </div>
 </section>
+
+<script type="text/javascript">
+  function getLikedDrinks() {
+    $.get(liked_drinks_user_path(current_user))
+      .then(function() {
+        debugger;
+      })  
+  }
+
+  $(document).ready(function() {
+    $('#sub-nav-row button').on('click', function() {
+      $('#sub-nav-row button').not(this).removeClass('active');
+      if (!$(this).hasClass('active')) {
+        $(this).addClass('active');
+      }
+    });
+  })
+</script>
