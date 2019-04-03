@@ -17,12 +17,3 @@
 //= require popper
 //= require bootstrap
 //= require_tree .
-
-// $(document).ready(function() {
-//   //change colour when radio is selected
-//   $('.pricing input:radio').change(function() {
-//     // Only remove the class in the specific `box` that contains the radio
-//     $('div.highlight').removeClass('highlight');
-//     $(this).closest('.card').addClass('highlight');
-//   });
-// });
