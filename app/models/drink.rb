@@ -43,6 +43,10 @@ class Drink < ApplicationRecord
     self.ingredients.map {|i| i.name}.join(", ")
   end
 
+  def correct_article
+    self.name.chars.first.match?(/[aeiou]/i) ? "an" : "a"
+  end
+
   def results_message(score)
     if score <= 1
       "It's not perfect, but we were able to find a drink that matches a couple of the ingredients & drink palates you seem to like."

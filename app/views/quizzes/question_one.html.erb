@@ -154,7 +154,7 @@
 </section>
 
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.1/handlebars.min.js"></script>
 <script type="text/javascript">
   class Drink {
     constructor(drinkInfo) {
@@ -225,9 +225,43 @@
 
       posting.done(function(data) {
         let drink = new Drink(data.drink)
-        debugger; // <-------- Need to add code to show modal (need to write modal HTML)
+        let template = Handlebars.compile(document.querySelector('#quiz-result-template').innerHTML)
+        let context = {
+          drink_recommendation: drink.nameWithArticle(),
+          image_url: drink.image,
+          drink_name: drink.name,
+          results_message: drink.resultsMessage(),
+          quiz_info: drink.quizInfo,
+          drink_path: "/drinks/" + drink.id
+        }
+        let html = template(context)
+        document.querySelector('section.pricing').innerHTML = html
       })
     })
   });
 
+</script>
+<script id="quiz-result-template" type="text/x-handlebars-template">
+  <div class="container">
+
+    <div class="row mb-5">
+      <div class="col-md-6 offset-md-3">
+
+        <div class="card text-center">
+          <h3 class="card-header">We recommend {{drink_recommendation}}...</h3>
+          <div class="results-img mt-5 mb-3">
+            <img class="card-img-top" src="{{image_url}}" alt="{{drink_name}}">
+          </div>
+          <div class="card-body">
+            <h2 class="card-text">{{drink_name}}</h2>
+            <p class="card-text">{{results_message}}</p>
+            <p class="card-text">{{quiz_info}}</p>
+            <a href="{{drink_path}}" class="btn btn-primary text-white">Want to learn more about it?</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </script>

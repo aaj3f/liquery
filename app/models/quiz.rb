@@ -62,7 +62,6 @@ class Quiz < ApplicationRecord
   def quiz_info(drink, quiz)
     ingredient = drink.ingredients.where("ingredients.flavor_profile_id = ?", quiz.flavor_profile_id).pluck(:name).sample.downcase
     flavor_profile = quiz.flavor_profile.name.downcase
-    drink = drink.name
-    "One of the components of this drink is #{ingredient}, which lends itself to the #{flavor_profile} palate you're looking for."
+    "One of the components of #{drink.correct_article} #{drink.name} is #{ingredient}, which lends itself to the #{flavor_profile} palate you're looking for."
   end
 end
