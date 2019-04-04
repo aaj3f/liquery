@@ -7,16 +7,19 @@ class QuizzesController < ApplicationController
     @quiz = current_user.quizzes.build
     @drinks.each {|d| @quiz.quiz_ratings.build(drink_id: d.id) }
     @quiz_ratings = @quiz.quiz_ratings
+    @flavor_profiles = FlavorProfile.all
   end
 
   def answer_one
     @quiz = current_user.quizzes.create
     @quiz.update(answer_one_params)
-    redirect_to quizzes_question_two_path
+    @quiz.build_ratings_for_current_user
+    @drink, @score = @quiz.recommend_drink
+    render json: { success: true, drink: @drink.attributes.merge( :score => @score )}
   end
 
   def question_two
-    @flavor_profiles = FlavorProfile.all
+
   end
 
   def answer_two
@@ -45,7 +48,7 @@ class QuizzesController < ApplicationController
   private
 
   def answer_one_params
-    params.require(:quiz).permit(:quiz_ratings_attributes => [:drink_id, :score])
+    params.require(:quiz).permit(:flavor_profile_id, :quiz_ratings_attributes => [:drink_id, :score])
   end
 
   def answer_two_params

@@ -7,49 +7,151 @@
         </div>
     </div>
 </div>
-
-<%= form_for @quiz, url: quizzes_answer_one_path, method: :post do |f| %>
-
 <section class="pricing py-5">
-  <div class="container">
+  <%= form_for @quiz, url: quizzes_answer_one_path, method: :post do |f| %>
 
-    <div class="row mt-2 mb-5">
-      <div class="col-md-8 offset-md-2">
-        <div class="inner-card-text">
-          <h2 class="text-center text-white">If there are any drinks here you've already tried<br>let us know what you think of them!</h2>
-        </div>
-      </div>
-    </div>
+  <section id="quiz-one">
+    <div class="container">
 
-    <div class="row">
-      <%= f.fields_for :quiz_ratings, @quiz_ratings do |rating_fields| %>
-      <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 ml-md-auto mr-md-auto">
-        <div class="card mb-5">
-          <div class="card-body">
-            <div class="inner-card-text">
-              <span><h6 class="text-center"><%= rating_fields.object.drink.name %></h6></span>
-            </div>
-            <hr>
-
-            <div class="row d-flex justify-content-center">
-                <%= rating_fields.hidden_field :drink_id %>
-                <%= rating_fields.collection_radio_buttons(:score, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
-                <%= b.label(class: "btn") { b.radio_button + image_tag(b.text+'.png') } %>
-                <% end %>
-            </div>
-            
+      <div class="row mt-2 mb-5">
+        <div class="col-md-8 offset-md-2">
+          <div class="inner-card-text">
+            <h2 class="text-center text-white">If there are any drinks here you've already tried<br>let us know what you think of them!</h2>
           </div>
         </div>
       </div>
-      <% end %>
-    </div>
 
-  </div>
-  <div class="container submit-container">
-    <%= f.submit "Finished? Let's move to the next question!", class: "btn btn-lg btn-success shadow", data: { disable_with: false } %>
-  </div>
+      <div class="row">
+        <%= f.fields_for :quiz_ratings, @quiz_ratings do |rating_fields| %>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 ml-md-auto mr-md-auto">
+          <div class="card mb-5">
+            <div class="card-body">
+              <div class="inner-card-text">
+                <span><h6 class="text-center"><%= rating_fields.object.drink.name %></h6></span>
+              </div>
+              <hr>
+
+              <div class="row d-flex justify-content-center">
+                  <%= rating_fields.hidden_field :drink_id %>
+                  <%= rating_fields.collection_radio_buttons(:score, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
+                  <%= b.label(class: "btn") { b.radio_button + image_tag(b.text+'.png') } %>
+                  <% end %>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <% end %>
+      </div>
+
+    </div>
+    <div class="container submit-container d-flex justify-content-center">
+      <button type="button" id="quiz-one-button" class="btn btn-lg btn-success shadow">Finished? Let's move to the next question!</button>
+    </div>
+  </section>
+
+  <section id="quiz-two" style="display:none;">
+    <div class="container">
+
+      <div class="row mt-2 mb-5">
+        <div class="col-md-10 offset-md-1">
+          <div class="inner-card-text">
+            <h2 class="text-center text-white">It's hard to describe drinks sometimes,<br>but if you had to choose one of these words to articulate<br>the flavor profile you're craving, what would it be?
+              </h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <div class="col-md-4 offset-md-1">
+          <div class="card mb-5">
+            <label for="quiz_flavor_profile_id_1" >
+              <div class="card-body">
+                <div class="inner-card-text">
+                  <input id="quiz_flavor_profile_id_1" type="radio" name="quiz[flavor_profile_id]" value="1">
+                  <h3 class="text-center"><%= @flavor_profiles[0].name %>
+                    </h3>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="col-md-4 offset-md-2">
+          <div class="card mb-5">
+            <label for="quiz_flavor_profile_id_2" >
+              <div class="card-body">
+                <div class="inner-card-text">
+                  <input id="quiz_flavor_profile_id_2" type="radio" name="quiz[flavor_profile_id]" value="2">
+                  <h3 class="text-center"><%= @flavor_profiles[1].name %>
+                    </h3>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+
+        <div class="col-md-4 offset-md-2">
+          <div class="card mb-5">
+            <label for="quiz_flavor_profile_id_3" >
+              <div class="card-body">
+                <div class="inner-card-text">
+                  <input id="quiz_flavor_profile_id_3" type="radio" name="quiz[flavor_profile_id]" value="3">
+                  <h3 class="text-center"><%= @flavor_profiles[2].name %>
+                    </h3>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card mb-5">
+            <label for="quiz_flavor_profile_id_4" >
+              <div class="card-body">
+                <div class="inner-card-text">
+                  <input id="quiz_flavor_profile_id_4" type="radio" name="quiz[flavor_profile_id]" value="4">
+                  <h3 class="text-center"><%= @flavor_profiles[3].name %>
+                    </h3>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+
+        <div class="col-md-4 offset-md-4">
+          <div class="card mb-5">
+            <label for="quiz_flavor_profile_id_5" >
+              <div class="card-body">
+                <div class="inner-card-text">
+                  <input id="quiz_flavor_profile_id_5" type="radio" name="quiz[flavor_profile_id]" value="5">
+                  <h3 class="text-center"><%= @flavor_profiles[4].name %>
+                    </h3>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="container submit-container">
+        <%= f.submit "Finished? Let's move to the next question!", class: "btn btn-lg btn-success", disabled: "disabled" %>
+      </div>
+
+    </div>
+  </section>
+  <% end %>
 </section>
-<% end %>
 
 
 
@@ -58,6 +160,8 @@
     if (hideOrshow == 'hide') document.getElementById('ac-wrapper').style.display = "none";
     else document.getElementById('ac-wrapper').removeAttribute('style');
 }
+
+  $("#quiz-two input:radio").change(function () {$("input.btn-success").prop("disabled", false);});
 // window.onload = function () {
 //     setTimeout(function () {
 //         PopUp('show');
@@ -67,25 +171,37 @@
     setTimeout(function () {
       PopUp('show');
     }, 1000);
-  })
 
-  $(document).ready(function() {
-     $(".pricing .card").on("click",function() {
-          if($(this).find('input[value=1]').is(':checked')) {
-            $(this).closest('.card').removeClass('highlight-red');
-            $(this).closest('.card').addClass('highlight-green');
-          }
-      });
+   $("#quiz-one .card").on("click",function() {
+        if($(this).find('input[value=1]').is(':checked')) {
+          $(this).closest('.card').removeClass('highlight-red');
+          $(this).closest('.card').addClass('highlight-green');
+        } else if ($(this).find('input[value=-1]').is(':checked')) {
+          $(this).closest('.card').removeClass('highlight-green');
+          $(this).closest('.card').addClass('highlight-red');
+        }
+    });
+
+    $("#quiz-two .card label").on("click",function() {
+         $('.card input:checked').not(this).closest('.card').css("background-color", "white");
+         $(this).closest('.card').css("background-color", "green");
+     });
+
+    $('#quiz-one-button').on('click', function(e) {
+      e.preventDefault();
+      document.querySelector('section#quiz-one').setAttribute('style', 'display:none')
+      document.querySelector('section#quiz-two').setAttribute('style', 'display:block')
+    })
+
+    $('form').submit(function(e) {
+      e.preventDefault();
+      let values = $(this).serialize();
+      let posting = $.post(this.action, values);
+
+      posting.done(function(data) {
+        debugger; // <-------- Need to add code to show modal (need to write modal HTML)
+      })
+    })
   });
-
-  $(document).ready(function() {
-     $(".pricing .card").on("click",function() {
-          if($(this).find('input[value=-1]').is(':checked')) {
-            $(this).closest('.card').removeClass('highlight-green');
-            $(this).closest('.card').addClass('highlight-red');
-          }
-      });
-  });
-
 
 </script>
