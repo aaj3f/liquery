@@ -52,7 +52,7 @@
           let drinksRow = document.querySelector('#drinks-row')
           let drinkCol = `<div class="col-xl-3 col-md-6 mb-4" style="display:flex;justify-content:center;align-items:flex-end;">
             <div class="card border-0 shadow drink-list">
-              <a data-drinkId="${drink['id']}" data-toggle="modal" onclick="toggleModal(${drink['id']}); return false;">
+              <a class="show-drink-modal" data-target="#showModal" data-id="${drink['id']}" href="#">
                 <img src="${drink['image']}" class="card-img-top" alt="${drink['name']}">
                 <div class="card-body text-center">
                   <h5 class="card-title mb-0">${drink['name']}</h5>
@@ -65,6 +65,8 @@
           </div>`
           drinksRow.innerHTML += drinkCol
         })
+      }).then(function() {
+        $('.show-drink-modal').on('click', showDrinkModalFn)
       })
   }
 
@@ -76,7 +78,7 @@
           let drinksRow = document.querySelector('#drinks-row')
           let drinkCol = `<div class="col-xl-3 col-md-6 mb-4" style="display:flex;justify-content:center;align-items:flex-end;">
             <div class="card border-0 shadow drink-list">
-              <a href="/drinks/${drink['id']}">
+              <a class="show-drink-modal" data-target="#showModal" data-id="${drink['id']}" href="#">
                 <img src="${drink['image']}" class="card-img-top" alt="${drink['name']}">
                 <div class="card-body text-center">
                   <h5 class="card-title mb-0">${drink['name']}</h5>
@@ -89,6 +91,8 @@
           </div>`
           drinksRow.innerHTML += drinkCol
         })
+      }).then(function() {
+        $('.show-drink-modal').on('click', showDrinkModalFn)
       })
   }
 
@@ -100,7 +104,7 @@
           let drinksRow = document.querySelector('#drinks-row')
           let drinkCol = `<div class="col-xl-3 col-md-6 mb-4" style="display:flex;justify-content:center;align-items:flex-end;">
             <div class="card border-0 shadow drink-list">
-              <a href="/drinks/${drink['id']}">
+              <a class="show-drink-modal" data-target="#showModal" data-id="${drink['id']}" href="#">
                 <img src="${drink['image']}" class="card-img-top" alt="${drink['name']}">
                 <div class="card-body text-center">
                   <h5 class="card-title mb-0">${drink['name']}</h5>
@@ -113,30 +117,34 @@
           </div>`
           drinksRow.innerHTML += drinkCol
         })
+      }).then(function() {
+        $('.show-drink-modal').on('click', showDrinkModalFn)
       })
   }
 
-  $(document).ready(function() {
-    $('.show-drink-modal').on('click', function (event) {
-      event.preventDefault();
-      let drinkId = this.dataset.id // Button that triggered the modal
-      let modal = $(this)
+  const showDrinkModalFn = function(event) {
+    event.preventDefault();
+    let drinkId = this.dataset.id // Button that triggered the modal
+    let modal = $(this)
 
-      $.get("/drinks/" + drinkId + ".json")
-        .then(function(resp) {
-          console.log(resp)
-          $('.modal-title').text(resp.name)
-          $('.modal-ingredients').html(`<p><strong>Ingredients</strong></p><p><ul>
-            ${resp.ingredients.map((i, index) => "<li>" + resp.measures[index].size + " " + resp.measures[index].measurement_type + " " + i.name + "</li>").join('')}
-          </ul></p>`)
-          $('.modal-preparation').html(`<p><strong>Preparation</strong></p><p>${resp.preparation}</p>`)
-          $('#showModal').modal()
-        })
-      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    $.get("/drinks/" + drinkId + ".json")
+      .then(function(resp) {
+        console.log(resp)
+        $('.modal-title').text(resp.name)
+        $('.modal-ingredients').html(`<p><strong>Ingredients</strong></p><p><ul>
+          ${resp.ingredients.map((i, index) => "<li>" + resp.measures[index].size + " " + resp.measures[index].measurement_type + " " + i.name + "</li>").join('')}
+        </ul></p>`)
+        $('.modal-preparation').html(`<p><strong>Preparation</strong></p><p>${resp.preparation}</p>`)
+        $('#showModal').modal()
+      })
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 
-      // modal.find('.modal-body input').val(recipient)
-    })
+    // modal.find('.modal-body input').val(recipient)
+  }
+
+  $(document).on('turbolinks:load', function() {
+    $('.show-drink-modal').on('click', showDrinkModalFn)
 
     $('#sub-nav-row button').on('click', function() {
       $('#sub-nav-row button').not(this).removeClass('active');
