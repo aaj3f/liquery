@@ -156,6 +156,31 @@
 
 
 <script type="text/javascript">
+  class Drink {
+    constructor(drinkInfo) {
+      this.id = drinkInfo.id;
+      this.name = drinkInfo.name;
+      this.image = drinkInfo.image;
+      this.preparation = drinkInfo.preparation;
+      this.score = drinkInfo.score;
+      this.quizInfo = drinkInfo.quizInfo;
+    }
+
+    nameWithArticle() {
+      return (this.name.charAt(0).match(/[aeiou]/i) ? `an ${this.name}` : `a ${this.name}`)
+    }
+
+    resultsMessage() {
+      if (this.score <= 1) {
+        return "It's not perfect, but we were able to find a drink that matches a couple of the ingredients & drink palates you seem to like.";
+      } else if (this.score <= 3) {
+        return "This drink matches several of the ingredients you seem to enjoy. We're pretty sure you'll love it!";
+      } else {
+        return "Whooo doggy! This drink is right up your alley, with several ingredients in common with your preferred palate!";
+      }
+    }
+  }
+
   function PopUp(hideOrshow) {
     if (hideOrshow == 'hide') document.getElementById('ac-wrapper').style.display = "none";
     else document.getElementById('ac-wrapper').removeAttribute('style');
@@ -199,6 +224,7 @@
       let posting = $.post(this.action, values);
 
       posting.done(function(data) {
+        let drink = new Drink(data.drink)
         debugger; // <-------- Need to add code to show modal (need to write modal HTML)
       })
     })

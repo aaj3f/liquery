@@ -14,8 +14,8 @@ class QuizzesController < ApplicationController
     @quiz = current_user.quizzes.create
     @quiz.update(answer_one_params)
     @quiz.build_ratings_for_current_user
-    @drink, @score = @quiz.recommend_drink
-    render json: { success: true, drink: @drink.attributes.merge( :score => @score )}
+    @drink, @score, @quiz_info = @quiz.recommend_drink
+    render json: { success: true, drink: @drink.attributes.merge( :score => @score, :quizInfo => @quiz_info )}
   end
 
   def question_two
