@@ -1,21 +1,27 @@
+<!-- Sub-nav with buttons to filter drinks by all/liked/recommended -->
 <header class="bg-primary text-center py-5">
   <div class="container">
     <div id="sub-nav-row" class="row justify-content-around">
-      <button id="all-drinks" type="button" class="col-3 btn btn-outline-light btn-lg" onclick="getAllDrinks(); return false;">All Drinks</button>
+      <button id="all-drinks" type="button" class="col-3 btn btn-outline-light btn-lg active" onclick="getAllDrinks(); return false;">All Drinks</button>
       <button id="liked-drinks" type="button" class="col-3 btn btn-outline-light btn-lg" onclick="getLikedDrinks(); return false;">Drinks You Like</button>
       <button id="recommended_drinks" type="button" class="col-3 btn btn-outline-light btn-lg" onclick="getRecommendedDrinks(); return false;">Drinks We've Recommended</button>
     </div>
   </div>
 </header>
 
+<!-- Container for main content (i.e. indexed drinks) -->
 <section class="bg-light pt-4">
   <div class="container">
     <div id="drinks-row" class="row">
-      <%= render partial: "drinks/drink", collection: @drinks if @drinks %>
+      <div class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+      </div>
     </div>
   </div>
 </section>
 
+<!-- Modal element -->
 <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -26,15 +32,8 @@
         </button>
       </div>
       <div class="modal-body">
-
-        <div class="modal-ingredients">
-
-        </div>
-
-        <div class="modal-preparation">
-
-        </div>
-
+        <div class="modal-ingredients"></div>
+        <div class="modal-preparation"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -144,6 +143,7 @@
   }
 
   $(document).on('turbolinks:load', function() {
+    getAllDrinks();
     $('.show-drink-modal').on('click', showDrinkModalFn)
 
     $('#sub-nav-row button').on('click', function() {
