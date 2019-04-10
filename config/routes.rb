@@ -8,13 +8,7 @@ Rails.application.routes.draw do
     end
   end
 
-  get 'quizzes/question_one'
-  post 'quizzes/answer_one'
-  get 'quizzes/question_two'
-  patch 'quizzes/answer_two'
-  get 'quizzes/question_three'
-  patch 'quizzes/answer_three'
-  get 'quizzes/results'
+  resources :quizzes, only: %i(show create new)
 
   get 'welcome/index'
   root 'welcome#index'
