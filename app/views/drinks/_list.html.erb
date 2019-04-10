@@ -42,85 +42,57 @@
   </div>
 </div>
 
+<!-- Handlebars template for each drink in rendered collection -->
+<script id="drink-card-template" type="text/x-handlebars-template">
+  <div class="col-xl-3 col-md-6 mb-4" style="display:flex;justify-content:center;align-items:flex-end;">
+    <div class="card border-0 shadow drink-list">
+      <a class="show-drink-modal" data-target="#showModal" data-id="{{drink_id}}" href="#">
+        <img src="{{drink_image}}" class="card-img-top" alt="{{drink_name}}">
+        <div class="card-body text-center">
+          <h5 class="card-title mb-0">{{drink_name}}</h5>
+          <div class="card-text text-black-50">
+            <strong>Ingredients:</strong> {{drink_ingredients}}
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</script>
+
+<!-- JS for drinks#index -->
 <script type="text/javascript">
-    function getAllDrinks() {
-    $.get("<%= drinks_path %>.json")
-      .then(function(resp) {
-        document.querySelector('#drinks-row').innerHTML = ""
-        resp.forEach(function(drink) {
-          let drinksRow = document.querySelector('#drinks-row')
-          let drinkCol = `<div class="col-xl-3 col-md-6 mb-4" style="display:flex;justify-content:center;align-items:flex-end;">
-            <div class="card border-0 shadow drink-list">
-              <a class="show-drink-modal" data-target="#showModal" data-id="${drink['id']}" href="#">
-                <img src="${drink['image']}" class="card-img-top" alt="${drink['name']}">
-                <div class="card-body text-center">
-                  <h5 class="card-title mb-0">${drink['name']}</h5>
-                  <div class="card-text text-black-50">
-                    <strong>Ingredients:</strong> ${drink.ingredients.map((x) => x.name).join(", ")}
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div>`
-          drinksRow.innerHTML += drinkCol
-        })
-      }).then(function() {
-        $('.show-drink-modal').on('click', showDrinkModalFn)
-      })
+
+  // Establishes context for Handlebars template
+  const drinkTemplateWithContext = function(drink) {
+    let drinksRow = document.querySelector('#drinks-row')
+    let drinkCardTemplate = Handlebars.compile(document.querySelector('#drink-card-template').innerHTML)
+    let context = {
+      drink_id: drink.id,
+      drink_image: drink.image,
+      drink_name: drink.name,
+      drink_ingredients: drink.ingredients.map((ingredient) => ingredient.name).join(', ')
+    }
+    drinksRow.innerHTML += drinkCardTemplate(context)
   }
 
-  function getLikedDrinks() {
-    $.get("<%= liked_drinks_user_path(current_user) %>")
-      .then(function(resp) {
-        document.querySelector('#drinks-row').innerHTML = ""
-        resp.forEach(function(drink) {
-          let drinksRow = document.querySelector('#drinks-row')
-          let drinkCol = `<div class="col-xl-3 col-md-6 mb-4" style="display:flex;justify-content:center;align-items:flex-end;">
-            <div class="card border-0 shadow drink-list">
-              <a class="show-drink-modal" data-target="#showModal" data-id="${drink['id']}" href="#">
-                <img src="${drink['image']}" class="card-img-top" alt="${drink['name']}">
-                <div class="card-body text-center">
-                  <h5 class="card-title mb-0">${drink['name']}</h5>
-                  <div class="card-text text-black-50">
-                    <strong>Ingredients:</strong> ${drink.ingredients.map((x) => x.name).join(", ")}
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div>`
-          drinksRow.innerHTML += drinkCol
+  // Modularizes AJAX request/response code with variable path
+  function getDrinks(path) {
+    return function() {
+      $.get(path)
+        .then(function(resp) {
+          document.querySelector('#drinks-row').innerHTML = ""
+          resp.forEach((drink) => drinkTemplateWithContext(drink))
+        }).then(function() {
+          $('.show-drink-modal').on('click', showDrinkModalFn)
         })
-      }).then(function() {
-        $('.show-drink-modal').on('click', showDrinkModalFn)
-      })
-  }
+    }}
 
-  function getRecommendedDrinks() {
-    $.get("<%= recommended_drinks_user_path(current_user) %>")
-      .then(function(resp) {
-        document.querySelector('#drinks-row').innerHTML = ""
-        resp.forEach(function(drink) {
-          let drinksRow = document.querySelector('#drinks-row')
-          let drinkCol = `<div class="col-xl-3 col-md-6 mb-4" style="display:flex;justify-content:center;align-items:flex-end;">
-            <div class="card border-0 shadow drink-list">
-              <a class="show-drink-modal" data-target="#showModal" data-id="${drink['id']}" href="#">
-                <img src="${drink['image']}" class="card-img-top" alt="${drink['name']}">
-                <div class="card-body text-center">
-                  <h5 class="card-title mb-0">${drink['name']}</h5>
-                  <div class="card-text text-black-50">
-                    <strong>Ingredients:</strong> ${drink.ingredients.map((x) => x.name).join(", ")}
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div>`
-          drinksRow.innerHTML += drinkCol
-        })
-      }).then(function() {
-        $('.show-drink-modal').on('click', showDrinkModalFn)
-      })
-  }
+  // Uses closures of modularized code above to declare ajax request/response functions for drink collections
+  const getAllDrinks = getDrinks("<%= drinks_path %>.json")
+  const getLikedDrinks = getDrinks("<%= liked_drinks_user_path(current_user) %>")
+  const getRecommendedDrinks = getDrinks("<%= recommended_drinks_user_path(current_user) %>")
 
+  // Initiates AJAX request/response for show action & displays modal in DOM
   const showDrinkModalFn = function(event) {
     event.preventDefault();
     let drinkId = this.dataset.id // Button that triggered the modal
@@ -128,7 +100,6 @@
 
     $.get("/drinks/" + drinkId + ".json")
       .then(function(resp) {
-        console.log(resp)
         $('.modal-title').text(resp.name)
         $('.modal-ingredients').html(`<p><strong>Ingredients</strong></p><p><ul>
           ${resp.ingredients.map((i, index) => "<li>" + resp.measures[index].size + " " + resp.measures[index].measurement_type + " " + i.name + "</li>").join('')}
@@ -136,12 +107,9 @@
         $('.modal-preparation').html(`<p><strong>Preparation</strong></p><p>${resp.preparation}</p>`)
         $('#showModal').modal()
       })
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    }
 
-    // modal.find('.modal-body input').val(recipient)
-  }
-
+  // JS to execute on document ready
   $(document).on('turbolinks:load', function() {
     getAllDrinks();
     $('.show-drink-modal').on('click', showDrinkModalFn)
