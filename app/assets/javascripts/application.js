@@ -42,3 +42,50 @@ class Drink {
     }
   }
 }
+
+// Establishes context for Handlebars template
+const drinkTemplateWithContext = function(drink) {
+  let drinksRow = document.querySelector('#drinks-row')
+  let drinkCardTemplate = Handlebars.compile(document.querySelector('#drink-card-template').innerHTML)
+  let context = {
+    drink_id: drink.id,
+    drink_image: drink.image,
+    drink_name: drink.name,
+    drink_ingredients: drink.ingredients.map((ingredient) => ingredient.name).join(', ')
+  }
+  drinksRow.innerHTML += drinkCardTemplate(context)
+}
+
+// Modularizes AJAX request/response code with variable path
+function getDrinks(path) {
+  return function() {
+    $.get(path)
+      .then(function(resp) {
+        document.querySelector('#drinks-row').innerHTML = ""
+        resp.forEach((drink) => drinkTemplateWithContext(drink))
+      }).then(function() {
+        $('.show-drink-modal').on('click', showDrinkModalFn)
+      })
+  }}
+
+  // Uses closures of modularized code above to declare ajax request/response functions for drink collections
+  const getAllDrinks = getDrinks("<%= drinks_path %>.json")
+  const getLikedDrinks = getDrinks("<%= liked_drinks_user_path(current_user) %>")
+  const getRecommendedDrinks = getDrinks("<%= recommended_drinks_user_path(current_user) %>")
+
+  // Initiates AJAX request/response for show action & displays modal in DOM
+  const showDrinkModalFn = function(event) {
+    event.preventDefault();
+    let drinkId = this.dataset.id // Button that triggered the modal
+    let modal = $(this)
+
+    $.get("/drinks/" + drinkId + ".json")
+      .then(function(resp) {
+        $('.modal-title').text(resp.name)
+        $('.modal-ingredients').html(`<p><strong>Ingredients</strong></p><p><ul style="list-style-type:none;">
+          ${resp.ingredients.map((i, index) => "<li>" + resp.measures[index].size + " " + resp.measures[index].measurement_type + " " + i.name + "</li>").join('')}
+        </ul></p>`)
+        $('.modal-preparation').html(`<p><strong>Preparation</strong></p><p>${resp.preparation}</p>`)
+        $('#showModal').modal()
+      })
+    }
