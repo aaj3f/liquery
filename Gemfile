@@ -45,6 +45,7 @@ gem 'omniauth-facebook'
 gem 'dotenv-rails'
 gem 'active_model_serializers'
 gem 'pg'
+gem 'webpacker'
 require 'open-uri'
 require 'json'
 
