@@ -1,6 +1,6 @@
 <!-- Modal with greeting text -->
 <div id="ac-wrapper" style='display:none'>
-    <div class="col-lg-6 offset-lg-3 mt-5" id="popup">
+    <div class="col-10 offset-1 col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 mt-5" id="popup">
         <div class="popup-div text-center text-dark">
              <div class="my-5"><h2><%= modal_header %></h2></div>
              <div class="mb-2"><h4><%= modal_text %></h4></div>
@@ -20,14 +20,14 @@
       <div class="row mt-2 mb-5">
         <div class="col-md-8 offset-md-2">
           <div class="inner-card-text">
-            <h2 class="text-center text-white">If there are any drinks here you've already tried<br>let us know what you think of them!</h2>
+            <h2 class="text-center text-white">If there are any drinks here you've already tried, let us know what you think of them!</h2>
           </div>
         </div>
       </div>
 
       <div class="row">
         <%= f.fields_for :quiz_ratings, @quiz_ratings do |rating_fields| %>
-        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 ml-md-auto mr-md-auto">
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6 ml-md-auto mr-md-auto">
           <div class="card mb-5">
             <div class="card-body">
               <div class="inner-card-text">
@@ -61,7 +61,7 @@
       <div class="row mt-2 mb-5">
         <div class="col-md-10 offset-md-1">
           <div class="inner-card-text">
-            <h2 class="text-center text-white">It's hard to describe drinks sometimes,<br>but if you had to choose one of these words to articulate<br>the flavor profile you're craving, what would it be?
+            <h2 class="text-center text-white">It's hard to describe drinks sometimes! But if you had to choose one of these words to articulate the flavor profile you're craving, what would it be?
               </h2>
           </div>
         </div>
@@ -149,7 +149,7 @@
 
       </div>
 
-      <div class="container submit-container">
+      <div class="container submit-container d-flex justify-content-center">
         <%= f.submit "Finished? Let's move to the next question!", class: "btn btn-lg btn-success", disabled: "disabled" %>
       </div>
 
@@ -166,7 +166,7 @@
 }
 
   $("#quiz-two input:radio").change(function () {$("input.btn-success").prop("disabled", false);});
-  
+
   $(document).ready(function () {
     setTimeout(function () {
       PopUp('show');
@@ -221,18 +221,18 @@
   <div class="container">
 
     <div class="row mb-5">
-      <div class="col-md-6 offset-md-3">
+      <div class="col-10 offset-1 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2">
 
         <div class="card text-center">
           <h3 class="card-header">We recommend {{drink_recommendation}}...</h3>
           <div class="results-img mt-5 mb-3">
             <img class="card-img-top" src="{{image_url}}" alt="{{drink_name}}">
           </div>
-          <div class="card-body">
+          <div class="card-body px-3">
             <h2 class="card-text">{{drink_name}}</h2>
             <p class="card-text">{{results_message}}</p>
             <p class="card-text">{{quiz_info}}</p>
-            <a href="{{drink_path}}" class="btn btn-primary text-white">Want to learn more about it?</a>
+            <a href="{{drink_path}}" class="mb-4 btn btn-primary text-white">Want to learn more about it?</a>
           </div>
         </div>
 

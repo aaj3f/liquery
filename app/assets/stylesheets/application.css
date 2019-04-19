@@ -341,7 +341,17 @@ box-shadow: #64686e 0px 0px 3px 3px;
     div.card-text {
       display: none;
     }
-    
+    .card-body {
+      padding: 0.25em
+    }
+    .pricing .btn {
+      margin-left: 0.25em;
+      margin-right: 0.25em;
+      padding: 0.25em;
+    }
+    .pricing hr {
+      margin: 0.25em;
+    }
 }
 @media (min-width: 768px) {
     #drinks-row .drink-list img {
