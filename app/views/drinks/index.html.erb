@@ -1,1 +1,82 @@
-<%= render partial: "list", locals: {drinks: @drinks} %>
+<!-- Sub-nav with buttons to filter drinks by all/liked/recommended -->
+<header class="bg-primary text-center">
+  <div class="container">
+    <div id="sub-nav-row" class="row py-4 justify-content-around">
+      <button id="all-drinks" type="button" class="col-sm-3 mb-3 mx-3 btn btn-outline-light btn-lg active" onclick="getAllDrinks(); return false;">All Drinks</button>
+      <button id="liked-drinks" type="button" class="col-sm-3 mb-3 mx-3 btn btn-outline-light btn-lg" onclick="getLikedDrinks(); return false;">Drinks You Like</button>
+      <button id="recommended_drinks" type="button" class="col-sm-3 mb-3 mx-3 btn btn-outline-light btn-lg" onclick="getRecommendedDrinks(); return false;">Drinks We Recommend</button>
+    </div>
+  </div>
+</header>
+
+<!-- Container for main content (i.e. indexed drinks) -->
+<section class="bg-light pt-4">
+  <div class="container">
+    <div id="drinks-row" class="row">
+      <div class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal element -->
+<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel" aria-hidden="true">
+  <div class="modal-dialog card border-0" role="document">
+    <div class="modal-content card-body">
+      <div class="modal-header">
+        <h3 class="modal-title card-text" id="showModalLabel"></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body card-text">
+        <div class="modal-ingredients"></div>
+        <div class="modal-preparation"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Handlebars template for each drink in rendered collection -->
+<script id="drink-card-template" type="text/x-handlebars-template">
+  <div class="col-xl-3 col-md-4 col-sm-4 col-6 mb-4" style="display:flex;justify-content:center;align-items:flex-end;">
+    <div class="card border-0 shadow drink-list">
+      <a class="show-drink-modal" data-target="#showModal" data-id="{{drink_id}}" href="#">
+        <img src="{{drink_image}}" class="card-img-top" alt="{{drink_name}}">
+        <div class="card-body text-center">
+          <h5 class="card-title mb-0">{{drink_name}}</h5>
+          <div class="card-text text-black-50">
+            <strong>Ingredients:</strong> {{drink_ingredients}}
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</script>
+
+<!-- JS for drinks#index -->
+<script type="text/javascript">
+  // Uses closures of modularized code above to declare ajax request/response functions for drink collections
+  let getAllDrinks = getDrinks("<%= drinks_path %>.json")
+  let getLikedDrinks = getDrinks("<%= liked_drinks_user_path(current_user) %>")
+  let getRecommendedDrinks = getDrinks("<%= recommended_drinks_user_path(current_user) %>")
+
+  // JS to execute on document ready
+  $(document).on('turbolinks:load', function() {
+    getAllDrinks();
+
+    $('.show-drink-modal').on('click', showDrinkModalFn)
+
+    $('#sub-nav-row button').on('click', function() {
+      $('#sub-nav-row button').not(this).removeClass('active');
+      if (!$(this).hasClass('active')) {
+        $(this).addClass('active');
+      }
+    });
+  })
+</script>

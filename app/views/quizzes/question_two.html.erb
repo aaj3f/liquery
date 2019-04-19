@@ -104,12 +104,12 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-     $(".pricing .card label").on("click",function() {
+     $(".quiz-two .card label").on("click",function() {
           $('.card input:checked').not(this).closest('.card').css("background-color", "white");
           $(this).closest('.card').css("background-color", "green");
       });
   });
 
-$("input:radio").change(function () {$(".btn-success").prop("disabled", false);});
+$(".quiz-two input:radio").change(function () {$(".btn-success").prop("disabled", false);});
 
 </script>

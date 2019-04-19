@@ -1,6 +1,6 @@
 <div class="col-xl-3 col-md-6 mb-4" style="display:flex;justify-content:center;align-items:flex-end;">
   <div class="card border-0 shadow drink-list">
-    <a href="<%= drink_path(drink) %>">
+    <a class="show-drink-modal" data-target="#showModal" data-id="<%= drink.id %>" href="#">
       <img src="<%= drink.image %>" class="card-img-top" alt="<%= drink.name %>">
       <div class="card-body text-center">
         <h5 class="card-title mb-0"><%= drink.name %></h5>

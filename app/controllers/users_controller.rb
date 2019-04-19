@@ -3,6 +3,7 @@ class UsersController < ApplicationController
   before_action :find_user
 
   def show
+    redirect_to drinks_path
   end
 
   def update
@@ -13,12 +14,12 @@ class UsersController < ApplicationController
 
   def liked_drinks
     @drinks = @user.liked_drinks.sort
-    @header = "Drinks You Like"
+    render json: @drinks
   end
 
   def recommended_drinks
     @drinks = @user.recommended_drinks.sort
-    @header = "Drinks We Recommend"
+    render json: @drinks
   end
 
   private

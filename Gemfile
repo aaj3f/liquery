@@ -44,6 +44,7 @@ gem 'jquery-rails'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'dotenv-rails'
+gem 'active_model_serializers'
 require 'open-uri'
 require 'json'
 

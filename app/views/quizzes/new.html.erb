@@ -1,0 +1,243 @@
+<!-- Modal with greeting text -->
+<div id="ac-wrapper" style='display:none'>
+    <div class="col-10 offset-1 col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 mt-5" id="popup">
+        <div class="popup-div text-center text-dark">
+             <div class="my-5"><h2><%= modal_header %></h2></div>
+             <div class="mb-2"><h4><%= modal_text %></h4></div>
+            <div class="container submit-container my-5"><input class="btn btn-lg btn-info shadow" type="submit" name="submit" value="Okurrr??" onClick="PopUp('hide')" /></div>
+        </div>
+    </div>
+</div>
+
+<!-- Main static container -->
+<section class="pricing py-5">
+  <%= form_for @quiz do |f| %>
+
+  <!-- Container for Question One of Quiz -- is hidden on button click -->
+  <section id="quiz-one">
+    <div class="container">
+
+      <div class="row mt-2 mb-5">
+        <div class="col-md-8 offset-md-2">
+          <div class="inner-card-text">
+            <h2 class="text-center text-white">If there are any drinks here you've already tried, let us know what you think of them!</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <%= f.fields_for :quiz_ratings, @quiz_ratings do |rating_fields| %>
+        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6 ml-md-auto mr-md-auto">
+          <div class="card mb-5">
+            <div class="card-body">
+              <div class="inner-card-text">
+                <span><h6 class="text-center"><%= rating_fields.object.drink.name %></h6></span>
+              </div>
+              <hr>
+
+              <div class="row d-flex justify-content-center">
+                  <%= rating_fields.hidden_field :drink_id %>
+                  <%= rating_fields.collection_radio_buttons(:score, [[1, 'thumbs-up'], [-1, 'thumbs-down']], :first, :last) do |b| %>
+                  <%= b.label(class: "btn") { b.radio_button + image_tag(b.text+'.png') } %>
+                  <% end %>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <% end %>
+      </div>
+
+    </div>
+    <div class="container submit-container d-flex justify-content-center">
+      <button type="button" id="quiz-one-button" class="btn btn-lg btn-success shadow">Finished? Let's move to the next question!</button>
+    </div>
+  </section>
+
+  <!-- Container for Question Two of Quiz -- begins hidden; is displayed on first question button click -->
+  <section id="quiz-two" style="display:none;">
+    <div class="container">
+
+      <div class="row mt-2 mb-5">
+        <div class="col-md-10 offset-md-1">
+          <div class="inner-card-text">
+            <h2 class="text-center text-white">It's hard to describe drinks sometimes! But if you had to choose one of these words to articulate the flavor profile you're craving, what would it be?
+              </h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <div class="col-md-4 offset-md-1">
+          <div class="card mb-5">
+            <label for="quiz_flavor_profile_id_1" >
+              <div class="card-body">
+                <div class="inner-card-text">
+                  <input id="quiz_flavor_profile_id_1" type="radio" name="quiz[flavor_profile_id]" value="1">
+                  <h3 class="text-center"><%= @flavor_profiles[0].name %>
+                    </h3>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="col-md-4 offset-md-2">
+          <div class="card mb-5">
+            <label for="quiz_flavor_profile_id_2" >
+              <div class="card-body">
+                <div class="inner-card-text">
+                  <input id="quiz_flavor_profile_id_2" type="radio" name="quiz[flavor_profile_id]" value="2">
+                  <h3 class="text-center"><%= @flavor_profiles[1].name %>
+                    </h3>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+
+        <div class="col-md-4 offset-md-2">
+          <div class="card mb-5">
+            <label for="quiz_flavor_profile_id_3" >
+              <div class="card-body">
+                <div class="inner-card-text">
+                  <input id="quiz_flavor_profile_id_3" type="radio" name="quiz[flavor_profile_id]" value="3">
+                  <h3 class="text-center"><%= @flavor_profiles[2].name %>
+                    </h3>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card mb-5">
+            <label for="quiz_flavor_profile_id_4" >
+              <div class="card-body">
+                <div class="inner-card-text">
+                  <input id="quiz_flavor_profile_id_4" type="radio" name="quiz[flavor_profile_id]" value="4">
+                  <h3 class="text-center"><%= @flavor_profiles[3].name %>
+                    </h3>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+
+        <div class="col-md-4 offset-md-4">
+          <div class="card mb-5">
+            <label for="quiz_flavor_profile_id_5" >
+              <div class="card-body">
+                <div class="inner-card-text">
+                  <input id="quiz_flavor_profile_id_5" type="radio" name="quiz[flavor_profile_id]" value="5">
+                  <h3 class="text-center"><%= @flavor_profiles[4].name %>
+                    </h3>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="container submit-container d-flex justify-content-center">
+        <%= f.submit "Finished? Let's move to the next question!", class: "btn btn-lg btn-success", disabled: "disabled" %>
+      </div>
+
+    </div>
+  </section>
+  <% end %>
+</section>
+
+
+<script type="text/javascript">
+  function PopUp(hideOrshow) {
+    if (hideOrshow == 'hide') document.getElementById('ac-wrapper').style.display = "none";
+    else document.getElementById('ac-wrapper').removeAttribute('style');
+}
+
+  $("#quiz-two input:radio").change(function () {$("input.btn-success").prop("disabled", false);});
+
+  $(document).ready(function () {
+    setTimeout(function () {
+      PopUp('show');
+    }, 1000);
+
+   $("#quiz-one .card").on("click",function() {
+        if($(this).find('input[value=1]').is(':checked')) {
+          $(this).closest('.card').removeClass('highlight-red');
+          $(this).closest('.card').addClass('highlight-green');
+        } else if ($(this).find('input[value=-1]').is(':checked')) {
+          $(this).closest('.card').removeClass('highlight-green');
+          $(this).closest('.card').addClass('highlight-red');
+        }
+    });
+
+    $("#quiz-two .card label").on("click",function() {
+         $('.card input:checked').not(this).closest('.card').css("background-color", "white");
+         $(this).closest('.card').css("background-color", "green");
+     });
+
+    $('#quiz-one-button').on('click', function(e) {
+      e.preventDefault();
+      document.querySelector('section#quiz-one').setAttribute('style', 'display:none')
+      document.querySelector('section#quiz-two').setAttribute('style', 'display:block')
+    })
+
+    $('form').submit(function(e) {
+      e.preventDefault();
+      let values = $(this).serialize();
+      let posting = $.post(this.action, values);
+
+      posting.done(function(data) {
+        let drink = new Drink(data.drink)
+        let template = Handlebars.compile(document.querySelector('#quiz-result-template').innerHTML)
+        let context = {
+          drink_recommendation: drink.nameWithArticle(),
+          image_url: drink.image,
+          drink_name: drink.name,
+          results_message: drink.resultsMessage(),
+          quiz_info: drink.quizInfo,
+          drink_path: "/drinks/" + drink.id
+        }
+        let html = template(context)
+        document.querySelector('section.pricing').innerHTML = html
+      })
+    })
+  });
+
+</script>
+
+<script id="quiz-result-template" type="text/x-handlebars-template">
+  <div class="container">
+
+    <div class="row mb-5">
+      <div class="col-10 offset-1 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2">
+
+        <div class="card text-center">
+          <h3 class="card-header">We recommend {{drink_recommendation}}...</h3>
+          <div class="results-img mt-5 mb-3">
+            <img class="card-img-top" src="{{image_url}}" alt="{{drink_name}}">
+          </div>
+          <div class="card-body px-3">
+            <h2 class="card-text">{{drink_name}}</h2>
+            <p class="card-text">{{results_message}}</p>
+            <p class="card-text">{{quiz_info}}</p>
+            <a href="{{drink_path}}" class="mb-4 btn btn-primary text-white">Want to learn more about it?</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</script>

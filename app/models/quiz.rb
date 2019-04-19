@@ -33,13 +33,14 @@ class Quiz < ApplicationRecord
     disliked_ingredients = self.user.disliked_ingredients
     drinks_to_reject = liked_drinks + disliked_drinks + previously_recommended_drinks
     unrated_drinks = Drink.all.reject {|d| drinks_to_reject.include?(d) }
-    drinks_of_chosen_profile = unrated_drinks.select {|d| d.flavor_profile_ids.include?(self.flavor_profile_id) } 
+    drinks_of_chosen_profile = unrated_drinks.select {|d| d.flavor_profile_ids.include?(self.flavor_profile_id) }
     scored_results = drinks_of_chosen_profile.group_by {|d| (d.ingredients & liked_ingredients).size }
     score = scored_results.keys.max
     self.update(recommendation: scored_results[scored_results.keys.max].sample.id)
     self.user.ratings.where("ratings.drink_id = ?", self.recommendation).first_or_create.update(recommended: true, drink_id: self.recommendation)
     self.user.save
-    [self.drink_recommendation, score]
+    drink = self.drink_recommendation
+    [drink, score, quiz_info(drink, self)]
   end
 
   def recommend_without_ratings
@@ -54,6 +55,13 @@ class Quiz < ApplicationRecord
     self.update(recommendation: scored_results[scored_results.keys.max].sample.id)
     self.user.ratings.where("ratings.drink_id = ?", self.recommendation).first_or_create.update(recommended: true, drink_id: self.recommendation)
     self.user.save
-    [self.drink_recommendation, score]
+    drink = self.drink_recommendation
+    [drink, score, quiz_info(drink, self)]
+  end
+
+  def quiz_info(drink, quiz)
+    ingredient = drink.ingredients.where("ingredients.flavor_profile_id = ?", quiz.flavor_profile_id).pluck(:name).sample.downcase
+    flavor_profile = quiz.flavor_profile.name.downcase
+    "One of the components of #{drink.correct_article} #{drink.name} is #{ingredient}, which lends itself to the #{flavor_profile} palate you're looking for."
   end
 end
