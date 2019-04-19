@@ -68,10 +68,6 @@ function getDrinks(path) {
       })
   }}
 
-  // Uses closures of modularized code above to declare ajax request/response functions for drink collections
-  const getAllDrinks = getDrinks("<%= drinks_path %>.json")
-  const getLikedDrinks = getDrinks("<%= liked_drinks_user_path(current_user) %>")
-  const getRecommendedDrinks = getDrinks("<%= recommended_drinks_user_path(current_user) %>")
 
   // Initiates AJAX request/response for show action & displays modal in DOM
   const showDrinkModalFn = function(event) {

@@ -1,10 +1,10 @@
 <!-- Sub-nav with buttons to filter drinks by all/liked/recommended -->
-<header class="bg-primary text-center py-5">
+<header class="bg-primary text-center">
   <div class="container">
-    <div id="sub-nav-row" class="row justify-content-around">
-      <button id="all-drinks" type="button" class="col-3 btn btn-outline-light btn-lg active" onclick="getAllDrinks(); return false;">All Drinks</button>
-      <button id="liked-drinks" type="button" class="col-3 btn btn-outline-light btn-lg" onclick="getLikedDrinks(); return false;">Drinks You Like</button>
-      <button id="recommended_drinks" type="button" class="col-3 btn btn-outline-light btn-lg" onclick="getRecommendedDrinks(); return false;">Drinks We've Recommended</button>
+    <div id="sub-nav-row" class="row py-4 justify-content-around">
+      <button id="all-drinks" type="button" class="col-sm-3 mb-3 mx-3 btn btn-outline-light btn-lg active" onclick="getAllDrinks(); return false;">All Drinks</button>
+      <button id="liked-drinks" type="button" class="col-sm-3 mb-3 mx-3 btn btn-outline-light btn-lg" onclick="getLikedDrinks(); return false;">Drinks You Like</button>
+      <button id="recommended_drinks" type="button" class="col-sm-3 mb-3 mx-3 btn btn-outline-light btn-lg" onclick="getRecommendedDrinks(); return false;">Drinks We Recommend</button>
     </div>
   </div>
 </header>
@@ -44,7 +44,7 @@
 
 <!-- Handlebars template for each drink in rendered collection -->
 <script id="drink-card-template" type="text/x-handlebars-template">
-  <div class="col-xl-3 col-md-6 mb-4" style="display:flex;justify-content:center;align-items:flex-end;">
+  <div class="col-xl-3 col-md-4 col-sm-4 col-6 mb-4" style="display:flex;justify-content:center;align-items:flex-end;">
     <div class="card border-0 shadow drink-list">
       <a class="show-drink-modal" data-target="#showModal" data-id="{{drink_id}}" href="#">
         <img src="{{drink_image}}" class="card-img-top" alt="{{drink_name}}">
@@ -61,10 +61,15 @@
 
 <!-- JS for drinks#index -->
 <script type="text/javascript">
+  // Uses closures of modularized code above to declare ajax request/response functions for drink collections
+  let getAllDrinks = getDrinks("<%= drinks_path %>.json")
+  let getLikedDrinks = getDrinks("<%= liked_drinks_user_path(current_user) %>")
+  let getRecommendedDrinks = getDrinks("<%= recommended_drinks_user_path(current_user) %>")
 
   // JS to execute on document ready
   $(document).on('turbolinks:load', function() {
     getAllDrinks();
+
     $('.show-drink-modal').on('click', showDrinkModalFn)
 
     $('#sub-nav-row button').on('click', function() {
