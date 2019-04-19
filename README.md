@@ -8,6 +8,7 @@ Liquery is Ruby/Rails web app built to help its users better understand their pr
 2. To practice RESTful conventions within an MVC architectural structure.
 3. To write DRY front- and back-end code by way of design features such as partials, nested resources, & nested forms.
 4. To practice authenticating, validating and authorizing users, to protect their identity & the security of the app.
+5. To practice deploying a Rails/JS app to Heroku.
 
 ## Contact
 
