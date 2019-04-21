@@ -44,10 +44,10 @@ class Quiz < ApplicationRecord
   end
 
   def recommend_without_ratings
-    liked_drinks = Drink.joins(:quizzes).where(quizzes: { id: self.id }).group("drinks.id").having(quiz_ratings: { score: 1 })
-    disliked_drinks = Drink.joins(:quizzes).where(quizzes: { id: self.id }).group("drinks.id").having(quiz_ratings: { score: -1 })
-    liked_ingredients = Ingredient.joins(drinks: :quizzes).where(quizzes: { id: self.id }).group("ingredients.id").having(quiz_ratings: { score: 1 })
-    disliked_ingredients = Ingredient.joins(drinks: :quizzes).where(quizzes: { id: self.id }).group("ingredients.id").having(quiz_ratings: { score: -1 })
+    liked_drinks = Drink.joins(:quizzes).where(quizzes: { id: self.id }).group("drinks.id, quiz_ratings.score").having(quiz_ratings: { score: 1 })
+    disliked_drinks = Drink.joins(:quizzes).where(quizzes: { id: self.id }).group("drinks.id, quiz_ratings.score").having(quiz_ratings: { score: -1 })
+    liked_ingredients = Ingredient.joins(drinks: :quizzes).where(quizzes: { id: self.id }).group("ingredients.id, quiz_ratings.score").having(quiz_ratings: { score: 1 })
+    disliked_ingredients = Ingredient.joins(drinks: :quizzes).where(quizzes: { id: self.id }).group("ingredients.id, quiz_ratings.score").having(quiz_ratings: { score: -1 })
     unrated_drinks = Drink.all.reject {|d| (liked_drinks + disliked_drinks).include?(d) }
     drinks_of_chosen_profile = unrated_drinks.select {|d| d.flavor_profile_ids.include?(self.flavor_profile_id) }
     scored_results = drinks_of_chosen_profile.group_by {|d| (d.ingredients & liked_ingredients).size }

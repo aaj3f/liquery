@@ -14,12 +14,16 @@ class UsersController < ApplicationController
 
   def liked_drinks
     @drinks = @user.liked_drinks.sort
-    render json: @drinks
+    respond_to do |f|
+      f.json { render json: @drinks }
+    end
   end
 
   def recommended_drinks
     @drinks = @user.recommended_drinks.sort
-    render json: @drinks
+    respond_to do |f|
+      f.json { render json: @drinks }
+    end
   end
 
   private

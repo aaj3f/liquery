@@ -63,8 +63,8 @@
 <script type="text/javascript">
   // Uses closures of modularized code above to declare ajax request/response functions for drink collections
   let getAllDrinks = getDrinks("<%= drinks_path %>.json")
-  let getLikedDrinks = getDrinks("<%= liked_drinks_user_path(current_user) %>")
-  let getRecommendedDrinks = getDrinks("<%= recommended_drinks_user_path(current_user) %>")
+  let getLikedDrinks = getDrinks("<%= liked_drinks_user_path(current_user) %>.json")
+  let getRecommendedDrinks = getDrinks("<%= recommended_drinks_user_path(current_user) %>.json")
 
   // JS to execute on document ready
   $(document).on('turbolinks:load', function() {

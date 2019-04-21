@@ -14,7 +14,7 @@ class Drink < ApplicationRecord
   validate :must_have_at_least_one_ingredient
 
   def self.test_drinks
-    where("test_drink = 1")
+    where("test_drink = TRUE")
   end
 
   def self.sort

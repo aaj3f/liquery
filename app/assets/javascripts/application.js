@@ -61,6 +61,7 @@ function getDrinks(path) {
   return function() {
     $.get(path)
       .then(function(resp) {
+        console.log(resp)
         document.querySelector('#drinks-row').innerHTML = ""
         resp.forEach((drink) => drinkTemplateWithContext(drink))
       }).then(function() {
