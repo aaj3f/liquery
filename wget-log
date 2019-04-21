@@ -1,0 +1,11 @@
+--2019-04-21 12:47:43--  https://liquery-heroku.s3.amazonaws.com/testdb.dump?AWSAccessKeyId=AKIAIAAHZ2ZI7VLBUKCQ
+Resolving liquery-heroku.s3.amazonaws.com (liquery-heroku.s3.amazonaws.com)... 52.216.170.243
+Connecting to liquery-heroku.s3.amazonaws.com (liquery-heroku.s3.amazonaws.com)|52.216.170.243|:443... connected.
+HTTP request sent, awaiting response... 307 Temporary Redirect
+Location: https://liquery-heroku.s3.us-east-2.amazonaws.com/testdb.dump?AWSAccessKeyId=AKIAIAAHZ2ZI7VLBUKCQ [following]
+--2019-04-21 12:47:43--  https://liquery-heroku.s3.us-east-2.amazonaws.com/testdb.dump?AWSAccessKeyId=AKIAIAAHZ2ZI7VLBUKCQ
+Resolving liquery-heroku.s3.us-east-2.amazonaws.com (liquery-heroku.s3.us-east-2.amazonaws.com)... 52.219.100.184, 52.219.100.184, 52.219.100.128
+Connecting to liquery-heroku.s3.us-east-2.amazonaws.com (liquery-heroku.s3.us-east-2.amazonaws.com)|52.219.100.184|:443... connected.
+HTTP request sent, awaiting response... 403 Forbidden
+2019-04-21 12:47:43 ERROR 403: Forbidden.
+

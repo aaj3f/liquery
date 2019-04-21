@@ -1,0 +1,2228 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.2
+-- Dumped by pg_dump version 11.2
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ar_internal_metadata (
+    key text NOT NULL,
+    value text,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone
+);
+
+
+--
+-- Name: drinks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drinks (
+    id bigint NOT NULL,
+    name text,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    preparation text,
+    image text,
+    test_drink boolean DEFAULT false
+);
+
+
+--
+-- Name: drinks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.drinks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: drinks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.drinks_id_seq OWNED BY public.drinks.id;
+
+
+--
+-- Name: flavor_profiles; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.flavor_profiles (
+    id bigint NOT NULL,
+    name text,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone
+);
+
+
+--
+-- Name: flavor_profiles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.flavor_profiles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: flavor_profiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.flavor_profiles_id_seq OWNED BY public.flavor_profiles.id;
+
+
+--
+-- Name: ingredients; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ingredients (
+    id bigint NOT NULL,
+    name text,
+    flavor_profile_id bigint,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone
+);
+
+
+--
+-- Name: ingredients_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ingredients_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ingredients_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ingredients_id_seq OWNED BY public.ingredients.id;
+
+
+--
+-- Name: measures; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.measures (
+    id bigint NOT NULL,
+    drink_id bigint,
+    ingredient_id bigint,
+    size double precision,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    measurement_type text
+);
+
+
+--
+-- Name: quiz_ratings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.quiz_ratings (
+    id bigint NOT NULL,
+    drink_id bigint,
+    quiz_id bigint,
+    score bigint,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone
+);
+
+
+--
+-- Name: quiz_ratings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.quiz_ratings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: quiz_ratings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.quiz_ratings_id_seq OWNED BY public.quiz_ratings.id;
+
+
+--
+-- Name: quizzes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.quizzes (
+    id bigint NOT NULL,
+    user_id bigint,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    flavor_profile_id bigint,
+    use_previous_ratings boolean DEFAULT false,
+    recommendation bigint
+);
+
+
+--
+-- Name: quizzes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.quizzes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: quizzes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.quizzes_id_seq OWNED BY public.quizzes.id;
+
+
+--
+-- Name: ratings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ratings (
+    id bigint NOT NULL,
+    user_id bigint,
+    drink_id bigint,
+    score bigint,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    recommended boolean DEFAULT false
+);
+
+
+--
+-- Name: ratings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ratings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ratings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ratings_id_seq OWNED BY public.ratings.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.schema_migrations (
+    version text NOT NULL
+);
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id bigint NOT NULL,
+    email text DEFAULT ''::text,
+    encrypted_password text DEFAULT ''::text,
+    reset_password_token text,
+    reset_password_sent_at timestamp with time zone,
+    remember_created_at timestamp with time zone,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    admin_access boolean DEFAULT false,
+    provider text,
+    uid text,
+    image text
+);
+
+
+--
+-- Name: drinks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drinks ALTER COLUMN id SET DEFAULT nextval('public.drinks_id_seq'::regclass);
+
+
+--
+-- Name: flavor_profiles id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flavor_profiles ALTER COLUMN id SET DEFAULT nextval('public.flavor_profiles_id_seq'::regclass);
+
+
+--
+-- Name: ingredients id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ingredients ALTER COLUMN id SET DEFAULT nextval('public.ingredients_id_seq'::regclass);
+
+
+--
+-- Name: quiz_ratings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.quiz_ratings ALTER COLUMN id SET DEFAULT nextval('public.quiz_ratings_id_seq'::regclass);
+
+
+--
+-- Name: quizzes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.quizzes ALTER COLUMN id SET DEFAULT nextval('public.quizzes_id_seq'::regclass);
+
+
+--
+-- Name: ratings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ratings ALTER COLUMN id SET DEFAULT nextval('public.ratings_id_seq'::regclass);
+
+
+--
+-- Data for Name: ar_internal_metadata; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.ar_internal_metadata (key, value, created_at, updated_at) FROM stdin;
+environment	development	2019-02-21 15:23:24.317954-05	2019-02-21 15:23:24.317954-05
+\.
+
+
+--
+-- Data for Name: drinks; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.drinks (id, name, created_at, updated_at, preparation, image, test_drink) FROM stdin;
+82	Alexander	2019-02-24 00:25:34.472167-05	2019-02-24 00:25:34.472167-05	Shake all ingredients with ice and strain contents into a cocktail glass. Sprinkle nutmeg on top and serve.	https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Alexander_Cocktail.png/220px-Alexander_Cocktail.png	f
+83	Americano	2019-02-24 00:28:41.049369-05	2019-02-24 00:28:41.049369-05	Pour the Campari and vermouth over ice into a highball glass, add a splash of soda water and garnish with half orange slice and a lemon twist.	https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Americano_cocktail_at_Nightwood_Restaurant.jpg/220px-Americano_cocktail_at_Nightwood_Restaurant.jpg	f
+84	Angel Face	2019-02-24 00:32:25.962691-05	2019-02-24 00:32:25.962691-05	Shake all ingredients with ice and strain contents into a cocktail glass.	https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/IBA_Cocktail_Angel_Face_%2828068833805%29.jpg/220px-IBA_Cocktail_Angel_Face_%2828068833805%29.jpg	f
+85	Aviation	2019-02-24 00:33:52.592713-05	2019-02-24 00:33:52.592713-05	Add all ingredients into cocktail shaker filled with ice. Shake well and strain into cocktail glass. Garnish with a cherry.	https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Aviation_Cocktail.jpg/220px-Aviation_Cocktail.jpg	f
+86	Bacardi Signature	2019-02-24 00:36:04.713003-05	2019-02-28 17:23:48.351874-05	Shake together with ice. Strain into glass and serve	https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Bacardi_cocktail.jpg/220px-Bacardi_cocktail.jpg	f
+87	Between the Sheets	2019-02-24 00:37:54.80653-05	2019-02-24 00:37:54.80653-05	Pour all ingredients into shaker with ice cubes, shake, strain into chilled cocktail glass.	https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Between_The_Sheets_Cocktail.jpg/220px-Between_The_Sheets_Cocktail.jpg	f
+88	Casino	2019-02-24 00:39:33.983074-05	2019-02-24 00:39:33.983074-05	Pour all ingredients into shaker with ice cubes. Shake well. Strain into chilled cocktail glass. Garnish with a lemon twist and a maraschino cherry. Serve without a straw.	https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Casino_Cocktail_%289120690108%29.jpg/220px-Casino_Cocktail_%289120690108%29.jpg	f
+89	Clover Club	2019-02-24 00:44:54.135066-05	2019-02-24 00:44:54.135066-05	Dry shake ingredients to emulsify, add ice, shake and served straight up.	https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Cloverclub.jpg/220px-Cloverclub.jpg	f
+90	Daiquiri	2019-02-24 00:47:11.955569-05	2019-02-24 00:47:11.955569-05	Pour all ingredients into shaker with ice cubes. Shake well. Double Strain in chilled cocktail glass.	https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Classic_Daiquiri_in_Cocktail_Glass.jpg/220px-Classic_Daiquiri_in_Cocktail_Glass.jpg	f
+91	Derby	2019-02-24 00:48:23.694924-05	2019-02-24 00:48:23.694924-05	Pour all ingredients into a mixing glass with ice. Stir. Strain into a cocktail glass. Garnish with a sprig of fresh mint in the drink.	https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/IBA_Cocktail_Derby_%2828968231993%29.jpg/220px-IBA_Cocktail_Derby_%2828968231993%29.jpg	f
+92	Dry Martini (Gin)	2019-02-24 00:50:08.061037-05	2019-02-25 16:19:18.316157-05	Straight: Pour all ingredients into mixing glass with ice cubes. Stir well. Strain in chilled martini cocktail glass. Squeeze oil from lemon peel onto the drink, or garnish with olive.	https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/15-09-26-RalfR-WLC-0084.jpg/220px-15-09-26-RalfR-WLC-0084.jpg	t
+93	Gin Fizz	2019-02-24 02:46:49.970602-05	2019-02-24 02:46:49.970602-05	Shake all ingredients with ice cubes, except soda water. Pour into glass. Top with soda water.	https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/15-09-26-RalfR-WLC-0032.jpg/220px-15-09-26-RalfR-WLC-0032.jpg	f
+94	Ramos Fizz	2019-02-24 02:49:54.396054-05	2019-02-24 02:49:54.396054-05	All ingredients except the soda are poured in a mixing glass, dry shaken (no ice) for two minutes, then ice is added and shaken hard for another minute Strained into a highball glass without ice and topped with soda	https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Ramos_Gin_Fizz.jpg/220px-Ramos_Gin_Fizz.jpg	f
+95	John Collins	2019-02-24 02:52:07.725678-05	2019-02-24 02:52:07.725678-05	Pour all ingredients directly into highball glass filled with ice. Stir gently. Garnish. Add a dash of Angostura bitters.	https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/IBA_Cocktail_John_Collins_%2829221732881%29.jpg/220px-IBA_Cocktail_John_Collins_%2829221732881%29.jpg	f
+96	Manhattan	2019-02-24 02:53:50.395243-05	2019-02-25 16:19:18.339162-05	Stirred over ice, strained into a chilled glass, garnished, and served up.	https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Manhattan_Cocktail2.jpg/220px-Manhattan_Cocktail2.jpg	t
+97	Mary Pickford	2019-02-24 02:55:17.518796-05	2019-02-24 02:55:17.518796-05	Shake and strain into a chilled large cocktail glass	https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Mary_Pickford_Cocktail.jpg/220px-Mary_Pickford_Cocktail.jpg	f
+98	Monkey Gland	2019-02-24 03:07:22.534345-05	2019-02-24 03:07:22.534345-05	Shake well over ice cubes in a shaker, strain into a chilled cocktail glass.	https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Monkey_Gland_%2811677703163%29.jpg/220px-Monkey_Gland_%2811677703163%29.jpg	f
+99	Negroni	2019-02-24 03:09:55.417937-05	2019-02-25 16:19:18.349153-05	Stir into glass over ice, garnish and serve.	https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Negroni_served_in_Vancouver_BC.jpg/220px-Negroni_served_in_Vancouver_BC.jpg	t
+100	Old Fashioned	2019-02-24 03:11:18.462001-05	2019-02-25 16:19:18.358397-05	Place sugar cube in old fashioned glass and saturate with bitters, add a dash of plain water.\r\nMuddle until dissolved. \r\nFill the glass with ice cubes and add whiskey. \r\nGarnish with orange twist, and a cocktail cherry.	https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Whiskey_Old_Fashioned1.jpg/220px-Whiskey_Old_Fashioned1.jpg	t
+101	Paradise	2019-02-24 03:12:29.998633-05	2019-02-24 03:12:29.998633-05	Shake together over ice. Strain into cocktail glass and serve chilled.	https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Paradise_cocktail.jpg/220px-Paradise_cocktail.jpg	f
+102	Planter's Punch	2019-02-24 03:14:01.078685-05	2019-02-24 03:14:01.078685-05	Pour all ingredients, except the bitters, into shaker filled with ice. Shake well. Pour into large glass, filled with ice. Add Angostura bitters, "on top". Garnish with cocktail cherry and pineapple.	https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Planters_Punch_2.jpg/220px-Planters_Punch_2.jpg	f
+103	Porto Flip	2019-02-24 03:16:23.54952-05	2019-02-24 03:16:23.54952-05	Shake ingredients together in a mixer with ice. Strain into glass, garnish and serve	https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Porto_Flip.jpg/220px-Porto_Flip.jpg	f
+104	Rusty Nail	2019-02-24 03:19:07.384723-05	2019-02-24 03:19:07.384723-05	Pour all ingredients directly into old-fashioned glass filled with ice. Stir gently. Garnish with a lemon twist. Serve.	https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Rusty_Nail_a_cocktail_by_%40tokenchick13_%2816503594826%29.jpg/220px-Rusty_Nail_a_cocktail_by_%40tokenchick13_%2816503594826%29.jpg	f
+105	Sazerac	2019-02-24 03:20:12.832381-05	2019-02-24 03:20:12.832381-05	Rinse a chilled old-fashioned glass with the absinthe, add crushed ice, and set it aside.\r\nStir the remaining ingredients over ice and set it aside.\r\n\r\nDiscard the ice and any excess absinthe from the prepared glass, and strain the drink into the glass. Add the lemon peel for garnish	https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/SazeracRooseveltNOLA1July2009.JPG/220px-SazeracRooseveltNOLA1July2009.JPG	f
+106	Screwdriver	2019-02-24 03:21:20.387947-05	2019-02-24 03:21:20.387947-05	Mix in a highball glass with ice. Garnish and serve.	https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Screwdriver%2C_Birmingham-Shuttlesworth_International_Airport%2C_Birmingham_AL.jpg/220px-Screwdriver%2C_Birmingham-Shuttlesworth_International_Airport%2C_Birmingham_AL.jpg	f
+107	Sidecar	2019-02-24 03:22:09.912276-05	2019-02-24 03:22:09.912276-05	Pour all ingredients into cocktail shaker filled with ice. Shake well and strain into cocktail glass.	https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Sidecar-cocktail.jpg/220px-Sidecar-cocktail.jpg	f
+108	Stinger	2019-02-24 03:23:32.592848-05	2019-02-24 03:23:32.592848-05	Pour in a mixing glass with ice, stir and strain into a cocktail glass. May also be served on rocks in a rocks glass.	https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Stinger_Cocktail.jpg/220px-Stinger_Cocktail.jpg	f
+109	Tuxedo	2019-02-24 03:25:31.048178-05	2019-02-28 15:29:43.076858-05	Stir all ingredients with ice and strain into a cocktail glass. Garnish with a cherry and a twist of lemon zest.	https://cdn.diffordsguide.com/contrib/stock-images/2017/3/25/2017b028c1ec4c762814be95323c2a8a13c4.jpg	f
+110	Whiskey Sour	2019-02-24 03:28:19.202537-05	2019-02-25 16:19:18.367878-05	Shake with ice. Strain into chilled glass, garnish and serve.	https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Whiskey_Sour.jpg/220px-Whiskey_Sour.jpg	t
+111	White Lady	2019-02-24 03:29:32.372026-05	2019-02-24 03:29:32.372026-05	Add all ingredients into cocktail shaker filled with ice. Shake well and strain into large cocktail glass.	https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/White_Lady_-_Beefeater_gin%2C_Cointreau%2C_fresh_lemon_juice_%2812403540403%29.jpg/220px-White_Lady_-_Beefeater_gin%2C_Cointreau%2C_fresh_lemon_juice_%2812403540403%29.jpg	f
+112	Bellini	2019-02-24 03:31:01.746257-05	2019-02-24 03:31:01.746257-05	Pour peach purée into chilled glass, add sparkling wine. Stir gently.	https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Bellini_Cipriani%2C_Macaroni_Grill%2C_Dunwoody_GA.jpg/220px-Bellini_Cipriani%2C_Macaroni_Grill%2C_Dunwoody_GA.jpg	f
+113	Black Russian	2019-02-24 03:32:23.59552-05	2019-02-24 03:32:23.59552-05	Pour the ingredients into an old fashioned glass filled with ice cubes. Stir gently.	https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Black_Russian.jpg/220px-Black_Russian.jpg	f
+114	Bloody Mary	2019-02-24 03:34:49.894118-05	2019-02-24 03:34:49.894118-05	Stirring gently, pour all ingredients into highball glass. Garnish.	https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Bloody_Mary_Coctail_with_celery_stalk_-_Evan_Swigart.jpg/220px-Bloody_Mary_Coctail_with_celery_stalk_-_Evan_Swigart.jpg	f
+115	Caipirinha	2019-02-24 03:37:29.620701-05	2019-02-24 03:37:29.620701-05	Place lime and sugar into old fashioned glass and muddle (mash the two ingredients together using a muddler or a wooden spoon). Fill the glass with ice and add the Cachaça.	https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/15-09-26-RalfR-WLC-0048.jpg/220px-15-09-26-RalfR-WLC-0048.jpg	f
+116	Champagne Cocktail	2019-02-24 03:39:15.746618-05	2019-02-24 03:39:15.746618-05	Add dash of Angostura bitter onto sugar cube and drop it into champagne flute. Add cognac followed by gently pouring chilled champagne. Garnish with orange slice and maraschino cherry.	https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Champagne_cocktail_-_Portal%2C_Clerkenwell%2C_London_%284356768748%29_%28cropped%29.jpg/220px-Champagne_cocktail_-_Portal%2C_Clerkenwell%2C_London_%284356768748%29_%28cropped%29.jpg	f
+117	Cosmopolitan	2019-02-24 03:41:08.685315-05	2019-02-25 16:19:18.376547-05	Shake all ingredients in cocktail shaker filled with ice. Strain into a large cocktail glass. Garnish with lime slice.	https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Cosmopolitan_%285076906532%29.jpg/220px-Cosmopolitan_%285076906532%29.jpg	t
+118	Cuba Libre	2019-02-24 03:42:18.856762-05	2019-02-24 03:42:18.856762-05	Build all ingredients in a highball glass filled with ice. Garnish with lime wedge.	https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/15-09-26-RalfR-WLC-0056.jpg/225px-15-09-26-RalfR-WLC-0056.jpg	f
+119	French 75	2019-02-24 03:43:28.002512-05	2019-02-24 03:43:28.002512-05	Combine gin, syrup, and lemon juice in a cocktail shaker filled with ice. Shake vigorously and strain into a chilled champagne glass. Top up with Champagne. Stir gently.	https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/French_75.jpg/220px-French_75.jpg	f
+120	French Connection	2019-02-24 03:44:36.512653-05	2019-02-28 15:31:47.492187-05	Pour all ingredients directly into old fashioned glass filled with ice cubes. Stir gently.	https://cdn.diffordsguide.com/contrib/stock-images/2016/8/20/2016821269531569f6a91f941693d46aa895.jpg	f
+121	Godfather	2019-02-24 03:45:23.363661-05	2019-02-24 03:45:23.363661-05	Pour all ingredients directly into old fashioned glass filled with ice cubes. Stir gently.	https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Godfather_cocktail.jpg/220px-Godfather_cocktail.jpg	f
+122	Godmother	2019-02-24 03:46:15.439789-05	2019-02-24 03:46:15.439789-05	Pour all ingredients directly into old fashioned glass filled with ice cubes. Stir gently.	https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Godfather_cocktail.jpg/220px-Godfather_cocktail.jpg	f
+123	Golden Dream	2019-02-24 03:48:05.086646-05	2019-02-24 03:48:05.086646-05	Shake with cracked ice. Strain into glass and serve.	https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Godlen-Dream_Mixed_Drink_Cocktail_%282360538105%29.jpg/220px-Godlen-Dream_Mixed_Drink_Cocktail_%282360538105%29.jpg	f
+124	Grasshopper	2019-02-24 03:49:32.401653-05	2019-02-25 16:19:18.385391-05	Pour ingredients into a cocktail shaker with ice. Shake briskly and then strain into a chilled cocktail glass.	https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Grasshopper_cocktail.jpg/220px-Grasshopper_cocktail.jpg	t
+125	Harvey Wallbanger	2019-02-24 03:50:22.556727-05	2019-02-24 03:50:22.556727-05	Stir the vodka and orange juice with ice in the glass, then float the Galliano on top. Garnish and serve.	https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Harvey_Wallbanger.jpg/220px-Harvey_Wallbanger.jpg	f
+126	Hemingway Special	2019-02-24 03:52:09.098145-05	2019-02-24 03:52:09.098145-05	Pour all ingredients into a shaker with ice. Shake.	https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Hemingway_Daiquiri.jpg/220px-Hemingway_Daiquiri.jpg	f
+127	Horse's Neck	2019-02-24 03:53:49.86179-05	2019-02-24 03:53:49.86179-05	Pour brandy and ginger ale directly into highball glass with ice cubes. Stir gently. Garnish with lemon zest. If desired, add dashes of Angostura Bitter.	https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Horse%27s_Neck_cocktail.jpg/220px-Horse%27s_Neck_cocktail.jpg	f
+128	Irish Coffee	2019-02-24 03:55:35.454716-05	2019-02-25 16:19:18.393543-05	Heat the coffee, whiskey and sugar; do not boil. Pour into glass and top with cream; serve hot.	https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Irish_coffee_glass.jpg/220px-Irish_coffee_glass.jpg	t
+129	Kir	2019-02-24 03:57:11.642034-05	2019-02-24 03:57:11.642034-05	Add the crème de cassis to the bottom of the glass, then top up with wine.	https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Kir_cocktail.jpg/220px-Kir_cocktail.jpg	f
+130	Long Island Iced Tea	2019-02-24 03:58:40.645092-05	2019-02-25 16:19:18.402772-05	Add all ingredients into highball glass filled with ice. Stir gently. Garnish with lemon spiral. Serve with straw	https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Long_Island_Iced_Teas.jpg/220px-Long_Island_Iced_Teas.jpg	t
+131	Mai Tai	2019-02-24 04:00:25.694501-05	2019-02-25 16:19:18.414394-05	Shake all ingredients with ice. Strain into glass. Garnish and serve with straw.	https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Trader_Vic%27s_1944_Mai_Tai.jpg/220px-Trader_Vic%27s_1944_Mai_Tai.jpg	t
+132	Margarita	2019-02-24 04:01:30.823726-05	2019-02-25 16:19:18.429249-05	Pour all ingredients into shaker with ice. Shake well and strain into cocktail glass rimmed with salt.	https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/MargaritaReal.jpg/220px-MargaritaReal.jpg	t
+133	Mimosa	2019-02-24 04:02:31.540801-05	2019-02-25 16:19:18.444249-05	Ensure both ingredients are well chilled, then mix into the glass. Serve cold.	https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Pool-side_Mimosas_at_The_Standard_Hotel.jpg/220px-Pool-side_Mimosas_at_The_Standard_Hotel.jpg	t
+134	Mint Julep	2019-02-24 04:03:44.777947-05	2019-02-24 04:03:44.777947-05	In a highball glass gently muddle the mint, sugar and water. Fill the glass with cracked ice, add Bourbon and stir well until the glass is well frosted. Garnish with a mint sprig.	https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Mint_Julep_im_Silberbecher.jpg/220px-Mint_Julep_im_Silberbecher.jpg	f
+135	Mojito	2019-02-24 04:05:19.226812-05	2019-02-25 16:19:18.457622-05	\tMuddle mint leaves with sugar and lime juice. Add a splash of soda water and fill the glass with cracked ice. Pour the rum and top with soda water. Garnish with sprig of mint leaves and lemon slice. Serve with straw.	https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Mojito98775.jpeg/220px-Mojito98775.jpeg	t
+136	Moscow Mule	2019-02-24 04:07:57.325624-05	2019-02-25 16:19:18.468754-05	Combine vodka and ginger beer in a highball glass filled with ice. Add lime juice. Stir gently. Garnish.	https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Moscow_Mule_at_Rye%2C_San_Francisco.jpg/220px-Moscow_Mule_at_Rye%2C_San_Francisco.jpg	t
+137	Rose	2019-02-24 04:10:47.189416-05	2019-02-24 04:10:47.189416-05	Shake together in a cocktail shaker, then strain into chilled glass. Garnish and serve.	https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Rose_%28cocktail%29.jpg/220px-Rose_%28cocktail%29.jpg	f
+138	Sea Breeze	2019-02-24 04:12:35.634127-05	2019-02-24 04:12:35.634127-05	Build all ingredients in a highball glass filled with ice. Garnish with lime wedge.	https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Cocktail_with_vodka.jpg/220px-Cocktail_with_vodka.jpg	f
+139	Sex on the Beach	2019-02-24 04:13:45.024107-05	2019-02-24 04:13:45.024107-05	Build all ingredients in a highball glass filled with ice. Garnish with orange slice.	https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Sex_On_The_Beach.jpg/220px-Sex_On_The_Beach.jpg	f
+140	Singapore Sling	2019-02-24 04:16:16.399575-05	2019-02-24 04:16:16.399575-05	Pour all ingredients into cocktail shaker filled with ice cubes. Shake well. Strain into highball glass. Garnish with pineapple and cocktail cherry.	https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Singaporesling-march2017.jpg/220px-Singaporesling-march2017.jpg	f
+141	Tequila Sunrise	2019-02-24 04:17:52.560055-05	2019-02-24 04:17:52.560055-05	Pour the tequila and orange juice into glass over ice. Add the grenadine, which will sink to the bottom. Stir gently to create the sunrise effect. Garnish and serve.	https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Tequila_Sunrise_glass.jpg/220px-Tequila_Sunrise_glass.jpg	f
+142	B-52	2019-02-24 04:19:52.272019-05	2019-02-24 04:19:52.272019-05	Layer ingredients into a shot glass. Serve with a stirrer.	https://upload.wikimedia.org/wikipedia/commons/3/3a/Cocktail_B52.jpg	f
+143	Barracuda	2019-02-24 04:22:09.070324-05	2019-02-24 04:22:09.070324-05	Shake pour ingredients with ice. Strain into glass, top with Sparkling wine.	https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Barracuda_Sparkling_Cocktail.png/220px-Barracuda_Sparkling_Cocktail.png	f
+144	Bramble	2019-02-24 04:23:35.357764-05	2019-02-24 04:23:35.357764-05	Fill glass with crushed ice. Build gin, lemon juice and simple syrup over. Stir, and then pour blackberry liqueur over in a circular fashion to create marbling effect. Garnish with two blackberries and lemon slice.	https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Bramble_Cocktail1.jpg/220px-Bramble_Cocktail1.jpg	f
+145	Dark 'n' Stormy	2019-02-24 04:24:49.949447-05	2019-02-24 04:24:49.949447-05	Fill glass with ice, add rum and top with ginger beer. Garnish with lime wedge.	https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/DarknStormy.jpg/220px-DarknStormy.jpg	f
+146	Dirty Martini (Gin)	2019-02-24 04:26:27.435911-05	2019-02-24 04:26:27.435911-05	Straight: Pour all ingredients into mixing glass with ice cubes. Stir well. Strain in chilled martini cocktail glass. Garnish with olive.	https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/15-09-26-RalfR-WLC-0084.jpg/220px-15-09-26-RalfR-WLC-0084.jpg	f
+147	Espresso Martini	2019-02-24 04:27:38.021216-05	2019-02-25 16:19:18.482365-05	Pour ingredients into shaker filled with ice, shake vigorously, and strain into chilled martini glass	https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Bistrot_Bruno_Loubet%2C_Clerkenwell%2C_London_%284574785649%29.jpg/220px-Bistrot_Bruno_Loubet%2C_Clerkenwell%2C_London_%284574785649%29.jpg	t
+148	French Martini	2019-02-24 04:29:18.396991-05	2019-02-24 04:29:18.396991-05	Pour all ingredients into shaker with ice cubes. Shake well and strain into a chilled cocktail glass. Squeeze oil from lemon peel onto the drink.	https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/A_French_martini_%282664064759%29.jpg/220px-A_French_martini_%282664064759%29.jpg	f
+149	Kamikaze	2019-02-24 04:30:30.378693-05	2019-02-24 04:30:30.378693-05	Shake all ingredients together with ice. Strain into glass, garnish and serve.	https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Kamikaze-cocktail.jpg/220px-Kamikaze-cocktail.jpg	f
+150	Lemon Drop	2019-02-24 04:31:11.837471-05	2019-02-25 16:19:18.497926-05	Shake and strain into a chilled cocktail glass rimmed with sugar.	https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Lemon_Drop_cocktails.jpg/220px-Lemon_Drop_cocktails.jpg	t
+151	Pisco Sour	2019-02-24 04:32:14.563498-05	2019-02-24 04:32:14.563498-05	Vigorously shake contents in a cocktail shaker with ice cubes, then strain into a glass and garnish with bitters	https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Pisco_sour_20100613b.JPG/220px-Pisco_sour_20100613b.JPG	f
+152	Russian Spring Punch	2019-02-24 04:33:28.397626-05	2019-02-28 15:32:55.398754-05	Pour the ingredients into an highball glass, top with Sparkling wine	https://cdn.diffordsguide.com/contrib/stock-images/2016/8/07/20166c0d631b6e7da0cbf7d6db6edbfb0f98.jpg	f
+153	Spritz Veneziano	2019-02-24 04:34:30.890691-05	2019-02-24 04:34:30.890691-05	Build into glass over ice, garnish and serve.	https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/20120704_170702_venezia_1584.jpg/220px-20120704_170702_venezia_1584.jpg	f
+154	Tommy's Margarita	2019-02-24 04:35:32.151358-05	2019-02-24 04:35:32.151358-05	Shake and strain into a chilled cocktail glass.	https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/TommysMargarita.jpg/220px-TommysMargarita.jpg	f
+155	Vampiro	2019-02-24 04:36:57.553676-05	2019-02-24 04:36:57.553676-05	Pour ingredients into glass rimmed with salt. Stir.	https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Vampiro_coctail_Orange.jpg/220px-Vampiro_coctail_Orange.jpg	f
+156	Vesper	2019-02-24 04:38:15.12829-05	2019-02-24 04:38:15.12829-05	Shake and strain into a chilled cocktail glass. Add the garnish.	https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Gordon%27s_Vesper.jpeg/220px-Gordon%27s_Vesper.jpeg	f
+157	Yellow Bird	2019-02-24 04:39:09.405573-05	2019-02-28 15:34:08.089027-05	Shake and strain into a chilled cocktail glass	https://cdn.diffordsguide.com/contrib/stock-images/2017/1/17/2017e030a41ae0762d3d60a39a7a90875ea1.jpg	f
+158	Boulevardier	2019-02-27 18:36:43.04015-05	2019-02-27 18:36:43.04015-05	Stir with ice, strain, garnish and serve.	https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Society_Lounge_-_Boulevardier_-_16164913902.jpg/220px-Society_Lounge_-_Boulevardier_-_16164913902.jpg	f
+159	Dirty Martini (Vodka)	2019-03-06 13:48:15.313885-05	2019-03-06 13:48:15.313885-05	Straight: Pour all ingredients into mixing glass with ice cubes. Shake well. Strain in chilled martini cocktail glass. Squeeze oil from lemon peel onto the drink, or garnish with olive.	https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Vodka_Martini%2C_Macaroni_Grill%2C_Dunwoody_GA.jpg/220px-Vodka_Martini%2C_Macaroni_Grill%2C_Dunwoody_GA.jpg	f
+160	New Drink	2019-03-06 19:47:30.248417-05	2019-03-06 19:47:30.248417-05	Prep		f
+\.
+
+
+--
+-- Data for Name: flavor_profiles; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.flavor_profiles (id, name, created_at, updated_at) FROM stdin;
+1	Stiff	2019-02-22 16:33:42.535264-05	2019-02-22 16:33:42.535264-05
+2	Creamy	2019-02-22 16:34:43.785167-05	2019-02-22 16:34:43.785167-05
+3	Bitter	2019-02-22 16:35:36.961382-05	2019-02-22 16:35:36.961382-05
+4	Bright	2019-02-22 16:36:42.04795-05	2019-02-22 16:36:42.04795-05
+5	Sweet	2019-02-22 16:37:10.794733-05	2019-02-22 16:37:10.794733-05
+\.
+
+
+--
+-- Data for Name: ingredients; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.ingredients (id, name, flavor_profile_id, created_at, updated_at) FROM stdin;
+154	Cognac	1	2019-02-24 00:25:34.422555-05	2019-02-24 00:38:37.463484-05
+155	Creme de Cacao	2	2019-02-24 00:25:34.455008-05	2019-02-24 00:26:09.467008-05
+156	Light Cream	2	2019-02-24 00:25:34.462232-05	2019-02-24 00:26:09.473511-05
+157	Campari	3	2019-02-24 00:28:41.015248-05	2019-02-24 00:29:47.574568-05
+158	Sweet Vermouth	\N	2019-02-24 00:28:41.025612-05	2019-02-24 00:28:41.025612-05
+159	Soda Water	\N	2019-02-24 00:28:41.035551-05	2019-02-24 00:28:41.035551-05
+160	Gin	\N	2019-02-24 00:32:25.902784-05	2019-02-24 00:32:25.902784-05
+161	Apricot Brandy	4	2019-02-24 00:32:25.929229-05	2019-02-24 03:13:06.580713-05
+162	Calvados	1	2019-02-24 00:32:25.940836-05	2019-02-24 00:32:37.696391-05
+163	Creme de Violette	\N	2019-02-24 00:33:52.557727-05	2019-02-24 00:33:52.557727-05
+164	Lemon Juice	4	2019-02-24 00:33:52.569212-05	2019-02-24 00:34:45.893349-05
+165	Maraschino Liqueur	5	2019-02-24 00:33:52.577422-05	2019-02-24 00:34:45.903745-05
+166	White Rum	\N	2019-02-24 00:36:04.677877-05	2019-02-24 00:36:04.677877-05
+167	Lime Juice	4	2019-02-24 00:36:04.687583-05	2019-02-24 00:36:38.488702-05
+168	Grenadine	5	2019-02-24 00:36:04.693615-05	2019-02-24 00:36:38.496656-05
+169	Triple Sec	\N	2019-02-24 00:37:54.790692-05	2019-02-24 00:37:54.790692-05
+170	Orange Bitters	\N	2019-02-24 00:39:33.969498-05	2019-02-24 00:39:33.969498-05
+171	Raspberry Syrup	5	2019-02-24 00:44:54.113031-05	2019-02-24 00:46:20.696277-05
+172	Egg White	2	2019-02-24 00:44:54.121894-05	2019-02-24 02:51:17.662399-05
+173	Simple Syrup	5	2019-02-24 00:47:11.942004-05	2019-02-24 00:47:38.83475-05
+174	Peach Bitters	\N	2019-02-24 00:48:23.674482-05	2019-02-24 00:48:23.674482-05
+175	Mint Leaves	4	2019-02-24 00:48:23.682573-05	2019-02-24 00:49:09.874974-05
+176	Dry Vermouth	1	2019-02-24 00:50:08.039759-05	2019-02-24 00:50:29.683555-05
+177	Heavy Cream	2	2019-02-24 02:49:54.375454-05	2019-02-24 02:51:17.707532-05
+178	Vanilla Extract	\N	2019-02-24 02:49:54.381226-05	2019-02-24 02:49:54.381226-05
+179	Rye Whiskey	3	2019-02-24 02:53:50.359884-05	2019-02-27 15:20:51.229445-05
+180	Angostura Bitters	\N	2019-02-24 02:53:50.378721-05	2019-02-24 02:53:50.378721-05
+181	Pineapple Juice	5	2019-02-24 02:55:17.502987-05	2019-02-24 02:55:51.193285-05
+182	Orange Juice	\N	2019-02-24 03:07:22.515027-05	2019-02-24 03:07:22.515027-05
+183	Absinthe	\N	2019-02-24 03:07:22.521943-05	2019-02-24 03:07:22.521943-05
+184	Sugar Cube	\N	2019-02-24 03:11:18.442065-05	2019-02-24 03:11:18.442065-05
+185	Water	\N	2019-02-24 03:11:18.452103-05	2019-02-24 03:11:18.452103-05
+186	Dark Rum	\N	2019-02-24 03:14:01.067546-05	2019-02-24 03:14:01.067546-05
+187	Brandy	1	2019-02-24 03:16:23.499989-05	2019-02-24 03:17:10.101596-05
+188	Port	\N	2019-02-24 03:16:23.521614-05	2019-02-24 03:16:23.521614-05
+189	Egg Yolk	\N	2019-02-24 03:16:23.53176-05	2019-02-24 03:16:23.53176-05
+190	Scotch	1	2019-02-24 03:19:07.361499-05	2019-02-24 03:19:25.880513-05
+191	Drambuie	5	2019-02-24 03:19:07.37072-05	2019-02-24 03:19:25.888635-05
+192	Vodka	\N	2019-02-24 03:21:20.367959-05	2019-02-24 03:21:20.367959-05
+193	Creme de Menthe (White)	5	2019-02-24 03:23:32.582889-05	2019-02-24 03:23:44.1597-05
+194	Bourbon Whiskey	\N	2019-02-24 03:28:19.191686-05	2019-02-24 03:28:19.191686-05
+195	Sparkling Wine	4	2019-02-24 03:31:01.724285-05	2019-02-24 04:02:55.983359-05
+196	Peach Puree	5	2019-02-24 03:31:01.734264-05	2019-02-24 03:31:27.430281-05
+197	Coffee Liqueur	5	2019-02-24 03:32:23.569448-05	2019-02-24 03:33:25.152481-05
+198	Tomato Juice	\N	2019-02-24 03:34:49.858788-05	2019-02-24 03:34:49.858788-05
+199	Worcestershire Sauce	\N	2019-02-24 03:34:49.865835-05	2019-02-24 03:34:49.865835-05
+200	Tabasco	\N	2019-02-24 03:34:49.871226-05	2019-02-24 03:34:49.871226-05
+201	Celery Salt	\N	2019-02-24 03:34:49.876597-05	2019-02-24 03:34:49.876597-05
+202	Pepper	\N	2019-02-24 03:34:49.884296-05	2019-02-24 03:34:49.884296-05
+203	Cachaça	\N	2019-02-24 03:37:29.597468-05	2019-02-24 03:37:29.597468-05
+204	Lime	4	2019-02-24 03:37:29.606585-05	2019-02-24 03:38:10.740579-05
+205	Vodka Citron	4	2019-02-24 03:41:08.656578-05	2019-02-24 03:41:37.465829-05
+206	Cointreau	\N	2019-02-24 03:41:08.666253-05	2019-02-24 03:41:08.666253-05
+207	Cranberry Juice	\N	2019-02-24 03:41:08.674948-05	2019-02-24 03:41:08.674948-05
+208	Cola	5	2019-02-24 03:42:18.841516-05	2019-02-24 03:42:36.010775-05
+209	Amaretto	5	2019-02-24 03:44:36.500547-05	2019-02-24 03:44:49.378057-05
+210	Galliano	4	2019-02-24 03:48:05.073073-05	2019-02-24 03:48:38.300498-05
+211	Creme de Menthe (Green)	5	2019-02-24 03:49:32.387281-05	2019-02-24 03:49:45.920848-05
+212	Grapefruit Juice	4	2019-02-24 03:52:09.084488-05	2019-02-24 03:52:59.758924-05
+213	Ginger Ale	\N	2019-02-24 03:53:49.847521-05	2019-02-24 03:53:49.847521-05
+214	Irish Whiskey	1	2019-02-24 03:55:35.43404-05	2019-02-24 03:56:24.112611-05
+215	Hot Coffee	\N	2019-02-24 03:55:35.440196-05	2019-02-24 03:55:35.440196-05
+216	White Wine	\N	2019-02-24 03:57:11.623801-05	2019-02-24 03:57:11.623801-05
+217	Creme de Cassis	5	2019-02-24 03:57:11.6298-05	2019-02-24 03:57:25.11062-05
+218	Tequila	\N	2019-02-24 03:58:40.628916-05	2019-02-24 03:58:40.628916-05
+219	Orange Curaçao	\N	2019-02-24 04:00:25.661901-05	2019-02-24 04:00:25.661901-05
+220	Orgeat Syrup	5	2019-02-24 04:00:25.677717-05	2019-02-24 04:00:56.31624-05
+221	Ginger Beer	4	2019-02-24 04:07:57.314082-05	2019-02-24 04:08:37.780122-05
+222	Strawberry Syrup	5	2019-02-24 04:10:47.171412-05	2019-02-24 04:11:54.384518-05
+223	Peach Schnapps	5	2019-02-24 04:13:45.004565-05	2019-02-24 04:14:17.321972-05
+224	Bénédictine	\N	2019-02-24 04:16:16.381834-05	2019-02-24 04:16:16.381834-05
+225	Irish Cream	2	2019-02-24 04:19:52.247474-05	2019-02-24 04:20:12.376523-05
+226	Grand Marnier	5	2019-02-24 04:19:52.259757-05	2019-02-24 04:20:12.383217-05
+227	Blackberry Liqueur	5	2019-02-24 04:23:35.34809-05	2019-02-24 04:24:04.012901-05
+228	Olive Juice	\N	2019-02-24 04:26:27.419227-05	2019-02-24 04:26:27.419227-05
+229	Espresso	3	2019-02-24 04:27:38.008317-05	2019-02-27 15:21:40.39215-05
+230	Chambord	4	2019-02-24 04:29:18.368198-05	2019-02-24 04:29:56.769381-05
+231	Pisco	\N	2019-02-24 04:32:14.549613-05	2019-02-24 04:32:14.549613-05
+232	Aperol	3	2019-02-24 04:34:30.849741-05	2019-02-27 15:19:58.971532-05
+233	Agave	5	2019-02-24 04:35:32.137509-05	2019-02-24 04:35:58.632562-05
+234	Honey	5	2019-02-24 04:36:57.54344-05	2019-02-24 04:37:35.940631-05
+235	Lillet Blanc	5	2019-02-24 04:38:15.114431-05	2019-02-24 04:38:32.259077-05
+236	New Ing1	\N	2019-03-06 19:47:29.775897-05	2019-03-06 19:47:29.775897-05
+237	NewIng2	\N	2019-03-06 19:47:29.848617-05	2019-03-06 19:47:29.848617-05
+\.
+
+
+--
+-- Data for Name: measures; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.measures (id, drink_id, ingredient_id, size, created_at, updated_at, measurement_type) FROM stdin;
+1	82	154	3	2019-02-24 00:25:34.47494-05	2019-02-24 00:26:09.462769-05	cl
+2	82	155	3	2019-02-24 00:25:34.477652-05	2019-02-24 00:26:09.471309-05	cl
+3	82	156	3	2019-02-24 00:25:34.479016-05	2019-02-24 00:26:09.475999-05	cl
+4	83	157	3	2019-02-24 00:28:41.051246-05	2019-02-24 00:29:47.579898-05	cl
+5	83	158	3	2019-02-24 00:28:41.052712-05	2019-02-24 00:29:47.584946-05	cl
+6	83	159	1	2019-02-24 00:28:41.053849-05	2019-02-24 00:43:30.140525-05	dash(es)
+7	84	160	3	2019-02-24 00:32:25.965439-05	2019-02-24 00:32:37.687432-05	cl
+8	84	161	3	2019-02-24 00:32:25.968151-05	2019-02-24 00:32:37.692389-05	cl
+9	84	162	3	2019-02-24 00:32:25.969392-05	2019-02-24 00:32:37.701635-05	cl
+10	85	160	1.5	2019-02-24 00:33:52.595154-05	2019-02-24 00:34:45.884269-05	oz
+11	85	163	0.5	2019-02-24 00:33:52.598093-05	2019-02-24 00:34:45.890345-05	oz
+12	85	164	0.5	2019-02-24 00:33:52.600603-05	2019-02-24 00:34:45.900162-05	oz
+13	85	165	0.5	2019-02-24 00:33:52.602045-05	2019-02-24 00:34:45.907569-05	oz
+14	86	166	4.5	2019-02-24 00:36:04.714822-05	2019-02-24 00:36:38.485102-05	cl
+15	86	167	2	2019-02-24 00:36:04.716171-05	2019-02-24 00:36:38.493975-05	cl
+16	86	168	1	2019-02-24 00:36:04.717032-05	2019-02-24 00:36:38.500591-05	cl
+17	87	154	3	2019-02-24 00:37:54.808546-05	2019-02-24 00:38:37.467307-05	cl
+18	87	164	2	2019-02-24 00:37:54.810068-05	2019-02-24 00:38:37.47296-05	cl
+19	87	166	3	2019-02-24 00:37:54.811328-05	2019-02-24 00:38:37.478763-05	cl
+20	87	169	3	2019-02-24 00:37:54.812571-05	2019-02-24 00:38:37.481997-05	cl
+21	88	160	4	2019-02-24 00:39:33.987324-05	2019-02-24 00:40:42.538249-05	cl
+22	88	164	1	2019-02-24 00:39:33.989576-05	2019-02-24 00:40:42.545995-05	cl
+23	88	165	1	2019-02-24 00:39:33.990672-05	2019-02-24 00:40:42.550623-05	cl
+24	88	170	1	2019-02-24 00:39:33.991682-05	2019-02-24 00:43:30.150508-05	dash(es)
+25	89	160	4.5	2019-02-24 00:44:54.137471-05	2019-02-24 00:46:20.68502-05	cl
+26	89	164	1.5	2019-02-24 00:44:54.139286-05	2019-02-24 00:46:20.693717-05	cl
+27	89	171	1.5	2019-02-24 00:44:54.141292-05	2019-02-24 00:46:20.699649-05	cl
+28	89	172	1	2019-02-24 00:44:54.143221-05	2019-02-24 00:46:20.703218-05	(optional)
+29	90	167	2.5	2019-02-24 00:47:11.957315-05	2019-02-24 00:47:38.825102-05	cl
+30	90	166	4.5	2019-02-24 00:47:11.958548-05	2019-02-24 00:47:38.829703-05	cl
+31	90	173	1.5	2019-02-24 00:47:11.959588-05	2019-02-24 00:47:38.839292-05	cl
+32	91	160	6	2019-02-24 00:48:23.696722-05	2019-02-24 00:49:09.867495-05	cl
+33	91	174	2	2019-02-24 00:48:23.699113-05	2019-02-24 00:49:09.871344-05	dash(es)
+34	91	175	2	2019-02-24 00:48:23.700712-05	2019-02-24 00:49:09.879854-05	unit(s)
+35	92	160	6	2019-02-24 00:50:08.063542-05	2019-02-24 00:50:29.677763-05	part(s)
+36	92	176	1	2019-02-24 00:50:08.065063-05	2019-02-24 00:50:29.688736-05	part(s)
+37	93	160	4.5	2019-02-24 02:46:49.977152-05	2019-02-24 02:47:19.553604-05	cl
+38	93	164	3	2019-02-24 02:46:49.984403-05	2019-02-24 02:47:19.561725-05	cl
+39	93	173	1	2019-02-24 02:46:49.986693-05	2019-02-24 02:47:19.568671-05	cl
+40	93	159	8	2019-02-24 02:46:49.989211-05	2019-02-24 02:47:19.572689-05	cl
+41	94	172	1	2019-02-24 02:49:54.402352-05	2019-02-24 02:51:17.668494-05	unit(s)
+42	94	160	4.5	2019-02-24 02:49:54.404315-05	2019-02-24 02:51:17.672521-05	cl
+43	94	164	1.5	2019-02-24 02:49:54.406049-05	2019-02-24 02:51:17.680236-05	cl
+44	94	167	1.5	2019-02-24 02:49:54.407251-05	2019-02-24 02:51:17.6918-05	cl
+45	94	170	3	2019-02-24 02:49:54.408157-05	2019-02-24 02:51:17.695287-05	dash(es)
+46	94	173	3	2019-02-24 02:49:54.409303-05	2019-02-24 02:51:17.700036-05	cl
+47	94	159	1	2019-02-24 02:49:54.410194-05	2019-02-24 02:51:17.703635-05	dash(es)
+48	94	177	6	2019-02-24 02:49:54.410987-05	2019-02-24 02:51:17.7113-05	cl
+49	94	178	2	2019-02-24 02:49:54.411788-05	2019-02-24 02:51:17.714638-05	dash(es)
+50	95	160	3	2019-02-24 02:52:07.729564-05	2019-02-24 02:52:46.079929-05	part(s)
+51	95	164	2	2019-02-24 02:52:07.730985-05	2019-02-24 02:52:46.089914-05	part(s)
+52	95	173	1	2019-02-24 02:52:07.732008-05	2019-02-24 02:52:46.096606-05	part(s)
+53	95	159	4	2019-02-24 02:52:07.732987-05	2019-02-24 02:52:46.103017-05	part(s)
+54	96	158	2	2019-02-24 02:53:50.396912-05	2019-02-24 02:54:16.257492-05	cl
+55	96	179	5	2019-02-24 02:53:50.398176-05	2019-02-24 02:54:16.264212-05	cl
+56	96	180	1	2019-02-24 02:53:50.399019-05	2019-02-24 02:54:16.268011-05	dash(es)
+57	97	168	1	2019-02-24 02:55:17.520622-05	2019-02-24 02:55:51.179342-05	cl
+58	97	165	1	2019-02-24 02:55:17.529248-05	2019-02-24 02:55:51.187598-05	cl
+59	97	166	6	2019-02-24 02:55:17.532076-05	2019-02-24 02:55:51.190759-05	cl
+60	97	181	6	2019-02-24 02:55:17.533998-05	2019-02-24 02:55:51.195974-05	cl
+61	98	160	5	2019-02-24 03:07:22.536638-05	2019-02-24 03:07:56.241638-05	cl
+62	98	168	2	2019-02-24 03:07:22.539118-05	2019-02-24 03:07:56.251657-05	dash(es)
+63	98	182	3	2019-02-24 03:07:22.541171-05	2019-02-24 03:07:56.256353-05	cl
+64	98	183	2	2019-02-24 03:07:22.542672-05	2019-02-24 03:07:56.259623-05	dash(es)
+65	99	157	3	2019-02-24 03:09:55.420454-05	2019-02-24 03:10:09.285671-05	cl
+66	99	160	3	2019-02-24 03:09:55.422324-05	2019-02-24 03:10:09.291292-05	cl
+67	99	158	3	2019-02-24 03:09:55.425213-05	2019-02-24 03:10:09.298737-05	cl
+68	100	180	2	2019-02-24 03:11:18.46401-05	2019-02-24 03:11:46.753135-05	dash(es)
+69	100	179	4.5	2019-02-24 03:11:18.466676-05	2019-02-24 03:11:46.758832-05	cl
+70	100	184	1	2019-02-24 03:11:18.467962-05	2019-02-24 03:11:46.763532-05	unit(s)
+71	100	185	3	2019-02-24 03:11:18.468959-05	2019-02-24 03:11:46.768424-05	dash(es)
+72	101	161	2	2019-02-24 03:12:30.000635-05	2019-02-24 03:13:06.584567-05	cl
+73	101	160	3.5	2019-02-24 03:12:30.001841-05	2019-02-24 03:13:06.588152-05	cl
+74	101	182	1.5	2019-02-24 03:12:30.002733-05	2019-02-24 03:13:06.595526-05	cl
+75	102	180	3	2019-02-24 03:14:01.082203-05	2019-02-24 03:14:44.768833-05	dash(es)
+76	102	168	1	2019-02-24 03:14:01.084057-05	2019-02-24 03:14:44.77567-05	cl
+77	102	164	2	2019-02-24 03:14:01.086476-05	2019-02-24 03:14:44.781981-05	cl
+78	102	182	3.5	2019-02-24 03:14:01.087883-05	2019-02-24 03:14:44.786905-05	cl
+79	102	181	3.5	2019-02-24 03:14:01.089275-05	2019-02-24 03:14:44.793919-05	cl
+80	102	173	1	2019-02-24 03:14:01.091143-05	2019-02-24 03:14:44.798649-05	cl
+81	102	186	4.5	2019-02-24 03:14:01.092707-05	2019-02-24 03:14:44.802386-05	cl
+82	103	187	1.5	2019-02-24 03:16:23.553134-05	2019-02-24 03:17:10.106522-05	cl
+83	103	188	4.5	2019-02-24 03:16:23.555822-05	2019-02-24 03:17:10.110714-05	cl
+84	103	189	1	2019-02-24 03:16:23.558305-05	2019-02-24 03:17:10.114614-05	cl
+85	104	190	4.5	2019-02-24 03:19:07.387985-05	2019-02-24 03:19:25.886257-05	cl
+86	104	191	2.5	2019-02-24 03:19:07.389563-05	2019-02-24 03:19:25.89137-05	cl
+87	105	183	1	2019-02-24 03:20:12.835547-05	2019-02-24 03:20:39.549487-05	cl
+88	105	180	2	2019-02-24 03:20:12.838943-05	2019-02-24 03:20:39.554623-05	dash(es)
+89	105	154	5	2019-02-24 03:20:12.840916-05	2019-02-24 03:20:39.561489-05	cl
+90	105	184	1	2019-02-24 03:20:12.841978-05	2019-02-24 03:20:39.566487-05	unit(s)
+91	106	182	2	2019-02-24 03:21:20.390078-05	2019-02-24 03:21:35.159684-05	part(s)
+92	106	192	1	2019-02-24 03:21:20.392059-05	2019-02-24 03:21:35.165188-05	part(s)
+93	107	154	5	2019-02-24 03:22:09.915587-05	2019-02-24 03:22:27.540355-05	cl
+94	107	164	2	2019-02-24 03:22:09.916942-05	2019-02-24 03:22:27.547567-05	cl
+95	107	169	2	2019-02-24 03:22:09.917937-05	2019-02-24 03:22:27.552589-05	cl
+96	108	154	5	2019-02-24 03:23:32.59489-05	2019-02-24 03:23:44.156381-05	cl
+97	108	193	2	2019-02-24 03:23:32.597956-05	2019-02-24 03:23:44.163099-05	cl
+98	109	183	1	2019-02-24 03:25:31.050271-05	2019-02-24 03:26:11.990074-05	dash(es)
+99	109	176	3	2019-02-24 03:25:31.051663-05	2019-02-24 03:26:12.002444-05	cl
+100	109	160	3	2019-02-24 03:25:31.052904-05	2019-02-24 03:26:12.00653-05	cl
+101	109	165	2	2019-02-24 03:25:31.054358-05	2019-02-24 03:26:12.013241-05	dash(es)
+102	109	170	3	2019-02-24 03:25:31.05552-05	2019-02-24 03:26:12.018509-05	dash(es)
+103	110	172	1	2019-02-24 03:28:19.204763-05	2019-02-24 03:28:50.955554-05	(optional)
+104	110	164	3	2019-02-24 03:28:19.206509-05	2019-02-24 03:28:50.963264-05	cl
+105	110	173	1.5	2019-02-24 03:28:19.207746-05	2019-02-24 03:28:50.971661-05	cl
+106	110	194	4.5	2019-02-24 03:28:19.209463-05	2019-02-24 03:28:50.975968-05	cl
+107	111	160	4	2019-02-24 03:29:32.374759-05	2019-02-24 03:29:54.404799-05	cl
+108	111	164	2	2019-02-24 03:29:32.376956-05	2019-02-24 03:29:54.409462-05	cl
+109	111	169	3	2019-02-24 03:29:32.377991-05	2019-02-24 03:29:54.413161-05	cl
+110	112	195	2	2019-02-24 03:31:01.74881-05	2019-02-24 03:31:27.425678-05	part(s)
+111	112	196	1	2019-02-24 03:31:01.750308-05	2019-02-24 03:31:27.4333-05	part(s)
+112	113	192	5	2019-02-24 03:32:23.59753-05	2019-02-24 03:33:25.147126-05	cl
+113	113	197	2	2019-02-24 03:32:23.599948-05	2019-02-24 03:33:25.157816-05	cl
+114	114	164	1	2019-02-24 03:34:49.896981-05	2019-02-24 03:35:55.687223-05	part(s)
+115	114	192	3	2019-02-24 03:34:49.898739-05	2019-02-24 03:35:55.693202-05	part(s)
+116	114	198	9	2019-02-24 03:34:49.899778-05	2019-02-24 03:35:55.69655-05	part(s)
+117	114	199	3	2019-02-24 03:34:49.900819-05	2019-02-24 03:35:55.701054-05	dash(es)
+118	114	200	\N	2019-02-24 03:34:49.90167-05	2019-02-24 03:35:55.70834-05	(optional)
+119	114	201	\N	2019-02-24 03:34:49.902691-05	2019-02-24 03:35:55.712664-05	(optional)
+120	114	202	\N	2019-02-24 03:34:49.903614-05	2019-02-24 03:35:55.717063-05	(optional)
+121	115	173	2	2019-02-24 03:37:29.623683-05	2019-02-24 03:38:10.7302-05	cl
+122	115	203	5	2019-02-24 03:37:29.625143-05	2019-02-24 03:38:10.73698-05	cl
+123	115	204	0.5	2019-02-24 03:37:29.628644-05	2019-02-24 03:38:10.744527-05	unit(s)
+124	116	180	2	2019-02-24 03:39:15.74815-05	2019-02-24 03:40:11.696341-05	dash(es)
+125	116	154	1	2019-02-24 03:39:15.749628-05	2019-02-24 03:40:11.703552-05	cl
+126	116	195	9	2019-02-24 03:39:15.750642-05	2019-02-24 03:40:11.708822-05	cl
+127	116	184	1	2019-02-24 03:39:15.751614-05	2019-02-24 03:40:11.714109-05	unit(s)
+128	117	167	1.5	2019-02-24 03:41:08.689077-05	2019-02-24 03:41:37.462772-05	cl
+129	117	205	4	2019-02-24 03:41:08.690773-05	2019-02-24 03:41:37.469079-05	cl
+130	117	206	1.5	2019-02-24 03:41:08.692165-05	2019-02-24 03:41:37.475944-05	cl
+131	117	207	3	2019-02-24 03:41:08.69302-05	2019-02-24 03:41:37.479891-05	cl
+132	118	167	1	2019-02-24 03:42:18.858587-05	2019-02-24 03:42:36.003906-05	cl
+133	118	166	5	2019-02-24 03:42:18.859843-05	2019-02-24 03:42:36.008484-05	cl
+134	118	208	12	2019-02-24 03:42:18.86087-05	2019-02-24 03:42:36.014658-05	cl
+135	119	160	3	2019-02-24 03:43:28.008085-05	2019-02-24 03:43:50.002837-05	cl
+136	119	164	1.5	2019-02-24 03:43:28.010456-05	2019-02-24 03:43:50.012844-05	cl
+137	119	173	2	2019-02-24 03:43:28.012008-05	2019-02-24 03:43:50.019461-05	dash(es)
+138	119	195	6	2019-02-24 03:43:28.013042-05	2019-02-24 03:43:50.024617-05	cl
+139	120	154	3.5	2019-02-24 03:44:36.519111-05	2019-02-24 03:44:49.374251-05	cl
+140	120	209	3.5	2019-02-24 03:44:36.52235-05	2019-02-24 03:44:49.385032-05	cl
+141	121	209	3.5	2019-02-24 03:45:23.365564-05	2019-02-24 03:45:36.256971-05	cl
+142	121	190	3.5	2019-02-24 03:45:23.367259-05	2019-02-24 03:45:36.261836-05	cl
+143	122	209	3.5	2019-02-24 03:46:15.443504-05	2019-02-24 03:46:27.15153-05	cl
+144	122	192	3.5	2019-02-24 03:46:15.4454-05	2019-02-24 03:46:27.157613-05	cl
+145	123	177	1	2019-02-24 03:48:05.088776-05	2019-02-24 03:48:38.286503-05	part(s)
+146	123	182	2	2019-02-24 03:48:05.089997-05	2019-02-24 03:48:38.292828-05	part(s)
+147	123	169	2	2019-02-24 03:48:05.090843-05	2019-02-24 03:48:38.297848-05	part(s)
+148	123	210	2	2019-02-24 03:48:05.091676-05	2019-02-24 03:48:38.305804-05	part(s)
+149	124	155	3	2019-02-24 03:49:32.403293-05	2019-02-24 03:49:45.913323-05	cl
+150	124	177	3	2019-02-24 03:49:32.404583-05	2019-02-24 03:49:45.918196-05	cl
+151	124	211	3	2019-02-24 03:49:32.405453-05	2019-02-24 03:49:45.924717-05	cl
+152	125	210	1	2019-02-24 03:50:22.558359-05	2019-02-24 03:50:59.564663-05	part(s)
+153	125	182	6	2019-02-24 03:50:22.559752-05	2019-02-24 03:50:59.570447-05	part(s)
+154	125	192	3	2019-02-24 03:50:22.561368-05	2019-02-24 03:50:59.575211-05	part(s)
+155	126	167	1.5	2019-02-24 03:52:09.099987-05	2019-02-24 03:52:59.741242-05	cl
+156	126	165	1.5	2019-02-24 03:52:09.101415-05	2019-02-24 03:52:59.751292-05	cl
+157	126	166	6	2019-02-24 03:52:09.102335-05	2019-02-24 03:52:59.756792-05	cl
+158	126	212	4	2019-02-24 03:52:09.103302-05	2019-02-24 03:52:59.76169-05	cl
+159	127	180	1	2019-02-24 03:53:49.864303-05	2019-02-24 03:54:28.360302-05	dash(es)
+160	127	187	1	2019-02-24 03:53:49.866725-05	2019-02-24 03:54:28.365413-05	part(s)
+161	127	213	3	2019-02-24 03:53:49.869575-05	2019-02-24 03:54:28.368592-05	part(s)
+162	128	177	3	2019-02-24 03:55:35.456274-05	2019-02-24 03:56:24.103649-05	cl
+163	128	173	1	2019-02-24 03:55:35.457587-05	2019-02-24 03:56:24.10898-05	dash(es)
+164	128	214	4	2019-02-24 03:55:35.458557-05	2019-02-24 03:56:24.117513-05	cl
+165	128	215	8	2019-02-24 03:55:35.469622-05	2019-02-24 03:56:24.121299-05	cl
+166	129	216	9	2019-02-24 03:57:11.644265-05	2019-02-24 03:57:25.104473-05	part(s)
+167	129	217	1	2019-02-24 03:57:11.645689-05	2019-02-24 03:57:25.114692-05	part(s)
+168	130	208	1	2019-02-24 03:58:40.648719-05	2019-02-24 03:59:24.211474-05	dash(es)
+169	130	160	1.5	2019-02-24 03:58:40.651201-05	2019-02-24 03:59:24.216205-05	cl
+170	130	164	2.5	2019-02-24 03:58:40.653524-05	2019-02-24 03:59:24.223513-05	cl
+171	130	173	3	2019-02-24 03:58:40.654808-05	2019-02-24 03:59:24.228637-05	cl
+172	130	169	1.5	2019-02-24 03:58:40.656215-05	2019-02-24 03:59:24.232307-05	cl
+173	130	192	1.5	2019-02-24 03:58:40.65798-05	2019-02-24 03:59:24.237443-05	cl
+174	130	166	1.5	2019-02-24 03:58:40.659388-05	2019-02-24 03:59:24.24283-05	cl
+175	130	218	1.5	2019-02-24 03:58:40.660537-05	2019-02-24 03:59:24.247762-05	cl
+176	131	186	2	2019-02-24 04:00:25.700153-05	2019-02-24 04:00:56.291923-05	cl
+177	131	167	1	2019-02-24 04:00:25.702824-05	2019-02-24 04:00:56.297868-05	cl
+178	131	166	4	2019-02-24 04:00:25.704686-05	2019-02-24 04:00:56.303112-05	cl
+179	131	219	1.5	2019-02-24 04:00:25.706447-05	2019-02-24 04:00:56.30945-05	cl
+180	131	220	1.5	2019-02-24 04:00:25.707837-05	2019-02-24 04:00:56.322364-05	cl
+181	132	206	2	2019-02-24 04:01:30.825654-05	2019-02-24 04:01:57.878757-05	cl
+182	132	167	1.5	2019-02-24 04:01:30.826952-05	2019-02-24 04:01:57.884296-05	cl
+183	132	218	3.5	2019-02-24 04:01:30.827781-05	2019-02-24 04:01:57.887782-05	cl
+184	133	182	1	2019-02-24 04:02:31.543285-05	2019-02-24 04:02:55.979519-05	part(s)
+185	133	195	1	2019-02-24 04:02:31.545952-05	2019-02-24 04:02:55.98602-05	part(s)
+186	134	194	6	2019-02-24 04:03:44.779841-05	2019-02-24 04:04:24.818667-05	cl
+187	134	175	4	2019-02-24 04:03:44.781159-05	2019-02-24 04:04:24.827437-05	unit(s)
+188	134	173	1	2019-02-24 04:03:44.782176-05	2019-02-24 04:04:24.833652-05	dash(es)
+189	134	185	2	2019-02-24 04:03:44.784312-05	2019-02-24 04:04:24.837318-05	dash(es)
+190	135	167	3	2019-02-24 04:05:19.2307-05	2019-02-24 04:07:08.161429-05	cl
+191	135	175	6	2019-02-24 04:05:19.232832-05	2019-02-24 04:07:08.16966-05	unit(s)
+192	135	173	2	2019-02-24 04:05:19.234754-05	2019-02-24 04:07:08.177665-05	cl
+193	135	159	3	2019-02-24 04:05:19.236076-05	2019-02-24 04:07:08.183289-05	cl
+194	135	166	4	2019-02-24 04:05:19.237264-05	2019-02-24 04:07:08.18724-05	cl
+195	136	167	0.5	2019-02-24 04:07:57.32991-05	2019-02-24 04:08:37.773374-05	cl
+196	136	192	94.5	2019-02-24 04:07:57.332686-05	2019-02-24 04:08:37.777612-05	cl
+197	136	221	12	2019-02-24 04:07:57.33398-05	2019-02-24 04:08:37.784971-05	cl
+198	137	187	1	2019-02-24 04:10:47.191395-05	2019-02-24 04:11:54.37315-05	part(s)
+199	137	176	2	2019-02-24 04:10:47.193406-05	2019-02-24 04:11:54.379723-05	part(s)
+200	137	222	3	2019-02-24 04:10:47.196295-05	2019-02-24 04:11:54.388939-05	dash(es)
+201	138	207	12	2019-02-24 04:12:35.638544-05	2019-02-24 04:12:58.701549-05	cl
+202	138	212	3	2019-02-24 04:12:35.640377-05	2019-02-24 04:12:58.709933-05	cl
+203	138	192	4	2019-02-24 04:12:35.642349-05	2019-02-24 04:12:58.716452-05	cl
+204	139	207	4	2019-02-24 04:13:45.026168-05	2019-02-24 04:14:17.307136-05	cl
+205	139	182	4	2019-02-24 04:13:45.030852-05	2019-02-24 04:14:17.312386-05	cl
+206	139	192	4	2019-02-24 04:13:45.032869-05	2019-02-24 04:14:17.318486-05	cl
+207	139	223	2	2019-02-24 04:13:45.034281-05	2019-02-24 04:14:17.325622-05	cl
+208	140	180	1	2019-02-24 04:16:16.401514-05	2019-02-24 04:17:12.197099-05	dash(es)
+209	140	187	1.5	2019-02-24 04:16:16.403518-05	2019-02-24 04:17:12.205678-05	cl
+210	140	206	0.75	2019-02-24 04:16:16.404765-05	2019-02-24 04:17:12.219852-05	cl
+211	140	160	3	2019-02-24 04:16:16.405845-05	2019-02-24 04:17:12.223643-05	cl
+212	140	168	1	2019-02-24 04:16:16.407478-05	2019-02-24 04:17:12.228689-05	cl
+213	140	167	1.5	2019-02-24 04:16:16.408921-05	2019-02-24 04:17:12.233909-05	cl
+214	140	181	12	2019-02-24 04:16:16.412082-05	2019-02-24 04:17:12.239984-05	cl
+215	140	224	0.75	2019-02-24 04:16:16.413752-05	2019-02-24 04:17:12.244039-05	cl
+216	141	168	1	2019-02-24 04:17:52.562613-05	2019-02-24 04:18:19.049246-05	part(s)
+217	141	182	6	2019-02-24 04:17:52.563993-05	2019-02-24 04:18:19.055016-05	part(s)
+218	141	218	3	2019-02-24 04:17:52.565052-05	2019-02-24 04:18:19.061207-05	part(s)
+219	142	197	2	2019-02-24 04:19:52.275171-05	2019-02-24 04:20:12.373414-05	cl
+220	142	225	2	2019-02-24 04:19:52.27662-05	2019-02-24 04:20:12.379788-05	cl
+221	142	226	2	2019-02-24 04:19:52.278315-05	2019-02-24 04:20:12.387-05	cl
+222	143	210	1.5	2019-02-24 04:22:09.073754-05	2019-02-24 04:22:38.184381-05	cl
+223	143	167	1	2019-02-24 04:22:09.075358-05	2019-02-24 04:22:38.193193-05	dash(es)
+224	143	181	6	2019-02-24 04:22:09.076621-05	2019-02-24 04:22:38.198729-05	cl
+225	143	195	1	2019-02-24 04:22:09.077845-05	2019-02-24 04:22:38.205257-05	dash(es)
+226	143	166	4.5	2019-02-24 04:22:09.078983-05	2019-02-24 04:22:38.208941-05	cl
+227	144	160	4	2019-02-24 04:23:35.36233-05	2019-02-24 04:24:03.995325-05	cl
+228	144	164	1.5	2019-02-24 04:23:35.364679-05	2019-02-24 04:24:04.002154-05	cl
+229	144	173	1	2019-02-24 04:23:35.366145-05	2019-02-24 04:24:04.008481-05	cl
+230	144	227	1.5	2019-02-24 04:23:35.367197-05	2019-02-24 04:24:04.016414-05	cl
+231	145	186	6	2019-02-24 04:24:49.955116-05	2019-02-24 04:24:59.157131-05	cl
+232	145	221	10	2019-02-24 04:24:49.956764-05	2019-02-24 04:24:59.16232-05	cl
+233	146	176	1	2019-02-24 04:26:27.437679-05	2019-02-24 04:26:50.607111-05	cl
+234	146	160	6	2019-02-24 04:26:27.438946-05	2019-02-24 04:26:50.622702-05	cl
+235	146	228	1.5	2019-02-24 04:26:27.440469-05	2019-02-24 04:26:50.627138-05	cl
+236	147	197	1	2019-02-24 04:27:38.022876-05	2019-02-24 04:28:02.206112-05	cl
+237	147	173	1	2019-02-24 04:27:38.024241-05	2019-02-24 04:28:02.2108-05	cl
+238	147	192	5	2019-02-24 04:27:38.025389-05	2019-02-24 04:28:02.215298-05	cl
+239	147	229	1	2019-02-24 04:27:38.026551-05	2019-02-24 04:28:02.2216-05	unit(s)
+240	148	181	5.5	2019-02-24 04:29:18.399821-05	2019-02-24 04:29:56.759535-05	cl
+241	148	192	5	2019-02-24 04:29:18.401713-05	2019-02-24 04:29:56.765703-05	cl
+242	148	230	2.5	2019-02-24 04:29:18.40323-05	2019-02-24 04:29:56.772888-05	cl
+243	149	167	3	2019-02-24 04:30:30.380569-05	2019-02-24 04:30:37.065589-05	cl
+244	149	169	3	2019-02-24 04:30:30.382797-05	2019-02-24 04:30:37.071213-05	cl
+245	149	192	3	2019-02-24 04:30:30.385796-05	2019-02-24 04:30:37.074909-05	cl
+246	150	164	1.5	2019-02-24 04:31:11.842077-05	2019-02-24 04:31:31.41228-05	cl
+247	150	169	2	2019-02-24 04:31:11.843659-05	2019-02-24 04:31:31.416924-05	cl
+248	150	205	2.5	2019-02-24 04:31:11.844702-05	2019-02-24 04:31:31.421313-05	cl
+249	151	172	1	2019-02-24 04:32:14.56677-05	2019-02-24 04:32:34.6725-05	unit(s)
+250	151	167	3	2019-02-24 04:32:14.568029-05	2019-02-24 04:32:34.677769-05	cl
+251	151	173	2	2019-02-24 04:32:14.568875-05	2019-02-24 04:32:34.684902-05	cl
+252	151	231	4.5	2019-02-24 04:32:14.569679-05	2019-02-24 04:32:34.688698-05	cl
+253	152	217	1.5	2019-02-24 04:33:28.400793-05	2019-02-24 04:33:44.766031-05	cl
+254	152	164	2.5	2019-02-24 04:33:28.402374-05	2019-02-24 04:33:44.775208-05	cl
+255	152	173	1	2019-02-24 04:33:28.403402-05	2019-02-24 04:33:44.780351-05	cl
+256	152	192	2.5	2019-02-24 04:33:28.404343-05	2019-02-24 04:33:44.785335-05	cl
+257	153	159	1	2019-02-24 04:34:30.894114-05	2019-02-24 04:34:45.804306-05	dash(es)
+258	153	195	6	2019-02-24 04:34:30.896142-05	2019-02-24 04:34:45.811367-05	cl
+259	153	232	4	2019-02-24 04:34:30.897327-05	2019-02-24 04:34:45.81653-05	cl
+260	154	167	1.5	2019-02-24 04:35:32.153963-05	2019-02-24 04:35:58.624683-05	cl
+261	154	218	4.5	2019-02-24 04:35:32.155941-05	2019-02-24 04:35:58.62924-05	cl
+262	154	233	2	2019-02-24 04:35:32.157525-05	2019-02-24 04:35:58.638642-05	dash(es)
+263	155	167	1	2019-02-24 04:36:57.558494-05	2019-02-24 04:37:35.921266-05	cl
+264	155	182	3	2019-02-24 04:36:57.560228-05	2019-02-24 04:37:35.925899-05	cl
+265	155	218	5	2019-02-24 04:36:57.561289-05	2019-02-24 04:37:35.930749-05	cl
+266	155	198	7	2019-02-24 04:36:57.562434-05	2019-02-24 04:37:35.935389-05	cl
+267	155	199	3	2019-02-24 04:36:57.563911-05	2019-02-24 04:37:35.938349-05	dash(es)
+268	155	234	2	2019-02-24 04:36:57.565125-05	2019-02-24 04:37:35.944282-05	dash(es)
+269	156	160	6	2019-02-24 04:38:15.130609-05	2019-02-24 04:38:32.251422-05	cl
+270	156	192	1.5	2019-02-24 04:38:15.132005-05	2019-02-24 04:38:32.255539-05	cl
+271	156	235	0.75	2019-02-24 04:38:15.133288-05	2019-02-24 04:38:32.263635-05	cl
+272	157	210	1.5	2019-02-24 04:39:09.40864-05	2019-02-24 04:39:31.240361-05	cl
+273	157	167	1.5	2019-02-24 04:39:09.410916-05	2019-02-24 04:39:31.247067-05	cl
+274	157	169	1.5	2019-02-24 04:39:09.413103-05	2019-02-24 04:39:31.252655-05	cl
+275	157	166	3	2019-02-24 04:39:09.415301-05	2019-02-24 04:39:31.255917-05	cl
+276	158	194	1	2019-02-27 18:36:43.054989-05	2019-02-27 18:38:13.361702-05	part(s)
+277	158	157	1	2019-02-27 18:36:43.073464-05	2019-02-27 18:38:13.415953-05	part(s)
+278	158	158	1	2019-02-27 18:36:43.082144-05	2019-02-27 18:38:13.462905-05	part(s)
+279	159	176	1	2019-03-06 13:48:15.325263-05	2019-03-06 14:05:44.284074-05	part(s)
+280	159	192	6	2019-03-06 13:48:15.329314-05	2019-03-06 14:05:44.290715-05	part(s)
+281	159	228	1	2019-03-06 13:48:15.332076-05	2019-03-06 14:05:44.293692-05	dash(es)
+282	160	236	\N	2019-03-06 19:47:30.273867-05	2019-03-06 19:47:30.273867-05	\N
+283	160	237	\N	2019-03-06 19:47:30.401466-05	2019-03-06 19:47:30.401466-05	\N
+\.
+
+
+--
+-- Data for Name: quiz_ratings; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.quiz_ratings (id, drink_id, quiz_id, score, created_at, updated_at) FROM stdin;
+1	92	1	\N	2019-02-26 16:02:13.553374-05	2019-02-26 16:02:13.553374-05
+2	96	1	\N	2019-02-26 16:02:13.566754-05	2019-02-26 16:02:13.566754-05
+3	99	1	\N	2019-02-26 16:02:13.577316-05	2019-02-26 16:02:13.577316-05
+4	100	1	\N	2019-02-26 16:02:13.586454-05	2019-02-26 16:02:13.586454-05
+5	110	1	\N	2019-02-26 16:02:13.594536-05	2019-02-26 16:02:13.594536-05
+6	117	1	\N	2019-02-26 16:02:13.607539-05	2019-02-26 16:02:13.607539-05
+7	124	1	\N	2019-02-26 16:02:13.632795-05	2019-02-26 16:02:13.632795-05
+8	128	1	\N	2019-02-26 16:02:13.647909-05	2019-02-26 16:02:13.647909-05
+9	130	1	\N	2019-02-26 16:02:13.659963-05	2019-02-26 16:02:13.659963-05
+10	131	1	\N	2019-02-26 16:02:13.673995-05	2019-02-26 16:02:13.673995-05
+11	132	1	\N	2019-02-26 16:02:13.693439-05	2019-02-26 16:02:13.693439-05
+12	133	1	\N	2019-02-26 16:02:13.709185-05	2019-02-26 16:02:13.709185-05
+13	135	1	\N	2019-02-26 16:02:13.763258-05	2019-02-26 16:02:13.763258-05
+14	136	1	\N	2019-02-26 16:02:13.781211-05	2019-02-26 16:02:13.781211-05
+15	147	1	\N	2019-02-26 16:02:13.791838-05	2019-02-26 16:02:13.791838-05
+16	150	1	\N	2019-02-26 16:02:13.799998-05	2019-02-26 16:02:13.799998-05
+17	92	2	\N	2019-02-26 16:03:14.85454-05	2019-02-26 16:03:14.85454-05
+18	96	2	\N	2019-02-26 16:03:14.862869-05	2019-02-26 16:03:14.862869-05
+19	99	2	\N	2019-02-26 16:03:14.874418-05	2019-02-26 16:03:14.874418-05
+20	100	2	\N	2019-02-26 16:03:14.885146-05	2019-02-26 16:03:14.885146-05
+21	110	2	\N	2019-02-26 16:03:14.895423-05	2019-02-26 16:03:14.895423-05
+22	117	2	\N	2019-02-26 16:03:14.906215-05	2019-02-26 16:03:14.906215-05
+23	124	2	\N	2019-02-26 16:03:14.915668-05	2019-02-26 16:03:14.915668-05
+24	128	2	\N	2019-02-26 16:03:14.924721-05	2019-02-26 16:03:14.924721-05
+25	130	2	\N	2019-02-26 16:03:14.933813-05	2019-02-26 16:03:14.933813-05
+26	131	2	\N	2019-02-26 16:03:14.941914-05	2019-02-26 16:03:14.941914-05
+27	132	2	\N	2019-02-26 16:03:14.951746-05	2019-02-26 16:03:14.951746-05
+28	133	2	\N	2019-02-26 16:03:14.95904-05	2019-02-26 16:03:14.95904-05
+29	135	2	\N	2019-02-26 16:03:14.967131-05	2019-02-26 16:03:14.967131-05
+30	136	2	\N	2019-02-26 16:03:14.976926-05	2019-02-26 16:03:14.976926-05
+31	147	2	\N	2019-02-26 16:03:14.988266-05	2019-02-26 16:03:14.988266-05
+32	150	2	\N	2019-02-26 16:03:14.996368-05	2019-02-26 16:03:14.996368-05
+33	92	3	\N	2019-02-26 16:05:14.378909-05	2019-02-26 16:05:14.378909-05
+34	96	3	\N	2019-02-26 16:05:14.386713-05	2019-02-26 16:05:14.386713-05
+35	99	3	\N	2019-02-26 16:05:14.39416-05	2019-02-26 16:05:14.39416-05
+36	100	3	\N	2019-02-26 16:05:14.40693-05	2019-02-26 16:05:14.40693-05
+37	110	3	\N	2019-02-26 16:05:14.419172-05	2019-02-26 16:05:14.419172-05
+38	117	3	\N	2019-02-26 16:05:14.426891-05	2019-02-26 16:05:14.426891-05
+39	124	3	\N	2019-02-26 16:05:14.438121-05	2019-02-26 16:05:14.438121-05
+40	128	3	\N	2019-02-26 16:05:14.445809-05	2019-02-26 16:05:14.445809-05
+41	130	3	\N	2019-02-26 16:05:14.451626-05	2019-02-26 16:05:14.451626-05
+42	131	3	\N	2019-02-26 16:05:14.45924-05	2019-02-26 16:05:14.45924-05
+43	132	3	\N	2019-02-26 16:05:14.469195-05	2019-02-26 16:05:14.469195-05
+44	133	3	\N	2019-02-26 16:05:14.478499-05	2019-02-26 16:05:14.478499-05
+45	135	3	\N	2019-02-26 16:05:14.486216-05	2019-02-26 16:05:14.486216-05
+46	136	3	\N	2019-02-26 16:05:14.493102-05	2019-02-26 16:05:14.493102-05
+47	147	3	\N	2019-02-26 16:05:14.507131-05	2019-02-26 16:05:14.507131-05
+48	150	3	\N	2019-02-26 16:05:14.518835-05	2019-02-26 16:05:14.518835-05
+49	92	4	\N	2019-02-26 16:08:16.44411-05	2019-02-26 16:08:16.44411-05
+50	96	4	\N	2019-02-26 16:08:16.479133-05	2019-02-26 16:08:16.479133-05
+51	99	4	\N	2019-02-26 16:08:16.497477-05	2019-02-26 16:08:16.497477-05
+52	100	4	\N	2019-02-26 16:08:16.505374-05	2019-02-26 16:08:16.505374-05
+53	110	4	\N	2019-02-26 16:08:16.517952-05	2019-02-26 16:08:16.517952-05
+54	117	4	\N	2019-02-26 16:08:16.530185-05	2019-02-26 16:08:16.530185-05
+55	124	4	\N	2019-02-26 16:08:16.545461-05	2019-02-26 16:08:16.545461-05
+56	128	4	\N	2019-02-26 16:08:16.552849-05	2019-02-26 16:08:16.552849-05
+57	130	4	\N	2019-02-26 16:08:16.578087-05	2019-02-26 16:08:16.578087-05
+58	131	4	\N	2019-02-26 16:08:16.585785-05	2019-02-26 16:08:16.585785-05
+59	132	4	\N	2019-02-26 16:08:16.595012-05	2019-02-26 16:08:16.595012-05
+60	133	4	\N	2019-02-26 16:08:16.601373-05	2019-02-26 16:08:16.601373-05
+61	135	4	\N	2019-02-26 16:08:16.61359-05	2019-02-26 16:08:16.61359-05
+62	136	4	\N	2019-02-26 16:08:16.622263-05	2019-02-26 16:08:16.622263-05
+63	147	4	\N	2019-02-26 16:08:16.629967-05	2019-02-26 16:08:16.629967-05
+64	150	4	\N	2019-02-26 16:08:16.642225-05	2019-02-26 16:08:16.642225-05
+65	92	5	\N	2019-02-26 16:09:58.590135-05	2019-02-26 16:09:58.590135-05
+66	96	5	\N	2019-02-26 16:09:58.614386-05	2019-02-26 16:09:58.614386-05
+67	99	5	\N	2019-02-26 16:09:58.628169-05	2019-02-26 16:09:58.628169-05
+68	100	5	\N	2019-02-26 16:09:58.638843-05	2019-02-26 16:09:58.638843-05
+69	110	5	\N	2019-02-26 16:09:58.649251-05	2019-02-26 16:09:58.649251-05
+70	117	5	\N	2019-02-26 16:09:58.666653-05	2019-02-26 16:09:58.666653-05
+71	124	5	\N	2019-02-26 16:09:58.687113-05	2019-02-26 16:09:58.687113-05
+72	128	5	\N	2019-02-26 16:09:58.727068-05	2019-02-26 16:09:58.727068-05
+73	130	5	\N	2019-02-26 16:09:58.740375-05	2019-02-26 16:09:58.740375-05
+74	131	5	\N	2019-02-26 16:09:58.751155-05	2019-02-26 16:09:58.751155-05
+75	132	5	\N	2019-02-26 16:09:58.760586-05	2019-02-26 16:09:58.760586-05
+76	133	5	\N	2019-02-26 16:09:58.770475-05	2019-02-26 16:09:58.770475-05
+77	135	5	\N	2019-02-26 16:09:58.780866-05	2019-02-26 16:09:58.780866-05
+78	136	5	\N	2019-02-26 16:09:58.797022-05	2019-02-26 16:09:58.797022-05
+79	147	5	\N	2019-02-26 16:09:58.810648-05	2019-02-26 16:09:58.810648-05
+80	150	5	\N	2019-02-26 16:09:58.822555-05	2019-02-26 16:09:58.822555-05
+81	92	6	\N	2019-02-26 16:10:56.302252-05	2019-02-26 16:10:56.302252-05
+82	96	6	\N	2019-02-26 16:10:56.316867-05	2019-02-26 16:10:56.316867-05
+83	99	6	\N	2019-02-26 16:10:56.365427-05	2019-02-26 16:10:56.365427-05
+84	100	6	\N	2019-02-26 16:10:56.386281-05	2019-02-26 16:10:56.386281-05
+85	110	6	\N	2019-02-26 16:10:56.406085-05	2019-02-26 16:10:56.406085-05
+86	117	6	\N	2019-02-26 16:10:56.469701-05	2019-02-26 16:10:56.469701-05
+87	124	6	\N	2019-02-26 16:10:56.622426-05	2019-02-26 16:10:56.622426-05
+88	128	6	\N	2019-02-26 16:10:56.688925-05	2019-02-26 16:10:56.688925-05
+89	130	6	\N	2019-02-26 16:10:56.704343-05	2019-02-26 16:10:56.704343-05
+90	131	6	\N	2019-02-26 16:10:56.720341-05	2019-02-26 16:10:56.720341-05
+91	132	6	\N	2019-02-26 16:10:56.745251-05	2019-02-26 16:10:56.745251-05
+92	133	6	\N	2019-02-26 16:10:56.780383-05	2019-02-26 16:10:56.780383-05
+93	135	6	\N	2019-02-26 16:10:56.794412-05	2019-02-26 16:10:56.794412-05
+94	136	6	\N	2019-02-26 16:10:56.811203-05	2019-02-26 16:10:56.811203-05
+95	147	6	\N	2019-02-26 16:10:56.822781-05	2019-02-26 16:10:56.822781-05
+96	150	6	\N	2019-02-26 16:10:56.854237-05	2019-02-26 16:10:56.854237-05
+97	92	7	\N	2019-02-26 16:11:20.774371-05	2019-02-26 16:11:20.774371-05
+98	96	7	\N	2019-02-26 16:11:20.79751-05	2019-02-26 16:11:20.79751-05
+99	99	7	\N	2019-02-26 16:11:20.82296-05	2019-02-26 16:11:20.82296-05
+100	100	7	\N	2019-02-26 16:11:20.839941-05	2019-02-26 16:11:20.839941-05
+101	110	7	\N	2019-02-26 16:11:20.874212-05	2019-02-26 16:11:20.874212-05
+102	117	7	\N	2019-02-26 16:11:20.894258-05	2019-02-26 16:11:20.894258-05
+103	124	7	\N	2019-02-26 16:11:20.9125-05	2019-02-26 16:11:20.9125-05
+104	128	7	\N	2019-02-26 16:11:20.928676-05	2019-02-26 16:11:20.928676-05
+105	130	7	\N	2019-02-26 16:11:20.950985-05	2019-02-26 16:11:20.950985-05
+106	131	7	\N	2019-02-26 16:11:20.974563-05	2019-02-26 16:11:20.974563-05
+107	132	7	\N	2019-02-26 16:11:20.987119-05	2019-02-26 16:11:20.987119-05
+108	133	7	\N	2019-02-26 16:11:20.997265-05	2019-02-26 16:11:20.997265-05
+109	135	7	\N	2019-02-26 16:11:21.007539-05	2019-02-26 16:11:21.007539-05
+110	136	7	\N	2019-02-26 16:11:21.03404-05	2019-02-26 16:11:21.03404-05
+111	147	7	\N	2019-02-26 16:11:21.050293-05	2019-02-26 16:11:21.050293-05
+112	150	7	\N	2019-02-26 16:11:21.071602-05	2019-02-26 16:11:21.071602-05
+113	92	8	\N	2019-02-26 16:13:21.744176-05	2019-02-26 16:13:21.744176-05
+114	96	8	\N	2019-02-26 16:13:21.759461-05	2019-02-26 16:13:21.759461-05
+115	99	8	\N	2019-02-26 16:13:21.775784-05	2019-02-26 16:13:21.775784-05
+116	100	8	\N	2019-02-26 16:13:21.79627-05	2019-02-26 16:13:21.79627-05
+117	110	8	\N	2019-02-26 16:13:21.806913-05	2019-02-26 16:13:21.806913-05
+118	117	8	\N	2019-02-26 16:13:21.821957-05	2019-02-26 16:13:21.821957-05
+119	124	8	\N	2019-02-26 16:13:21.835569-05	2019-02-26 16:13:21.835569-05
+120	128	8	\N	2019-02-26 16:13:21.850981-05	2019-02-26 16:13:21.850981-05
+121	130	8	\N	2019-02-26 16:13:21.862094-05	2019-02-26 16:13:21.862094-05
+122	131	8	\N	2019-02-26 16:13:21.874857-05	2019-02-26 16:13:21.874857-05
+123	132	8	\N	2019-02-26 16:13:21.886615-05	2019-02-26 16:13:21.886615-05
+124	133	8	\N	2019-02-26 16:13:21.897259-05	2019-02-26 16:13:21.897259-05
+125	135	8	\N	2019-02-26 16:13:21.906016-05	2019-02-26 16:13:21.906016-05
+126	136	8	\N	2019-02-26 16:13:21.918165-05	2019-02-26 16:13:21.918165-05
+127	147	8	\N	2019-02-26 16:13:21.934942-05	2019-02-26 16:13:21.934942-05
+128	150	8	\N	2019-02-26 16:13:21.94465-05	2019-02-26 16:13:21.94465-05
+129	92	\N	1	2019-02-26 16:37:53.712941-05	2019-02-26 16:37:53.712941-05
+130	92	10	1	2019-02-26 16:44:39.600329-05	2019-02-26 16:44:39.600329-05
+131	100	10	-1	2019-02-26 16:44:39.608465-05	2019-02-26 16:44:39.608465-05
+132	130	10	1	2019-02-26 16:44:39.61301-05	2019-02-26 16:44:39.61301-05
+133	133	10	-1	2019-02-26 16:44:39.616762-05	2019-02-26 16:44:39.616762-05
+134	147	10	1	2019-02-26 16:44:39.621106-05	2019-02-26 16:44:39.621106-05
+135	92	11	1	2019-02-26 16:50:44.663139-05	2019-02-26 16:50:44.663139-05
+136	99	11	-1	2019-02-26 16:50:44.670596-05	2019-02-26 16:50:44.670596-05
+137	128	11	1	2019-02-26 16:50:44.6742-05	2019-02-26 16:50:44.6742-05
+138	131	11	1	2019-02-26 16:50:44.676744-05	2019-02-26 16:50:44.676744-05
+139	150	11	-1	2019-02-26 16:50:44.679264-05	2019-02-26 16:50:44.679264-05
+140	92	12	1	2019-02-26 22:41:23.992337-05	2019-02-26 22:41:23.992337-05
+141	100	12	1	2019-02-26 22:41:24.011482-05	2019-02-26 22:41:24.011482-05
+142	128	12	-1	2019-02-26 22:41:24.015115-05	2019-02-26 22:41:24.015115-05
+143	132	12	1	2019-02-26 22:41:24.019825-05	2019-02-26 22:41:24.019825-05
+144	92	13	1	2019-02-26 22:43:07.683024-05	2019-02-26 22:43:07.683024-05
+145	96	13	-1	2019-02-26 22:43:07.687303-05	2019-02-26 22:43:07.687303-05
+146	130	13	1	2019-02-26 22:43:07.690856-05	2019-02-26 22:43:07.690856-05
+147	132	13	-1	2019-02-26 22:43:07.69617-05	2019-02-26 22:43:07.69617-05
+148	96	14	1	2019-02-26 22:44:42.788678-05	2019-02-26 22:44:42.788678-05
+149	100	14	-1	2019-02-26 22:44:42.795847-05	2019-02-26 22:44:42.795847-05
+150	130	14	1	2019-02-26 22:44:42.799237-05	2019-02-26 22:44:42.799237-05
+151	132	14	-1	2019-02-26 22:44:42.802516-05	2019-02-26 22:44:42.802516-05
+152	136	14	1	2019-02-26 22:44:42.809895-05	2019-02-26 22:44:42.809895-05
+153	96	15	1	2019-02-27 00:02:35.241154-05	2019-02-27 00:02:35.241154-05
+154	100	15	-1	2019-02-27 00:02:35.249281-05	2019-02-27 00:02:35.249281-05
+155	130	15	1	2019-02-27 00:02:35.256122-05	2019-02-27 00:02:35.256122-05
+156	131	15	-1	2019-02-27 00:02:35.26793-05	2019-02-27 00:02:35.26793-05
+157	136	15	1	2019-02-27 00:02:35.275089-05	2019-02-27 00:02:35.275089-05
+158	99	16	1	2019-02-27 13:29:39.78354-05	2019-02-27 13:29:39.78354-05
+159	128	16	1	2019-02-27 13:29:39.787161-05	2019-02-27 13:29:39.787161-05
+160	131	16	-1	2019-02-27 13:29:39.790759-05	2019-02-27 13:29:39.790759-05
+161	147	16	-1	2019-02-27 13:29:39.797755-05	2019-02-27 13:29:39.797755-05
+162	96	17	1	2019-02-27 13:39:12.778626-05	2019-02-27 13:39:12.778626-05
+163	110	17	1	2019-02-27 13:39:12.78761-05	2019-02-27 13:39:12.78761-05
+164	130	17	-1	2019-02-27 13:39:12.796265-05	2019-02-27 13:39:12.796265-05
+165	133	17	-1	2019-02-27 13:39:12.808441-05	2019-02-27 13:39:12.808441-05
+166	92	18	-1	2019-02-27 13:48:20.958827-05	2019-02-27 13:48:20.958827-05
+167	96	18	-1	2019-02-27 13:48:20.965863-05	2019-02-27 13:48:20.965863-05
+168	100	18	1	2019-02-27 13:48:20.969561-05	2019-02-27 13:48:20.969561-05
+169	131	18	1	2019-02-27 13:48:20.972481-05	2019-02-27 13:48:20.972481-05
+170	92	19	1	2019-02-27 13:52:47.48828-05	2019-02-27 13:52:47.48828-05
+171	99	19	-1	2019-02-27 13:52:47.496968-05	2019-02-27 13:52:47.496968-05
+172	128	19	1	2019-02-27 13:52:47.502093-05	2019-02-27 13:52:47.502093-05
+173	131	19	-1	2019-02-27 13:52:47.512826-05	2019-02-27 13:52:47.512826-05
+174	147	19	1	2019-02-27 13:52:47.518624-05	2019-02-27 13:52:47.518624-05
+175	92	20	1	2019-02-27 14:11:30.27408-05	2019-02-27 14:11:30.27408-05
+176	99	20	-1	2019-02-27 14:11:30.281156-05	2019-02-27 14:11:30.281156-05
+177	128	20	1	2019-02-27 14:11:30.286696-05	2019-02-27 14:11:30.286696-05
+178	131	20	-1	2019-02-27 14:11:30.291802-05	2019-02-27 14:11:30.291802-05
+179	96	21	1	2019-02-27 14:12:37.332314-05	2019-02-27 14:12:37.332314-05
+180	130	21	-1	2019-02-27 14:12:37.338712-05	2019-02-27 14:12:37.338712-05
+181	92	22	1	2019-02-27 14:20:00.788144-05	2019-02-27 14:20:00.788144-05
+182	96	22	-1	2019-02-27 14:20:00.795059-05	2019-02-27 14:20:00.795059-05
+183	131	22	1	2019-02-27 14:20:00.800469-05	2019-02-27 14:20:00.800469-05
+184	92	23	1	2019-02-27 14:25:45.793105-05	2019-02-27 14:25:45.793105-05
+185	100	23	1	2019-02-27 14:25:45.798438-05	2019-02-27 14:25:45.798438-05
+186	128	23	-1	2019-02-27 14:25:45.803371-05	2019-02-27 14:25:45.803371-05
+187	147	23	-1	2019-02-27 14:25:45.810833-05	2019-02-27 14:25:45.810833-05
+188	92	24	1	2019-02-27 14:27:18.734189-05	2019-02-27 14:27:18.734189-05
+189	99	24	1	2019-02-27 14:27:18.739722-05	2019-02-27 14:27:18.739722-05
+190	128	24	-1	2019-02-27 14:27:18.743912-05	2019-02-27 14:27:18.743912-05
+191	147	24	-1	2019-02-27 14:27:18.748842-05	2019-02-27 14:27:18.748842-05
+192	92	25	1	2019-02-27 14:28:38.69-05	2019-02-27 14:28:38.69-05
+193	99	25	1	2019-02-27 14:28:38.69552-05	2019-02-27 14:28:38.69552-05
+194	128	25	-1	2019-02-27 14:28:38.699628-05	2019-02-27 14:28:38.699628-05
+195	131	25	-1	2019-02-27 14:28:38.72074-05	2019-02-27 14:28:38.72074-05
+196	92	26	1	2019-02-27 15:06:47.778708-05	2019-02-27 15:06:47.778708-05
+197	96	26	1	2019-02-27 15:06:47.786624-05	2019-02-27 15:06:47.786624-05
+198	99	26	1	2019-02-27 15:06:47.78992-05	2019-02-27 15:06:47.78992-05
+199	128	26	-1	2019-02-27 15:06:47.79315-05	2019-02-27 15:06:47.79315-05
+200	131	26	-1	2019-02-27 15:06:47.795759-05	2019-02-27 15:06:47.795759-05
+201	132	26	-1	2019-02-27 15:06:47.800035-05	2019-02-27 15:06:47.800035-05
+202	150	26	-1	2019-02-27 15:06:47.804958-05	2019-02-27 15:06:47.804958-05
+203	92	27	-1	2019-02-27 15:27:17.30661-05	2019-02-27 15:27:17.30661-05
+204	99	27	-1	2019-02-27 15:27:17.311048-05	2019-02-27 15:27:17.311048-05
+205	100	27	-1	2019-02-27 15:27:17.318958-05	2019-02-27 15:27:17.318958-05
+206	110	27	1	2019-02-27 15:27:17.324843-05	2019-02-27 15:27:17.324843-05
+207	117	27	1	2019-02-27 15:27:17.328362-05	2019-02-27 15:27:17.328362-05
+208	132	27	1	2019-02-27 15:27:17.334088-05	2019-02-27 15:27:17.334088-05
+209	135	27	1	2019-02-27 15:27:17.341114-05	2019-02-27 15:27:17.341114-05
+210	92	28	1	2019-02-27 15:53:01.553524-05	2019-02-27 15:53:01.553524-05
+211	99	28	1	2019-02-27 15:53:01.559806-05	2019-02-27 15:53:01.559806-05
+212	100	28	1	2019-02-27 15:53:01.563258-05	2019-02-27 15:53:01.563258-05
+213	130	28	-1	2019-02-27 15:53:01.566063-05	2019-02-27 15:53:01.566063-05
+214	131	28	-1	2019-02-27 15:53:01.571715-05	2019-02-27 15:53:01.571715-05
+215	147	28	-1	2019-02-27 15:53:01.574977-05	2019-02-27 15:53:01.574977-05
+216	150	28	-1	2019-02-27 15:53:01.57807-05	2019-02-27 15:53:01.57807-05
+217	96	29	-1	2019-02-27 16:09:38.371526-05	2019-02-27 16:09:38.371526-05
+218	99	29	-1	2019-02-27 16:09:38.380421-05	2019-02-27 16:09:38.380421-05
+219	132	29	1	2019-02-27 16:09:38.384913-05	2019-02-27 16:09:38.384913-05
+220	135	29	1	2019-02-27 16:09:38.387297-05	2019-02-27 16:09:38.387297-05
+221	150	29	1	2019-02-27 16:09:38.390477-05	2019-02-27 16:09:38.390477-05
+222	96	30	-1	2019-02-27 16:12:26.890756-05	2019-02-27 16:12:26.890756-05
+223	99	30	-1	2019-02-27 16:12:26.897595-05	2019-02-27 16:12:26.897595-05
+224	100	30	-1	2019-02-27 16:12:26.901228-05	2019-02-27 16:12:26.901228-05
+225	132	30	1	2019-02-27 16:12:26.90768-05	2019-02-27 16:12:26.90768-05
+226	135	30	1	2019-02-27 16:12:26.922173-05	2019-02-27 16:12:26.922173-05
+227	136	30	1	2019-02-27 16:12:26.935487-05	2019-02-27 16:12:26.935487-05
+228	150	30	1	2019-02-27 16:12:26.939983-05	2019-02-27 16:12:26.939983-05
+229	92	31	-1	2019-02-27 16:15:37.242348-05	2019-02-27 16:15:37.242348-05
+230	96	31	-1	2019-02-27 16:15:37.25029-05	2019-02-27 16:15:37.25029-05
+231	99	31	-1	2019-02-27 16:15:37.255675-05	2019-02-27 16:15:37.255675-05
+232	100	31	-1	2019-02-27 16:15:37.264656-05	2019-02-27 16:15:37.264656-05
+233	132	31	1	2019-02-27 16:15:37.269492-05	2019-02-27 16:15:37.269492-05
+234	135	31	1	2019-02-27 16:15:37.275545-05	2019-02-27 16:15:37.275545-05
+235	136	31	1	2019-02-27 16:15:37.280628-05	2019-02-27 16:15:37.280628-05
+236	150	31	1	2019-02-27 16:15:37.285001-05	2019-02-27 16:15:37.285001-05
+237	92	32	-1	2019-02-27 16:17:24.374318-05	2019-02-27 16:17:24.374318-05
+238	96	32	-1	2019-02-27 16:17:24.383596-05	2019-02-27 16:17:24.383596-05
+239	99	32	-1	2019-02-27 16:17:24.388737-05	2019-02-27 16:17:24.388737-05
+240	100	32	-1	2019-02-27 16:17:24.3964-05	2019-02-27 16:17:24.3964-05
+241	132	32	1	2019-02-27 16:17:24.401685-05	2019-02-27 16:17:24.401685-05
+242	135	32	1	2019-02-27 16:17:24.406248-05	2019-02-27 16:17:24.406248-05
+243	136	32	1	2019-02-27 16:17:24.411941-05	2019-02-27 16:17:24.411941-05
+244	96	33	1	2019-02-27 16:20:57.572822-05	2019-02-27 16:20:57.572822-05
+245	132	33	-1	2019-02-27 16:20:57.580149-05	2019-02-27 16:20:57.580149-05
+246	96	34	-1	2019-02-27 16:30:28.030763-05	2019-02-27 16:30:28.030763-05
+247	132	34	1	2019-02-27 16:30:28.038204-05	2019-02-27 16:30:28.038204-05
+248	128	35	1	2019-02-27 16:40:52.536339-05	2019-02-27 16:40:52.536339-05
+249	147	35	1	2019-02-27 16:40:52.541144-05	2019-02-27 16:40:52.541144-05
+250	128	36	1	2019-02-27 16:41:38.602808-05	2019-02-27 16:41:38.602808-05
+251	147	36	1	2019-02-27 16:41:38.608976-05	2019-02-27 16:41:38.608976-05
+252	117	37	1	2019-02-27 16:42:21.437885-05	2019-02-27 16:42:21.437885-05
+253	130	37	1	2019-02-27 16:42:21.443861-05	2019-02-27 16:42:21.443861-05
+254	136	37	1	2019-02-27 16:42:21.449074-05	2019-02-27 16:42:21.449074-05
+255	110	38	1	2019-02-27 16:51:07.662764-05	2019-02-27 16:51:07.662764-05
+256	132	38	1	2019-02-27 16:51:07.666843-05	2019-02-27 16:51:07.666843-05
+257	135	38	1	2019-02-27 16:51:07.677519-05	2019-02-27 16:51:07.677519-05
+258	100	39	1	2019-02-27 18:39:14.837115-05	2019-02-27 18:39:14.837115-05
+259	128	39	-1	2019-02-27 18:39:14.870555-05	2019-02-27 18:39:14.870555-05
+260	132	39	1	2019-02-27 18:39:14.895634-05	2019-02-27 18:39:14.895634-05
+261	136	39	-1	2019-02-27 18:39:15.051567-05	2019-02-27 18:39:15.051567-05
+262	100	41	-1	2019-02-27 19:18:44.748927-05	2019-02-27 19:18:44.748927-05
+263	96	42	1	2019-02-28 16:43:21.043838-05	2019-02-28 16:43:21.043838-05
+264	131	42	-1	2019-02-28 16:43:21.04949-05	2019-02-28 16:43:21.04949-05
+265	150	42	-1	2019-02-28 16:43:21.052219-05	2019-02-28 16:43:21.052219-05
+266	124	43	1	2019-02-28 16:45:48.137617-05	2019-02-28 16:45:48.137617-05
+267	128	43	-1	2019-02-28 16:45:48.144609-05	2019-02-28 16:45:48.144609-05
+268	96	44	1	2019-02-28 17:07:38.4557-05	2019-02-28 17:07:38.4557-05
+269	99	44	1	2019-02-28 17:07:38.463139-05	2019-02-28 17:07:38.463139-05
+270	110	44	1	2019-02-28 17:07:38.465911-05	2019-02-28 17:07:38.465911-05
+271	131	44	-1	2019-02-28 17:07:38.468806-05	2019-02-28 17:07:38.468806-05
+272	147	44	-1	2019-02-28 17:07:38.471763-05	2019-02-28 17:07:38.471763-05
+273	150	44	-1	2019-02-28 17:07:38.476447-05	2019-02-28 17:07:38.476447-05
+274	92	45	1	2019-02-28 17:08:39.66808-05	2019-02-28 17:08:39.66808-05
+275	96	45	1	2019-02-28 17:08:39.67188-05	2019-02-28 17:08:39.67188-05
+276	99	45	1	2019-02-28 17:08:39.673842-05	2019-02-28 17:08:39.673842-05
+277	100	45	1	2019-02-28 17:08:39.675813-05	2019-02-28 17:08:39.675813-05
+278	117	45	-1	2019-02-28 17:08:39.67852-05	2019-02-28 17:08:39.67852-05
+279	131	45	-1	2019-02-28 17:08:39.685011-05	2019-02-28 17:08:39.685011-05
+280	132	45	-1	2019-02-28 17:08:39.688167-05	2019-02-28 17:08:39.688167-05
+281	133	45	-1	2019-02-28 17:08:39.690416-05	2019-02-28 17:08:39.690416-05
+282	135	45	-1	2019-02-28 17:08:39.692289-05	2019-02-28 17:08:39.692289-05
+283	100	46	1	2019-02-28 17:09:49.314928-05	2019-02-28 17:09:49.314928-05
+284	130	47	1	2019-02-28 17:10:12.845247-05	2019-02-28 17:10:12.845247-05
+285	132	47	1	2019-02-28 17:10:12.8486-05	2019-02-28 17:10:12.8486-05
+286	135	47	1	2019-02-28 17:10:12.850994-05	2019-02-28 17:10:12.850994-05
+287	136	47	1	2019-02-28 17:10:12.853496-05	2019-02-28 17:10:12.853496-05
+288	99	48	1	2019-02-28 17:10:38.986447-05	2019-02-28 17:10:38.986447-05
+289	117	48	1	2019-02-28 17:10:38.988902-05	2019-02-28 17:10:38.988902-05
+290	124	48	1	2019-02-28 17:10:38.993397-05	2019-02-28 17:10:38.993397-05
+291	130	48	-1	2019-02-28 17:10:38.998036-05	2019-02-28 17:10:38.998036-05
+292	133	48	1	2019-02-28 17:10:39.000563-05	2019-02-28 17:10:39.000563-05
+293	136	49	1	2019-02-28 17:25:21.474953-05	2019-02-28 17:25:21.474953-05
+294	96	50	-1	2019-02-28 17:26:46.697553-05	2019-02-28 17:26:46.697553-05
+295	110	51	1	2019-02-28 17:29:18.636077-05	2019-02-28 17:29:18.636077-05
+296	100	52	1	2019-02-28 21:09:18.991276-05	2019-02-28 21:09:18.991276-05
+297	128	52	1	2019-02-28 21:09:19.002938-05	2019-02-28 21:09:19.002938-05
+298	131	52	-1	2019-02-28 21:09:19.015145-05	2019-02-28 21:09:19.015145-05
+299	147	52	-1	2019-02-28 21:09:19.033796-05	2019-02-28 21:09:19.033796-05
+300	92	54	-1	2019-02-28 22:06:05.123468-05	2019-02-28 22:06:05.123468-05
+301	110	54	1	2019-02-28 22:06:05.130851-05	2019-02-28 22:06:05.130851-05
+302	117	54	1	2019-02-28 22:06:05.143034-05	2019-02-28 22:06:05.143034-05
+303	132	54	1	2019-02-28 22:06:05.150455-05	2019-02-28 22:06:05.150455-05
+304	92	56	1	2019-03-01 14:52:04.778119-05	2019-03-01 14:52:04.778119-05
+305	128	56	-1	2019-03-01 14:52:04.782572-05	2019-03-01 14:52:04.782572-05
+306	130	56	1	2019-03-01 14:52:04.784909-05	2019-03-01 14:52:04.784909-05
+307	99	57	1	2019-03-01 15:20:47.000673-05	2019-03-01 15:20:47.000673-05
+308	136	57	-1	2019-03-01 15:20:47.010557-05	2019-03-01 15:20:47.010557-05
+309	92	58	1	2019-03-01 15:22:58.815189-05	2019-03-01 15:22:58.815189-05
+310	99	59	1	2019-03-01 15:28:45.98221-05	2019-03-01 15:28:45.98221-05
+311	147	59	-1	2019-03-01 15:28:45.985041-05	2019-03-01 15:28:45.985041-05
+312	99	60	1	2019-03-01 15:32:49.4733-05	2019-03-01 15:32:49.4733-05
+313	131	60	-1	2019-03-01 15:32:49.477964-05	2019-03-01 15:32:49.477964-05
+314	136	61	1	2019-03-01 15:36:00.783773-05	2019-03-01 15:36:00.783773-05
+315	136	62	-1	2019-03-01 15:41:43.652972-05	2019-03-01 15:41:43.652972-05
+316	96	64	1	2019-03-01 16:01:22.317674-05	2019-03-01 16:01:22.317674-05
+317	99	64	1	2019-03-01 16:01:22.327871-05	2019-03-01 16:01:22.327871-05
+318	96	65	1	2019-03-01 16:11:03.106148-05	2019-03-01 16:11:03.106148-05
+319	136	65	-1	2019-03-01 16:11:03.112251-05	2019-03-01 16:11:03.112251-05
+320	92	66	1	2019-03-01 16:13:12.347262-05	2019-03-01 16:13:12.347262-05
+321	96	66	1	2019-03-01 16:13:12.353766-05	2019-03-01 16:13:12.353766-05
+322	100	66	1	2019-03-01 16:13:12.358433-05	2019-03-01 16:13:12.358433-05
+323	117	66	-1	2019-03-01 16:13:12.36226-05	2019-03-01 16:13:12.36226-05
+324	128	66	1	2019-03-01 16:13:12.365989-05	2019-03-01 16:13:12.365989-05
+325	132	66	-1	2019-03-01 16:13:12.368894-05	2019-03-01 16:13:12.368894-05
+326	133	66	-1	2019-03-01 16:13:12.37172-05	2019-03-01 16:13:12.37172-05
+327	150	66	-1	2019-03-01 16:13:12.373867-05	2019-03-01 16:13:12.373867-05
+328	96	69	1	2019-03-01 16:20:31.669404-05	2019-03-01 16:20:31.669404-05
+329	99	69	1	2019-03-01 16:20:31.673924-05	2019-03-01 16:20:31.673924-05
+330	132	69	-1	2019-03-01 16:20:31.679201-05	2019-03-01 16:20:31.679201-05
+331	133	69	-1	2019-03-01 16:20:31.683292-05	2019-03-01 16:20:31.683292-05
+332	147	70	1	2019-03-01 16:20:43.418214-05	2019-03-01 16:20:43.418214-05
+333	150	70	1	2019-03-01 16:20:43.422457-05	2019-03-01 16:20:43.422457-05
+334	92	71	-1	2019-03-01 16:22:18.514126-05	2019-03-01 16:22:18.514126-05
+335	117	71	1	2019-03-01 16:22:18.519647-05	2019-03-01 16:22:18.519647-05
+336	131	71	1	2019-03-01 16:22:18.526694-05	2019-03-01 16:22:18.526694-05
+337	128	73	1	2019-03-02 14:57:47.796096-05	2019-03-02 14:57:47.796096-05
+338	130	73	-1	2019-03-02 14:57:47.804905-05	2019-03-02 14:57:47.804905-05
+339	96	74	1	2019-03-02 14:58:22.236687-05	2019-03-02 14:58:22.236687-05
+340	99	74	1	2019-03-02 14:58:22.247504-05	2019-03-02 14:58:22.247504-05
+341	135	74	-1	2019-03-02 14:58:22.255138-05	2019-03-02 14:58:22.255138-05
+342	100	75	-1	2019-03-03 16:37:57.626873-05	2019-03-03 16:37:57.626873-05
+343	110	75	1	2019-03-03 16:37:57.634392-05	2019-03-03 16:37:57.634392-05
+344	128	75	-1	2019-03-03 16:37:57.639066-05	2019-03-03 16:37:57.639066-05
+345	130	75	-1	2019-03-03 16:37:57.643179-05	2019-03-03 16:37:57.643179-05
+346	132	75	1	2019-03-03 16:37:57.647785-05	2019-03-03 16:37:57.647785-05
+347	133	75	1	2019-03-03 16:37:57.653113-05	2019-03-03 16:37:57.653113-05
+348	150	75	1	2019-03-03 16:37:57.65757-05	2019-03-03 16:37:57.65757-05
+349	131	76	1	2019-03-03 16:40:08.500811-05	2019-03-03 16:40:08.500811-05
+350	92	78	1	2019-03-06 14:08:40.159483-05	2019-03-06 14:08:40.159483-05
+351	130	78	-1	2019-03-06 14:08:40.164867-05	2019-03-06 14:08:40.164867-05
+352	96	79	-1	2019-03-06 14:15:21.906597-05	2019-03-06 14:15:21.906597-05
+353	110	79	1	2019-03-06 14:15:21.918525-05	2019-03-06 14:15:21.918525-05
+354	117	79	-1	2019-03-06 14:15:21.922931-05	2019-03-06 14:15:21.922931-05
+355	130	79	-1	2019-03-06 14:15:21.927757-05	2019-03-06 14:15:21.927757-05
+356	131	79	1	2019-03-06 14:15:21.945751-05	2019-03-06 14:15:21.945751-05
+357	132	79	1	2019-03-06 14:15:21.95359-05	2019-03-06 14:15:21.95359-05
+358	133	79	-1	2019-03-06 14:15:21.974658-05	2019-03-06 14:15:21.974658-05
+359	96	80	1	2019-03-06 14:55:37.457936-05	2019-03-06 14:55:37.457936-05
+360	99	80	1	2019-03-06 14:55:37.465792-05	2019-03-06 14:55:37.465792-05
+361	130	80	-1	2019-03-06 14:55:37.47355-05	2019-03-06 14:55:37.47355-05
+362	131	80	-1	2019-03-06 14:55:37.479831-05	2019-03-06 14:55:37.479831-05
+363	136	80	-1	2019-03-06 14:55:37.485692-05	2019-03-06 14:55:37.485692-05
+364	99	82	1	2019-03-06 15:18:59.47863-05	2019-03-06 15:18:59.47863-05
+365	131	82	-1	2019-03-06 15:18:59.48777-05	2019-03-06 15:18:59.48777-05
+366	96	84	-1	2019-03-06 18:42:02.027232-05	2019-03-06 18:42:02.027232-05
+367	99	84	-1	2019-03-06 18:42:02.056244-05	2019-03-06 18:42:02.056244-05
+368	128	84	-1	2019-03-06 18:42:02.062779-05	2019-03-06 18:42:02.062779-05
+369	131	84	1	2019-03-06 18:42:02.083208-05	2019-03-06 18:42:02.083208-05
+370	132	84	1	2019-03-06 18:42:02.103113-05	2019-03-06 18:42:02.103113-05
+371	136	84	1	2019-03-06 18:42:02.164962-05	2019-03-06 18:42:02.164962-05
+372	124	85	1	2019-03-06 18:46:19.128883-05	2019-03-06 18:46:19.128883-05
+373	133	85	-1	2019-03-06 18:46:19.135043-05	2019-03-06 18:46:19.135043-05
+374	147	85	1	2019-03-06 18:46:19.139735-05	2019-03-06 18:46:19.139735-05
+375	99	86	1	2019-03-06 21:33:52.644961-05	2019-03-06 21:33:52.644961-05
+376	130	86	-1	2019-03-06 21:33:52.654096-05	2019-03-06 21:33:52.654096-05
+377	131	86	1	2019-03-06 21:33:52.668981-05	2019-03-06 21:33:52.668981-05
+378	99	87	-1	2019-03-07 15:07:55.91498-05	2019-03-07 15:07:55.91498-05
+379	110	87	1	2019-03-07 15:07:55.939549-05	2019-03-07 15:07:55.939549-05
+380	128	87	-1	2019-03-07 15:07:55.966848-05	2019-03-07 15:07:55.966848-05
+381	131	87	1	2019-03-07 15:07:55.975622-05	2019-03-07 15:07:55.975622-05
+382	92	88	1	2019-03-30 22:58:07.941932-04	2019-03-30 22:58:07.941932-04
+383	96	88	1	2019-03-30 22:58:07.947142-04	2019-03-30 22:58:07.947142-04
+384	99	88	1	2019-03-30 22:58:07.94967-04	2019-03-30 22:58:07.94967-04
+385	131	88	-1	2019-03-30 22:58:07.953199-04	2019-03-30 22:58:07.953199-04
+386	132	88	-1	2019-03-30 22:58:07.958004-04	2019-03-30 22:58:07.958004-04
+387	135	88	-1	2019-03-30 22:58:07.961384-04	2019-03-30 22:58:07.961384-04
+388	100	89	1	2019-04-03 16:36:54.171541-04	2019-04-03 16:36:54.171541-04
+389	136	89	-1	2019-04-03 16:36:54.176702-04	2019-04-03 16:36:54.176702-04
+390	92	90	-1	2019-04-03 21:44:05.428377-04	2019-04-03 21:44:05.428377-04
+391	96	90	-1	2019-04-03 21:44:05.43294-04	2019-04-03 21:44:05.43294-04
+392	99	90	-1	2019-04-03 21:44:05.435797-04	2019-04-03 21:44:05.435797-04
+393	100	90	-1	2019-04-03 21:44:05.447169-04	2019-04-03 21:44:05.447169-04
+394	117	90	1	2019-04-03 21:44:05.45235-04	2019-04-03 21:44:05.45235-04
+395	128	90	-1	2019-04-03 21:44:05.458364-04	2019-04-03 21:44:05.458364-04
+396	132	90	1	2019-04-03 21:44:05.463977-04	2019-04-03 21:44:05.463977-04
+397	135	90	1	2019-04-03 21:44:05.468394-04	2019-04-03 21:44:05.468394-04
+398	150	90	1	2019-04-03 21:44:05.473207-04	2019-04-03 21:44:05.473207-04
+399	110	91	-1	2019-04-04 13:33:42.072803-04	2019-04-04 13:33:42.072803-04
+400	131	91	1	2019-04-04 13:33:42.079305-04	2019-04-04 13:33:42.079305-04
+401	99	92	-1	2019-04-04 15:32:37.826749-04	2019-04-04 15:32:37.826749-04
+402	130	92	1	2019-04-04 15:32:37.831295-04	2019-04-04 15:32:37.831295-04
+403	92	93	1	2019-04-04 16:32:50.575956-04	2019-04-04 16:32:50.575956-04
+404	96	93	-1	2019-04-04 16:32:50.581789-04	2019-04-04 16:32:50.581789-04
+405	147	94	1	2019-04-04 16:54:10.843944-04	2019-04-04 16:54:10.843944-04
+406	150	94	-1	2019-04-04 16:54:10.849117-04	2019-04-04 16:54:10.849117-04
+407	147	95	-1	2019-04-04 16:55:11.737919-04	2019-04-04 16:55:11.737919-04
+408	150	95	1	2019-04-04 16:55:11.744915-04	2019-04-04 16:55:11.744915-04
+409	147	96	-1	2019-04-04 16:58:08.861166-04	2019-04-04 16:58:08.861166-04
+410	150	96	1	2019-04-04 16:58:08.865328-04	2019-04-04 16:58:08.865328-04
+411	147	97	-1	2019-04-04 16:59:07.047611-04	2019-04-04 16:59:07.047611-04
+412	150	97	1	2019-04-04 16:59:07.052241-04	2019-04-04 16:59:07.052241-04
+413	147	98	-1	2019-04-04 17:00:05.59838-04	2019-04-04 17:00:05.59838-04
+414	150	98	1	2019-04-04 17:00:05.60312-04	2019-04-04 17:00:05.60312-04
+415	147	99	-1	2019-04-04 17:05:09.093135-04	2019-04-04 17:05:09.093135-04
+416	150	99	1	2019-04-04 17:05:09.098993-04	2019-04-04 17:05:09.098993-04
+417	147	100	-1	2019-04-04 17:08:28.676578-04	2019-04-04 17:08:28.676578-04
+418	150	100	1	2019-04-04 17:08:28.682504-04	2019-04-04 17:08:28.682504-04
+419	147	101	-1	2019-04-04 17:08:50.164999-04	2019-04-04 17:08:50.164999-04
+420	150	101	1	2019-04-04 17:08:50.16908-04	2019-04-04 17:08:50.16908-04
+421	147	102	-1	2019-04-04 17:10:48.842437-04	2019-04-04 17:10:48.842437-04
+422	150	102	1	2019-04-04 17:10:48.849179-04	2019-04-04 17:10:48.849179-04
+423	92	103	-1	2019-04-04 18:13:10.169782-04	2019-04-04 18:13:10.169782-04
+424	96	103	1	2019-04-04 18:13:10.175219-04	2019-04-04 18:13:10.175219-04
+425	92	104	-1	2019-04-04 18:13:41.798931-04	2019-04-04 18:13:41.798931-04
+426	96	104	1	2019-04-04 18:13:41.80555-04	2019-04-04 18:13:41.80555-04
+427	92	105	-1	2019-04-04 18:14:04.293394-04	2019-04-04 18:14:04.293394-04
+428	96	105	1	2019-04-04 18:14:04.297406-04	2019-04-04 18:14:04.297406-04
+429	92	106	-1	2019-04-04 18:16:04.266762-04	2019-04-04 18:16:04.266762-04
+430	96	106	1	2019-04-04 18:16:04.273821-04	2019-04-04 18:16:04.273821-04
+431	92	107	-1	2019-04-04 18:17:01.107581-04	2019-04-04 18:17:01.107581-04
+432	96	107	1	2019-04-04 18:17:01.114323-04	2019-04-04 18:17:01.114323-04
+433	147	108	-1	2019-04-04 18:38:06.756719-04	2019-04-04 18:38:06.756719-04
+434	150	108	1	2019-04-04 18:38:06.761709-04	2019-04-04 18:38:06.761709-04
+435	147	109	-1	2019-04-04 18:43:30.753901-04	2019-04-04 18:43:30.753901-04
+436	150	109	1	2019-04-04 18:43:30.758621-04	2019-04-04 18:43:30.758621-04
+437	99	110	1	2019-04-04 18:46:15.310507-04	2019-04-04 18:46:15.310507-04
+438	130	110	-1	2019-04-04 18:46:15.317343-04	2019-04-04 18:46:15.317343-04
+439	99	111	1	2019-04-04 19:58:30.346297-04	2019-04-04 19:58:30.346297-04
+440	100	111	-1	2019-04-04 19:58:30.351686-04	2019-04-04 19:58:30.351686-04
+441	100	112	1	2019-04-04 20:00:05.011008-04	2019-04-04 20:00:05.011008-04
+442	132	112	-1	2019-04-04 20:00:05.016064-04	2019-04-04 20:00:05.016064-04
+443	99	113	1	2019-04-06 13:49:27.281873-04	2019-04-06 13:49:27.281873-04
+444	100	113	-1	2019-04-06 13:49:27.287354-04	2019-04-06 13:49:27.287354-04
+445	130	113	1	2019-04-06 13:49:27.290399-04	2019-04-06 13:49:27.290399-04
+446	100	114	1	2019-04-06 19:50:48.161981-04	2019-04-06 19:50:48.161981-04
+447	130	114	-1	2019-04-06 19:50:48.168677-04	2019-04-06 19:50:48.168677-04
+448	99	115	1	2019-04-06 19:56:57.693555-04	2019-04-06 19:56:57.693555-04
+449	110	115	1	2019-04-06 19:56:57.700267-04	2019-04-06 19:56:57.700267-04
+450	131	115	-1	2019-04-06 19:56:57.704435-04	2019-04-06 19:56:57.704435-04
+451	99	116	1	2019-04-10 14:33:40.498873-04	2019-04-10 14:33:40.498873-04
+452	100	116	-1	2019-04-10 14:33:40.503721-04	2019-04-10 14:33:40.503721-04
+453	99	117	1	2019-04-10 14:35:33.803093-04	2019-04-10 14:35:33.803093-04
+454	100	117	-1	2019-04-10 14:35:33.806855-04	2019-04-10 14:35:33.806855-04
+455	100	118	1	2019-04-10 16:36:16.433648-04	2019-04-10 16:36:16.433648-04
+456	130	118	1	2019-04-10 16:36:16.437351-04	2019-04-10 16:36:16.437351-04
+457	147	118	-1	2019-04-10 16:36:16.440697-04	2019-04-10 16:36:16.440697-04
+458	100	119	1	2019-04-10 16:37:33.638557-04	2019-04-10 16:37:33.638557-04
+459	130	119	-1	2019-04-10 16:37:33.646179-04	2019-04-10 16:37:33.646179-04
+460	132	119	1	2019-04-10 16:37:33.650523-04	2019-04-10 16:37:33.650523-04
+461	99	120	1	2019-04-10 17:48:59.204371-04	2019-04-10 17:48:59.204371-04
+462	131	120	-1	2019-04-10 17:48:59.326955-04	2019-04-10 17:48:59.326955-04
+463	136	120	1	2019-04-10 17:48:59.332779-04	2019-04-10 17:48:59.332779-04
+464	100	121	1	2019-04-13 14:03:50.981657-04	2019-04-13 14:03:50.981657-04
+465	132	121	-1	2019-04-13 14:03:50.987566-04	2019-04-13 14:03:50.987566-04
+\.
+
+
+--
+-- Data for Name: quizzes; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.quizzes (id, user_id, created_at, updated_at, flavor_profile_id, use_previous_ratings, recommendation) FROM stdin;
+1	2	2019-02-26 16:02:13.486204-05	2019-02-26 16:02:13.486204-05	\N	f	\N
+2	2	2019-02-26 16:03:14.837927-05	2019-02-26 16:03:14.837927-05	\N	f	\N
+3	2	2019-02-26 16:05:14.332016-05	2019-02-26 16:05:14.332016-05	\N	f	\N
+4	2	2019-02-26 16:08:16.394504-05	2019-02-26 16:08:16.394504-05	\N	f	\N
+5	2	2019-02-26 16:09:58.555597-05	2019-02-26 16:09:58.555597-05	\N	f	\N
+6	2	2019-02-26 16:10:56.293102-05	2019-02-26 16:10:56.293102-05	\N	f	\N
+7	2	2019-02-26 16:11:20.726746-05	2019-02-26 16:11:20.726746-05	\N	f	\N
+8	2	2019-02-26 16:13:21.696693-05	2019-02-26 16:13:21.696693-05	\N	f	\N
+9	2	2019-02-26 16:43:16.291643-05	2019-02-26 16:43:16.291643-05	\N	f	\N
+10	2	2019-02-26 16:44:39.521132-05	2019-02-26 16:44:39.521132-05	\N	f	\N
+11	2	2019-02-26 16:50:44.651519-05	2019-02-26 16:50:44.651519-05	\N	f	\N
+12	2	2019-02-26 22:41:17.185924-05	2019-02-26 22:41:17.185924-05	\N	f	\N
+13	2	2019-02-26 22:43:03.945743-05	2019-02-26 22:43:03.945743-05	\N	f	\N
+14	2	2019-02-26 22:44:42.775913-05	2019-02-26 22:44:42.775913-05	\N	f	\N
+15	2	2019-02-27 00:02:35.202949-05	2019-02-27 00:02:35.202949-05	\N	f	\N
+16	2	2019-02-27 13:29:39.768416-05	2019-02-27 13:29:48.944726-05	3	f	\N
+17	2	2019-02-27 13:39:12.751821-05	2019-02-27 13:39:16.240583-05	2	f	\N
+18	2	2019-02-27 13:48:20.94384-05	2019-02-27 13:48:23.798401-05	2	f	\N
+19	2	2019-02-27 13:52:47.474477-05	2019-02-27 13:52:51.398336-05	3	f	\N
+20	2	2019-02-27 14:11:30.257295-05	2019-02-27 14:11:33.322388-05	2	f	\N
+21	2	2019-02-27 14:12:37.310265-05	2019-02-27 14:12:39.538931-05	2	f	\N
+22	2	2019-02-27 14:20:00.777368-05	2019-02-27 14:21:53.384911-05	3	f	\N
+23	2	2019-02-27 14:25:45.778294-05	2019-02-27 14:25:51.238531-05	4	f	\N
+24	2	2019-02-27 14:27:18.707557-05	2019-02-27 14:27:24.010457-05	3	f	\N
+25	2	2019-02-27 14:28:38.668484-05	2019-02-27 14:28:41.670686-05	5	f	\N
+26	2	2019-02-27 15:06:47.766863-05	2019-02-27 15:06:54.195672-05	3	f	\N
+27	2	2019-02-27 15:27:17.294305-05	2019-02-27 15:27:23.464392-05	4	f	\N
+28	2	2019-02-27 15:53:01.53927-05	2019-02-27 15:53:06.513-05	1	f	\N
+29	2	2019-02-27 16:09:38.354013-05	2019-02-27 16:09:44.621685-05	4	t	\N
+30	2	2019-02-27 16:12:26.773507-05	2019-02-27 16:12:32.874239-05	4	t	\N
+31	2	2019-02-27 16:15:37.223001-05	2019-02-27 16:15:43.126429-05	4	t	\N
+32	2	2019-02-27 16:17:24.35302-05	2019-02-27 16:17:29.483349-05	4	t	\N
+33	2	2019-02-27 16:20:57.556757-05	2019-02-27 16:21:03.855975-05	3	t	\N
+34	2	2019-02-27 16:30:27.923775-05	2019-02-27 16:30:34.006515-05	4	t	\N
+35	2	2019-02-27 16:40:52.519572-05	2019-02-27 16:40:55.109055-05	2	f	\N
+36	2	2019-02-27 16:41:38.586977-05	2019-02-27 16:41:41.125597-05	2	f	\N
+37	2	2019-02-27 16:42:21.419002-05	2019-02-27 16:42:26.012697-05	4	t	\N
+38	2	2019-02-27 16:51:07.643912-05	2019-02-27 16:51:14.853393-05	4	t	\N
+39	2	2019-02-27 18:39:14.783895-05	2019-02-27 18:39:38.129419-05	4	f	\N
+40	2	2019-02-27 18:54:17.161038-05	2019-02-27 18:54:17.161038-05	\N	f	\N
+41	2	2019-02-27 19:18:44.705626-05	2019-02-27 19:18:56.481283-05	1	t	\N
+42	2	2019-02-28 16:43:21.023819-05	2019-02-28 16:43:30.624332-05	5	t	\N
+43	2	2019-02-28 16:45:48.118309-05	2019-02-28 16:45:51.178081-05	3	f	\N
+44	4	2019-02-28 17:07:38.444817-05	2019-02-28 17:07:44.743004-05	1	f	\N
+45	4	2019-02-28 17:08:39.657722-05	2019-02-28 17:09:34.38583-05	1	t	\N
+46	4	2019-02-28 17:09:49.305677-05	2019-02-28 17:09:54.036346-05	1	f	\N
+47	4	2019-02-28 17:10:12.832889-05	2019-02-28 17:10:15.869716-05	4	f	\N
+48	4	2019-02-28 17:10:38.974945-05	2019-02-28 17:10:44.90332-05	5	t	\N
+49	2	2019-02-28 17:25:21.454925-05	2019-02-28 17:25:23.363797-05	2	f	\N
+50	2	2019-02-28 17:26:46.684182-05	2019-02-28 17:26:48.540693-05	2	f	\N
+51	2	2019-02-28 17:29:18.612857-05	2019-02-28 17:29:20.757898-05	4	f	\N
+52	2	2019-02-28 21:09:18.928536-05	2019-02-28 21:09:53.240905-05	5	t	\N
+53	3	2019-02-28 21:46:45.240763-05	2019-02-28 21:46:45.240763-05	\N	f	\N
+54	5	2019-02-28 22:06:05.100309-05	2019-02-28 22:06:22.560073-05	4	f	\N
+55	5	2019-03-01 14:23:19.481482-05	2019-03-01 14:40:27.05288-05	2	f	\N
+56	5	2019-03-01 14:52:04.767049-05	2019-03-01 14:52:07.599449-05	1	f	\N
+57	5	2019-03-01 15:20:46.962585-05	2019-03-01 15:20:51.242418-05	1	f	\N
+58	5	2019-03-01 15:22:58.804076-05	2019-03-01 15:23:01.221941-05	3	f	\N
+59	5	2019-03-01 15:28:45.972493-05	2019-03-01 15:28:50.32501-05	4	f	140
+60	2	2019-03-01 15:32:49.456212-05	2019-03-01 15:32:52.952149-05	4	f	94
+61	2	2019-03-01 15:36:00.757612-05	2019-03-01 15:36:00.757612-05	\N	f	\N
+62	2	2019-03-01 15:41:43.633518-05	2019-03-01 15:45:04.517893-05	3	f	\N
+63	2	2019-03-01 15:55:11.502565-05	2019-03-01 15:59:26.44929-05	4	t	93
+64	2	2019-03-01 16:01:22.305615-05	2019-03-01 16:01:30.596982-05	1	t	105
+65	2	2019-03-01 16:11:03.062979-05	2019-03-01 16:11:08.064019-05	1	t	116
+66	2	2019-03-01 16:13:12.336706-05	2019-03-01 16:13:18.094842-05	1	f	109
+67	2	2019-03-01 16:19:55.064871-05	2019-03-01 16:19:55.064871-05	\N	f	\N
+68	2	2019-03-01 16:20:19.818828-05	2019-03-01 16:20:19.818828-05	\N	f	\N
+69	2	2019-03-01 16:20:31.652632-05	2019-03-01 16:20:31.652632-05	\N	f	\N
+70	2	2019-03-01 16:20:43.40367-05	2019-03-01 16:20:43.40367-05	\N	f	\N
+71	6	2019-03-01 16:22:18.502212-05	2019-03-01 16:22:26.925824-05	5	f	140
+72	2	2019-03-01 16:34:26.63763-05	2019-03-01 16:34:30.928723-05	2	f	110
+73	7	2019-03-02 14:57:47.709364-05	2019-03-02 14:57:53.27176-05	4	f	94
+74	7	2019-03-02 14:58:22.176713-05	2019-03-02 14:58:34.544054-05	1	f	140
+75	8	2019-03-03 16:37:57.607061-05	2019-03-03 16:38:16.963369-05	2	f	94
+76	8	2019-03-03 16:40:08.483772-05	2019-03-03 16:40:27.99654-05	4	t	102
+77	3	2019-03-06 14:06:16.429961-05	2019-03-06 14:06:26.4995-05	3	f	99
+78	3	2019-03-06 14:08:40.090657-05	2019-03-06 14:08:42.98613-05	1	f	109
+79	3	2019-03-06 14:15:21.871523-05	2019-03-06 14:15:27.623424-05	4	t	94
+80	9	2019-03-06 14:55:37.442983-05	2019-03-06 14:55:49.776966-05	3	f	100
+81	10	2019-03-06 15:03:09.800653-05	2019-03-06 15:03:13.595521-05	5	f	109
+82	11	2019-03-06 15:18:59.463556-05	2019-03-06 15:19:04.686708-05	5	f	88
+83	2	2019-03-06 18:24:49.223424-05	2019-03-06 18:24:54.025592-05	4	f	115
+84	12	2019-03-06 18:42:01.969407-05	2019-03-06 18:42:57.297823-05	4	f	130
+85	12	2019-03-06 18:46:19.107851-05	2019-03-06 18:46:45.572648-05	5	f	113
+86	3	2019-03-06 21:33:52.360099-05	2019-03-06 21:34:07.511417-05	3	f	158
+87	3	2019-03-07 15:07:55.845058-05	2019-03-07 15:08:56.455334-05	4	f	94
+88	13	2019-03-30 22:58:07.894015-04	2019-03-30 22:58:29.403675-04	1	f	109
+89	3	2019-04-03 16:36:54.117615-04	2019-04-03 16:37:10.023463-04	3	t	147
+90	14	2019-04-03 21:44:05.378729-04	2019-04-03 21:44:19.12652-04	4	f	130
+91	14	2019-04-04 13:33:42.022286-04	2019-04-04 13:33:42.022286-04	\N	f	\N
+92	14	2019-04-04 15:32:37.773798-04	2019-04-04 15:32:46.685432-04	3	f	\N
+93	14	2019-04-04 16:32:50.534093-04	2019-04-04 16:32:50.583922-04	5	f	\N
+94	14	2019-04-04 16:54:10.803956-04	2019-04-04 16:54:11.362988-04	5	f	113
+95	14	2019-04-04 16:55:11.510096-04	2019-04-04 16:55:12.131845-04	5	f	130
+96	14	2019-04-04 16:58:08.820395-04	2019-04-04 16:58:09.206378-04	5	f	130
+97	14	2019-04-04 16:59:06.988803-04	2019-04-04 16:59:07.412468-04	5	f	130
+98	14	2019-04-04 17:00:05.559269-04	2019-04-04 17:00:05.962666-04	5	f	130
+99	14	2019-04-04 17:05:09.044602-04	2019-04-04 17:05:09.477888-04	5	f	130
+100	14	2019-04-04 17:08:28.632457-04	2019-04-04 17:08:29.120445-04	5	f	130
+101	14	2019-04-04 17:08:50.119899-04	2019-04-04 17:08:50.5368-04	5	f	130
+102	14	2019-04-04 17:10:48.798505-04	2019-04-04 17:10:49.298755-04	5	f	130
+103	14	2019-04-04 18:13:10.1174-04	2019-04-04 18:13:10.607031-04	5	f	102
+104	14	2019-04-04 18:13:41.748149-04	2019-04-04 18:13:42.369174-04	5	f	102
+105	14	2019-04-04 18:14:04.251346-04	2019-04-04 18:14:11.858827-04	5	f	102
+106	14	2019-04-04 18:16:04.208744-04	2019-04-04 18:16:11.413886-04	5	f	140
+107	14	2019-04-04 18:17:01.052991-04	2019-04-04 18:17:01.551533-04	5	f	102
+108	14	2019-04-04 18:38:06.706703-04	2019-04-04 18:38:07.610617-04	5	f	130
+109	14	2019-04-04 18:43:30.707407-04	2019-04-04 18:43:31.168932-04	5	f	130
+110	14	2019-04-04 18:46:15.272787-04	2019-04-04 18:46:15.689059-04	3	f	83
+111	2	2019-04-04 19:58:30.299365-04	2019-04-04 19:58:30.731828-04	5	f	93
+112	2	2019-04-04 20:00:04.962245-04	2019-04-04 20:00:05.392234-04	1	f	116
+113	2	2019-04-06 13:49:27.236898-04	2019-04-06 13:49:27.712823-04	3	f	147
+114	2	2019-04-06 19:50:48.12431-04	2019-04-06 19:50:48.5224-04	5	f	134
+115	15	2019-04-06 19:56:57.648327-04	2019-04-06 19:56:58.258211-04	4	f	94
+116	2	2019-04-10 14:33:40.442293-04	2019-04-10 14:33:40.809098-04	3	f	158
+117	16	2019-04-10 14:35:33.762103-04	2019-04-10 14:35:34.152845-04	4	f	130
+118	17	2019-04-10 16:36:16.387663-04	2019-04-10 16:36:16.831579-04	5	f	144
+119	17	2019-04-10 16:37:33.57954-04	2019-04-10 16:37:33.982617-04	2	f	94
+120	17	2019-04-10 17:48:59.135371-04	2019-04-10 17:48:59.846182-04	4	f	130
+121	17	2019-04-13 14:03:50.924745-04	2019-04-13 14:03:51.311362-04	2	f	142
+122	2	2019-04-19 15:00:36.413199-04	2019-04-19 15:00:36.852764-04	4	f	150
+123	2	2019-04-19 15:02:08.918912-04	2019-04-19 15:02:09.371986-04	4	f	94
+124	2	2019-04-19 15:04:12.491545-04	2019-04-19 15:04:12.878782-04	5	f	155
+125	2	2019-04-19 15:05:31.449914-04	2019-04-19 15:05:31.863914-04	4	f	90
+126	2	2019-04-19 15:06:03.326946-04	2019-04-19 15:06:03.801544-04	3	f	83
+\.
+
+
+--
+-- Data for Name: ratings; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.ratings (id, user_id, drink_id, score, created_at, updated_at, recommended) FROM stdin;
+2	\N	92	\N	2019-02-25 22:39:53.476252-05	2019-02-25 22:39:53.476252-05	f
+3	\N	96	\N	2019-02-25 22:39:53.490174-05	2019-02-25 22:39:53.490174-05	f
+4	\N	99	\N	2019-02-25 22:39:53.496198-05	2019-02-25 22:39:53.496198-05	f
+5	\N	100	\N	2019-02-25 22:39:53.503987-05	2019-02-25 22:39:53.503987-05	f
+6	\N	110	\N	2019-02-25 22:39:53.512508-05	2019-02-25 22:39:53.512508-05	f
+7	\N	117	\N	2019-02-25 22:39:53.521657-05	2019-02-25 22:39:53.521657-05	f
+8	\N	124	\N	2019-02-25 22:39:53.527889-05	2019-02-25 22:39:53.527889-05	f
+9	\N	128	\N	2019-02-25 22:39:53.535709-05	2019-02-25 22:39:53.535709-05	f
+10	\N	130	\N	2019-02-25 22:39:53.542703-05	2019-02-25 22:39:53.542703-05	f
+11	\N	131	\N	2019-02-25 22:39:53.549507-05	2019-02-25 22:39:53.549507-05	f
+12	\N	132	\N	2019-02-25 22:39:53.557664-05	2019-02-25 22:39:53.557664-05	f
+13	\N	133	\N	2019-02-25 22:39:53.563757-05	2019-02-25 22:39:53.563757-05	f
+14	\N	135	\N	2019-02-25 22:39:53.571127-05	2019-02-25 22:39:53.571127-05	f
+15	\N	136	\N	2019-02-25 22:39:53.579693-05	2019-02-25 22:39:53.579693-05	f
+16	\N	147	\N	2019-02-25 22:39:53.585523-05	2019-02-25 22:39:53.585523-05	f
+17	\N	150	\N	2019-02-25 22:39:53.592862-05	2019-02-25 22:39:53.592862-05	f
+18	\N	92	\N	2019-02-25 22:39:56.457023-05	2019-02-25 22:39:56.457023-05	f
+19	\N	96	\N	2019-02-25 22:39:56.462074-05	2019-02-25 22:39:56.462074-05	f
+20	\N	99	\N	2019-02-25 22:39:56.466527-05	2019-02-25 22:39:56.466527-05	f
+21	\N	100	\N	2019-02-25 22:39:56.473139-05	2019-02-25 22:39:56.473139-05	f
+22	\N	110	\N	2019-02-25 22:39:56.478098-05	2019-02-25 22:39:56.478098-05	f
+23	\N	117	\N	2019-02-25 22:39:56.482778-05	2019-02-25 22:39:56.482778-05	f
+24	\N	124	\N	2019-02-25 22:39:56.488761-05	2019-02-25 22:39:56.488761-05	f
+25	\N	128	\N	2019-02-25 22:39:56.498797-05	2019-02-25 22:39:56.498797-05	f
+26	\N	130	\N	2019-02-25 22:39:56.507609-05	2019-02-25 22:39:56.507609-05	f
+27	\N	131	\N	2019-02-25 22:39:56.514499-05	2019-02-25 22:39:56.514499-05	f
+28	\N	132	\N	2019-02-25 22:39:56.523571-05	2019-02-25 22:39:56.523571-05	f
+29	\N	133	\N	2019-02-25 22:39:56.529637-05	2019-02-25 22:39:56.529637-05	f
+30	\N	135	\N	2019-02-25 22:39:56.536785-05	2019-02-25 22:39:56.536785-05	f
+31	\N	136	\N	2019-02-25 22:39:56.542545-05	2019-02-25 22:39:56.542545-05	f
+32	\N	147	\N	2019-02-25 22:39:56.547594-05	2019-02-25 22:39:56.547594-05	f
+33	\N	150	\N	2019-02-25 22:39:56.552305-05	2019-02-25 22:39:56.552305-05	f
+34	\N	92	\N	2019-02-25 22:40:24.739691-05	2019-02-25 22:40:24.739691-05	f
+35	\N	96	\N	2019-02-25 22:40:24.746827-05	2019-02-25 22:40:24.746827-05	f
+36	\N	99	\N	2019-02-25 22:40:24.751051-05	2019-02-25 22:40:24.751051-05	f
+37	\N	100	\N	2019-02-25 22:40:24.757738-05	2019-02-25 22:40:24.757738-05	f
+38	\N	110	\N	2019-02-25 22:40:24.76491-05	2019-02-25 22:40:24.76491-05	f
+39	\N	117	\N	2019-02-25 22:40:24.770184-05	2019-02-25 22:40:24.770184-05	f
+40	\N	124	\N	2019-02-25 22:40:24.776638-05	2019-02-25 22:40:24.776638-05	f
+41	\N	128	\N	2019-02-25 22:40:24.782255-05	2019-02-25 22:40:24.782255-05	f
+42	\N	130	\N	2019-02-25 22:40:24.787776-05	2019-02-25 22:40:24.787776-05	f
+43	\N	131	\N	2019-02-25 22:40:24.795369-05	2019-02-25 22:40:24.795369-05	f
+44	\N	132	\N	2019-02-25 22:40:24.801372-05	2019-02-25 22:40:24.801372-05	f
+45	\N	133	\N	2019-02-25 22:40:24.808526-05	2019-02-25 22:40:24.808526-05	f
+46	\N	135	\N	2019-02-25 22:40:24.814324-05	2019-02-25 22:40:24.814324-05	f
+47	\N	136	\N	2019-02-25 22:40:24.821813-05	2019-02-25 22:40:24.821813-05	f
+48	\N	147	\N	2019-02-25 22:40:24.828285-05	2019-02-25 22:40:24.828285-05	f
+49	\N	150	\N	2019-02-25 22:40:24.834091-05	2019-02-25 22:40:24.834091-05	f
+50	\N	92	\N	2019-02-25 22:41:20.430196-05	2019-02-25 22:41:20.430196-05	f
+51	\N	96	\N	2019-02-25 22:41:20.437288-05	2019-02-25 22:41:20.437288-05	f
+52	\N	99	\N	2019-02-25 22:41:20.443603-05	2019-02-25 22:41:20.443603-05	f
+53	\N	100	\N	2019-02-25 22:41:20.450072-05	2019-02-25 22:41:20.450072-05	f
+54	\N	110	\N	2019-02-25 22:41:20.455496-05	2019-02-25 22:41:20.455496-05	f
+55	\N	117	\N	2019-02-25 22:41:20.463188-05	2019-02-25 22:41:20.463188-05	f
+56	\N	124	\N	2019-02-25 22:41:20.469627-05	2019-02-25 22:41:20.469627-05	f
+57	\N	128	\N	2019-02-25 22:41:20.476138-05	2019-02-25 22:41:20.476138-05	f
+58	\N	130	\N	2019-02-25 22:41:20.482386-05	2019-02-25 22:41:20.482386-05	f
+59	\N	131	\N	2019-02-25 22:41:20.490728-05	2019-02-25 22:41:20.490728-05	f
+60	\N	132	\N	2019-02-25 22:41:20.505632-05	2019-02-25 22:41:20.505632-05	f
+61	\N	133	\N	2019-02-25 22:41:20.511931-05	2019-02-25 22:41:20.511931-05	f
+62	\N	135	\N	2019-02-25 22:41:20.517924-05	2019-02-25 22:41:20.517924-05	f
+63	\N	136	\N	2019-02-25 22:41:20.523296-05	2019-02-25 22:41:20.523296-05	f
+64	\N	147	\N	2019-02-25 22:41:20.529312-05	2019-02-25 22:41:20.529312-05	f
+65	\N	150	\N	2019-02-25 22:41:20.534316-05	2019-02-25 22:41:20.534316-05	f
+66	\N	92	\N	2019-02-25 22:42:25.338567-05	2019-02-25 22:42:25.338567-05	f
+67	\N	96	\N	2019-02-25 22:42:25.346331-05	2019-02-25 22:42:25.346331-05	f
+68	\N	99	\N	2019-02-25 22:42:25.353048-05	2019-02-25 22:42:25.353048-05	f
+69	\N	100	\N	2019-02-25 22:42:25.363636-05	2019-02-25 22:42:25.363636-05	f
+70	\N	110	\N	2019-02-25 22:42:25.371562-05	2019-02-25 22:42:25.371562-05	f
+71	\N	117	\N	2019-02-25 22:42:25.37878-05	2019-02-25 22:42:25.37878-05	f
+72	\N	124	\N	2019-02-25 22:42:25.385196-05	2019-02-25 22:42:25.385196-05	f
+73	\N	128	\N	2019-02-25 22:42:25.392035-05	2019-02-25 22:42:25.392035-05	f
+74	\N	130	\N	2019-02-25 22:42:25.397789-05	2019-02-25 22:42:25.397789-05	f
+75	\N	131	\N	2019-02-25 22:42:25.406855-05	2019-02-25 22:42:25.406855-05	f
+76	\N	132	\N	2019-02-25 22:42:25.414563-05	2019-02-25 22:42:25.414563-05	f
+77	\N	133	\N	2019-02-25 22:42:25.420174-05	2019-02-25 22:42:25.420174-05	f
+78	\N	135	\N	2019-02-25 22:42:25.42554-05	2019-02-25 22:42:25.42554-05	f
+79	\N	136	\N	2019-02-25 22:42:25.430006-05	2019-02-25 22:42:25.430006-05	f
+80	\N	147	\N	2019-02-25 22:42:25.435477-05	2019-02-25 22:42:25.435477-05	f
+81	\N	150	\N	2019-02-25 22:42:25.442015-05	2019-02-25 22:42:25.442015-05	f
+82	\N	92	\N	2019-02-25 22:43:19.344835-05	2019-02-25 22:43:19.344835-05	f
+83	\N	96	\N	2019-02-25 22:43:19.353522-05	2019-02-25 22:43:19.353522-05	f
+84	\N	99	\N	2019-02-25 22:43:19.362313-05	2019-02-25 22:43:19.362313-05	f
+85	\N	100	\N	2019-02-25 22:43:19.395186-05	2019-02-25 22:43:19.395186-05	f
+86	\N	110	\N	2019-02-25 22:43:19.404122-05	2019-02-25 22:43:19.404122-05	f
+87	\N	117	\N	2019-02-25 22:43:19.416267-05	2019-02-25 22:43:19.416267-05	f
+88	\N	124	\N	2019-02-25 22:43:19.423897-05	2019-02-25 22:43:19.423897-05	f
+89	\N	128	\N	2019-02-25 22:43:19.434246-05	2019-02-25 22:43:19.434246-05	f
+90	\N	130	\N	2019-02-25 22:43:19.45326-05	2019-02-25 22:43:19.45326-05	f
+91	\N	131	\N	2019-02-25 22:43:19.462018-05	2019-02-25 22:43:19.462018-05	f
+92	\N	132	\N	2019-02-25 22:43:19.466292-05	2019-02-25 22:43:19.466292-05	f
+93	\N	133	\N	2019-02-25 22:43:19.470885-05	2019-02-25 22:43:19.470885-05	f
+94	\N	135	\N	2019-02-25 22:43:19.476446-05	2019-02-25 22:43:19.476446-05	f
+95	\N	136	\N	2019-02-25 22:43:19.481136-05	2019-02-25 22:43:19.481136-05	f
+96	\N	147	\N	2019-02-25 22:43:19.485657-05	2019-02-25 22:43:19.485657-05	f
+97	\N	150	\N	2019-02-25 22:43:19.491754-05	2019-02-25 22:43:19.491754-05	f
+98	\N	92	\N	2019-02-25 22:43:25.354601-05	2019-02-25 22:43:25.354601-05	f
+99	\N	96	\N	2019-02-25 22:43:25.367258-05	2019-02-25 22:43:25.367258-05	f
+100	\N	99	\N	2019-02-25 22:43:25.374107-05	2019-02-25 22:43:25.374107-05	f
+101	\N	100	\N	2019-02-25 22:43:25.382405-05	2019-02-25 22:43:25.382405-05	f
+102	\N	110	\N	2019-02-25 22:43:25.387316-05	2019-02-25 22:43:25.387316-05	f
+103	\N	117	\N	2019-02-25 22:43:25.392756-05	2019-02-25 22:43:25.392756-05	f
+104	\N	124	\N	2019-02-25 22:43:25.397111-05	2019-02-25 22:43:25.397111-05	f
+105	\N	128	\N	2019-02-25 22:43:25.403997-05	2019-02-25 22:43:25.403997-05	f
+106	\N	130	\N	2019-02-25 22:43:25.411142-05	2019-02-25 22:43:25.411142-05	f
+107	\N	131	\N	2019-02-25 22:43:25.41582-05	2019-02-25 22:43:25.41582-05	f
+108	\N	132	\N	2019-02-25 22:43:25.421475-05	2019-02-25 22:43:25.421475-05	f
+109	\N	133	\N	2019-02-25 22:43:25.427455-05	2019-02-25 22:43:25.427455-05	f
+110	\N	135	\N	2019-02-25 22:43:25.433252-05	2019-02-25 22:43:25.433252-05	f
+111	\N	136	\N	2019-02-25 22:43:25.440362-05	2019-02-25 22:43:25.440362-05	f
+112	\N	147	\N	2019-02-25 22:43:25.446855-05	2019-02-25 22:43:25.446855-05	f
+113	\N	150	\N	2019-02-25 22:43:25.454983-05	2019-02-25 22:43:25.454983-05	f
+114	\N	92	\N	2019-02-25 22:44:09.106833-05	2019-02-25 22:44:09.106833-05	f
+115	\N	96	\N	2019-02-25 22:44:09.114479-05	2019-02-25 22:44:09.114479-05	f
+116	\N	99	\N	2019-02-25 22:44:09.120468-05	2019-02-25 22:44:09.120468-05	f
+117	\N	100	\N	2019-02-25 22:44:09.127051-05	2019-02-25 22:44:09.127051-05	f
+118	\N	110	\N	2019-02-25 22:44:09.134595-05	2019-02-25 22:44:09.134595-05	f
+119	\N	117	\N	2019-02-25 22:44:09.139117-05	2019-02-25 22:44:09.139117-05	f
+120	\N	124	\N	2019-02-25 22:44:09.145122-05	2019-02-25 22:44:09.145122-05	f
+121	\N	128	\N	2019-02-25 22:44:09.151236-05	2019-02-25 22:44:09.151236-05	f
+122	\N	130	\N	2019-02-25 22:44:09.155687-05	2019-02-25 22:44:09.155687-05	f
+123	\N	131	\N	2019-02-25 22:44:09.162677-05	2019-02-25 22:44:09.162677-05	f
+124	\N	132	\N	2019-02-25 22:44:09.170275-05	2019-02-25 22:44:09.170275-05	f
+125	\N	133	\N	2019-02-25 22:44:09.177139-05	2019-02-25 22:44:09.177139-05	f
+126	\N	135	\N	2019-02-25 22:44:09.185064-05	2019-02-25 22:44:09.185064-05	f
+127	\N	136	\N	2019-02-25 22:44:09.190899-05	2019-02-25 22:44:09.190899-05	f
+128	\N	147	\N	2019-02-25 22:44:09.197055-05	2019-02-25 22:44:09.197055-05	f
+129	\N	150	\N	2019-02-25 22:44:09.202496-05	2019-02-25 22:44:09.202496-05	f
+130	\N	92	\N	2019-02-25 22:44:11.904581-05	2019-02-25 22:44:11.904581-05	f
+131	\N	96	\N	2019-02-25 22:44:11.912257-05	2019-02-25 22:44:11.912257-05	f
+132	\N	99	\N	2019-02-25 22:44:11.917342-05	2019-02-25 22:44:11.917342-05	f
+133	\N	100	\N	2019-02-25 22:44:11.922281-05	2019-02-25 22:44:11.922281-05	f
+134	\N	110	\N	2019-02-25 22:44:11.927337-05	2019-02-25 22:44:11.927337-05	f
+135	\N	117	\N	2019-02-25 22:44:11.933968-05	2019-02-25 22:44:11.933968-05	f
+136	\N	124	\N	2019-02-25 22:44:11.940196-05	2019-02-25 22:44:11.940196-05	f
+137	\N	128	\N	2019-02-25 22:44:11.946318-05	2019-02-25 22:44:11.946318-05	f
+138	\N	130	\N	2019-02-25 22:44:11.951731-05	2019-02-25 22:44:11.951731-05	f
+139	\N	131	\N	2019-02-25 22:44:11.95723-05	2019-02-25 22:44:11.95723-05	f
+140	\N	132	\N	2019-02-25 22:44:11.962436-05	2019-02-25 22:44:11.962436-05	f
+141	\N	133	\N	2019-02-25 22:44:11.968092-05	2019-02-25 22:44:11.968092-05	f
+142	\N	135	\N	2019-02-25 22:44:11.972384-05	2019-02-25 22:44:11.972384-05	f
+143	\N	136	\N	2019-02-25 22:44:11.977648-05	2019-02-25 22:44:11.977648-05	f
+144	\N	147	\N	2019-02-25 22:44:11.982745-05	2019-02-25 22:44:11.982745-05	f
+145	\N	150	\N	2019-02-25 22:44:11.987084-05	2019-02-25 22:44:11.987084-05	f
+146	\N	92	\N	2019-02-25 22:47:08.942531-05	2019-02-25 22:47:08.942531-05	f
+147	\N	96	\N	2019-02-25 22:47:08.953494-05	2019-02-25 22:47:08.953494-05	f
+148	\N	99	\N	2019-02-25 22:47:08.960904-05	2019-02-25 22:47:08.960904-05	f
+149	\N	100	\N	2019-02-25 22:47:08.970601-05	2019-02-25 22:47:08.970601-05	f
+150	\N	110	\N	2019-02-25 22:47:08.980678-05	2019-02-25 22:47:08.980678-05	f
+151	\N	117	\N	2019-02-25 22:47:08.988811-05	2019-02-25 22:47:08.988811-05	f
+152	\N	124	\N	2019-02-25 22:47:08.99635-05	2019-02-25 22:47:08.99635-05	f
+153	\N	128	\N	2019-02-25 22:47:09.005618-05	2019-02-25 22:47:09.005618-05	f
+154	\N	130	\N	2019-02-25 22:47:09.016411-05	2019-02-25 22:47:09.016411-05	f
+155	\N	131	\N	2019-02-25 22:47:09.025455-05	2019-02-25 22:47:09.025455-05	f
+156	\N	132	\N	2019-02-25 22:47:09.036735-05	2019-02-25 22:47:09.036735-05	f
+157	\N	133	\N	2019-02-25 22:47:09.04434-05	2019-02-25 22:47:09.04434-05	f
+158	\N	135	\N	2019-02-25 22:47:09.052245-05	2019-02-25 22:47:09.052245-05	f
+159	\N	136	\N	2019-02-25 22:47:09.245035-05	2019-02-25 22:47:09.245035-05	f
+160	\N	147	\N	2019-02-25 22:47:09.255937-05	2019-02-25 22:47:09.255937-05	f
+161	\N	150	\N	2019-02-25 22:47:09.269017-05	2019-02-25 22:47:09.269017-05	f
+162	\N	92	\N	2019-02-26 00:05:52.033897-05	2019-02-26 00:05:52.033897-05	f
+163	\N	96	\N	2019-02-26 00:05:52.050782-05	2019-02-26 00:05:52.050782-05	f
+164	\N	99	\N	2019-02-26 00:05:52.056989-05	2019-02-26 00:05:52.056989-05	f
+165	\N	100	\N	2019-02-26 00:05:52.062714-05	2019-02-26 00:05:52.062714-05	f
+166	\N	110	\N	2019-02-26 00:05:52.068318-05	2019-02-26 00:05:52.068318-05	f
+167	\N	117	\N	2019-02-26 00:05:52.073877-05	2019-02-26 00:05:52.073877-05	f
+168	\N	124	\N	2019-02-26 00:05:52.083862-05	2019-02-26 00:05:52.083862-05	f
+169	\N	128	\N	2019-02-26 00:05:52.091928-05	2019-02-26 00:05:52.091928-05	f
+170	\N	130	\N	2019-02-26 00:05:52.098578-05	2019-02-26 00:05:52.098578-05	f
+171	\N	131	\N	2019-02-26 00:05:52.105146-05	2019-02-26 00:05:52.105146-05	f
+172	\N	132	\N	2019-02-26 00:05:52.110747-05	2019-02-26 00:05:52.110747-05	f
+173	\N	133	\N	2019-02-26 00:05:52.116732-05	2019-02-26 00:05:52.116732-05	f
+174	\N	135	\N	2019-02-26 00:05:52.123626-05	2019-02-26 00:05:52.123626-05	f
+175	\N	136	\N	2019-02-26 00:05:52.129716-05	2019-02-26 00:05:52.129716-05	f
+176	\N	147	\N	2019-02-26 00:05:52.134948-05	2019-02-26 00:05:52.134948-05	f
+177	\N	150	\N	2019-02-26 00:05:52.140812-05	2019-02-26 00:05:52.140812-05	f
+178	\N	92	\N	2019-02-26 00:13:40.703661-05	2019-02-26 00:13:40.703661-05	f
+179	\N	96	\N	2019-02-26 00:13:40.712256-05	2019-02-26 00:13:40.712256-05	f
+180	\N	99	\N	2019-02-26 00:13:40.718909-05	2019-02-26 00:13:40.718909-05	f
+181	\N	100	\N	2019-02-26 00:13:40.724685-05	2019-02-26 00:13:40.724685-05	f
+182	\N	110	\N	2019-02-26 00:13:40.729751-05	2019-02-26 00:13:40.729751-05	f
+183	\N	117	\N	2019-02-26 00:13:40.735834-05	2019-02-26 00:13:40.735834-05	f
+184	\N	124	\N	2019-02-26 00:13:40.745839-05	2019-02-26 00:13:40.745839-05	f
+185	\N	128	\N	2019-02-26 00:13:40.752925-05	2019-02-26 00:13:40.752925-05	f
+186	\N	130	\N	2019-02-26 00:13:40.760666-05	2019-02-26 00:13:40.760666-05	f
+187	\N	131	\N	2019-02-26 00:13:40.767328-05	2019-02-26 00:13:40.767328-05	f
+188	\N	132	\N	2019-02-26 00:13:40.773801-05	2019-02-26 00:13:40.773801-05	f
+189	\N	133	\N	2019-02-26 00:13:40.779805-05	2019-02-26 00:13:40.779805-05	f
+190	\N	135	\N	2019-02-26 00:13:40.787802-05	2019-02-26 00:13:40.787802-05	f
+191	\N	136	\N	2019-02-26 00:13:40.795009-05	2019-02-26 00:13:40.795009-05	f
+192	\N	147	\N	2019-02-26 00:13:40.802995-05	2019-02-26 00:13:40.802995-05	f
+193	\N	150	\N	2019-02-26 00:13:40.809683-05	2019-02-26 00:13:40.809683-05	f
+194	\N	92	\N	2019-02-26 00:14:33.998209-05	2019-02-26 00:14:33.998209-05	f
+195	\N	96	\N	2019-02-26 00:14:34.003299-05	2019-02-26 00:14:34.003299-05	f
+196	\N	99	\N	2019-02-26 00:14:34.007445-05	2019-02-26 00:14:34.007445-05	f
+197	\N	100	\N	2019-02-26 00:14:34.012683-05	2019-02-26 00:14:34.012683-05	f
+198	\N	110	\N	2019-02-26 00:14:34.022071-05	2019-02-26 00:14:34.022071-05	f
+199	\N	117	\N	2019-02-26 00:14:34.026786-05	2019-02-26 00:14:34.026786-05	f
+200	\N	124	\N	2019-02-26 00:14:34.030852-05	2019-02-26 00:14:34.030852-05	f
+201	\N	128	\N	2019-02-26 00:14:34.036962-05	2019-02-26 00:14:34.036962-05	f
+202	\N	130	\N	2019-02-26 00:14:34.041642-05	2019-02-26 00:14:34.041642-05	f
+203	\N	131	\N	2019-02-26 00:14:34.046381-05	2019-02-26 00:14:34.046381-05	f
+204	\N	132	\N	2019-02-26 00:14:34.050971-05	2019-02-26 00:14:34.050971-05	f
+205	\N	133	\N	2019-02-26 00:14:34.056404-05	2019-02-26 00:14:34.056404-05	f
+206	\N	135	\N	2019-02-26 00:14:34.06197-05	2019-02-26 00:14:34.06197-05	f
+207	\N	136	\N	2019-02-26 00:14:34.073916-05	2019-02-26 00:14:34.073916-05	f
+208	\N	147	\N	2019-02-26 00:14:34.092282-05	2019-02-26 00:14:34.092282-05	f
+209	\N	150	\N	2019-02-26 00:14:34.098859-05	2019-02-26 00:14:34.098859-05	f
+210	\N	92	\N	2019-02-26 00:14:46.694665-05	2019-02-26 00:14:46.694665-05	f
+211	\N	96	\N	2019-02-26 00:14:46.698922-05	2019-02-26 00:14:46.698922-05	f
+212	\N	99	\N	2019-02-26 00:14:46.703584-05	2019-02-26 00:14:46.703584-05	f
+213	\N	100	\N	2019-02-26 00:14:46.709166-05	2019-02-26 00:14:46.709166-05	f
+214	\N	110	\N	2019-02-26 00:14:46.71633-05	2019-02-26 00:14:46.71633-05	f
+215	\N	117	\N	2019-02-26 00:14:46.732218-05	2019-02-26 00:14:46.732218-05	f
+216	\N	124	\N	2019-02-26 00:14:46.738971-05	2019-02-26 00:14:46.738971-05	f
+217	\N	128	\N	2019-02-26 00:14:46.745078-05	2019-02-26 00:14:46.745078-05	f
+218	\N	130	\N	2019-02-26 00:14:46.750393-05	2019-02-26 00:14:46.750393-05	f
+219	\N	131	\N	2019-02-26 00:14:46.760621-05	2019-02-26 00:14:46.760621-05	f
+220	\N	132	\N	2019-02-26 00:14:46.764992-05	2019-02-26 00:14:46.764992-05	f
+221	\N	133	\N	2019-02-26 00:14:46.772796-05	2019-02-26 00:14:46.772796-05	f
+222	\N	135	\N	2019-02-26 00:14:46.777171-05	2019-02-26 00:14:46.777171-05	f
+223	\N	136	\N	2019-02-26 00:14:46.783022-05	2019-02-26 00:14:46.783022-05	f
+224	\N	147	\N	2019-02-26 00:14:46.792568-05	2019-02-26 00:14:46.792568-05	f
+225	\N	150	\N	2019-02-26 00:14:46.800352-05	2019-02-26 00:14:46.800352-05	f
+355	2	96	1	2019-02-27 13:40:25.309441-05	2019-03-01 16:01:30.430045-05	t
+356	2	92	1	2019-02-27 13:49:16.822274-05	2019-03-01 16:13:17.857209-05	f
+357	2	100	-1	2019-02-27 13:49:16.84573-05	2019-04-10 14:33:40.540943-04	t
+358	2	131	-1	2019-02-27 13:49:16.861471-05	2019-02-28 16:43:30.673889-05	f
+359	2	99	1	2019-02-27 13:52:51.44605-05	2019-03-01 15:32:52.644871-05	t
+360	2	128	1	2019-02-27 13:52:51.459065-05	2019-02-28 21:09:53.323695-05	f
+361	2	147	-1	2019-02-27 13:52:51.475317-05	2019-02-28 21:09:53.35109-05	t
+362	2	132	-1	2019-02-27 15:06:57.947125-05	2019-03-01 16:13:17.888684-05	f
+363	2	150	-1	2019-02-27 15:06:57.961153-05	2019-04-19 15:00:36.888704-04	t
+364	2	110	1	2019-02-27 15:27:25.337757-05	2019-03-01 16:34:30.940091-05	t
+365	2	117	-1	2019-02-27 15:27:25.359321-05	2019-03-01 16:13:17.875748-05	f
+366	2	135	1	2019-02-27 15:27:25.376507-05	2019-02-27 15:27:25.376507-05	f
+367	2	130	-1	2019-02-27 15:53:20.731756-05	2019-04-06 19:50:48.208863-04	f
+368	2	136	-1	2019-02-27 16:14:00.123812-05	2019-03-01 16:11:07.811503-05	f
+369	2	94	\N	2019-02-27 16:41:43.658955-05	2019-02-27 16:41:43.658955-05	t
+370	2	87	\N	2019-02-27 16:51:15.211325-05	2019-02-27 16:51:15.211325-05	t
+371	2	152	\N	2019-02-27 16:56:39.773535-05	2019-02-27 16:56:39.773535-05	t
+372	2	90	\N	2019-02-27 16:57:45.895836-05	2019-02-27 16:57:45.895836-05	t
+373	2	151	\N	2019-02-27 16:58:03.769093-05	2019-02-27 16:58:03.769093-05	t
+374	2	118	1	2019-02-27 16:58:47.291436-05	2019-03-01 17:45:12.439534-05	t
+375	2	157	\N	2019-02-27 16:58:59.487619-05	2019-02-27 16:58:59.487619-05	t
+376	2	140	\N	2019-02-27 18:40:14.182522-05	2019-02-27 18:40:14.182522-05	t
+377	2	134	\N	2019-02-28 16:43:30.922923-05	2019-02-28 16:43:30.922923-05	t
+378	2	124	1	2019-02-28 16:45:54.733448-05	2019-02-28 16:45:54.733448-05	f
+379	2	158	\N	2019-02-28 16:45:55.004224-05	2019-02-28 16:45:55.004224-05	t
+380	2	153	\N	2019-02-28 16:48:33.608165-05	2019-02-28 16:48:33.608165-05	t
+381	2	83	\N	2019-02-28 16:57:42.720157-05	2019-02-28 16:57:42.720157-05	t
+382	4	96	1	2019-02-28 17:07:44.819558-05	2019-02-28 17:07:44.819558-05	f
+383	4	99	1	2019-02-28 17:07:44.83283-05	2019-02-28 17:07:44.83283-05	f
+384	4	110	1	2019-02-28 17:07:44.841071-05	2019-02-28 17:07:44.841071-05	f
+385	4	131	-1	2019-02-28 17:07:44.853374-05	2019-02-28 17:07:44.853374-05	f
+386	4	147	-1	2019-02-28 17:07:44.879628-05	2019-02-28 17:07:44.879628-05	f
+387	4	150	-1	2019-02-28 17:07:44.893881-05	2019-02-28 17:07:44.893881-05	f
+388	4	140	\N	2019-02-28 17:07:45.141218-05	2019-02-28 17:07:45.141218-05	t
+389	4	92	1	2019-02-28 17:09:34.429277-05	2019-02-28 17:09:34.429277-05	f
+390	4	100	1	2019-02-28 17:09:34.45276-05	2019-02-28 17:09:34.45276-05	f
+391	4	117	1	2019-02-28 17:09:34.468175-05	2019-02-28 17:10:44.946837-05	f
+392	4	132	1	2019-02-28 17:09:34.511894-05	2019-02-28 17:10:17.902036-05	f
+393	4	133	1	2019-02-28 17:09:34.532374-05	2019-02-28 17:10:44.976507-05	f
+394	4	135	1	2019-02-28 17:09:34.544575-05	2019-02-28 17:10:17.910435-05	f
+395	4	146	\N	2019-02-28 17:09:34.755685-05	2019-02-28 17:09:34.755685-05	t
+396	4	105	\N	2019-02-28 17:09:56.643281-05	2019-02-28 17:09:56.643281-05	t
+397	4	130	-1	2019-02-28 17:10:17.895991-05	2019-02-28 17:10:44.969065-05	f
+398	4	136	1	2019-02-28 17:10:17.918226-05	2019-02-28 17:10:17.918226-05	f
+399	4	94	\N	2019-02-28 17:10:18.173877-05	2019-02-28 17:10:18.173877-05	t
+400	4	124	1	2019-02-28 17:10:44.959443-05	2019-02-28 17:10:44.959443-05	f
+401	4	134	\N	2019-02-28 17:10:45.186651-05	2019-02-28 17:10:45.186651-05	t
+402	4	93	\N	2019-02-28 17:15:07.791816-05	2019-02-28 17:15:07.791816-05	t
+403	4	119	\N	2019-02-28 17:15:30.583192-05	2019-02-28 17:15:30.583192-05	t
+404	4	102	\N	2019-02-28 17:17:46.230953-05	2019-02-28 17:17:46.230953-05	t
+405	4	95	\N	2019-02-28 17:19:06.537926-05	2019-02-28 17:19:06.537926-05	t
+406	4	89	\N	2019-02-28 17:19:14.846838-05	2019-02-28 17:19:14.846838-05	t
+407	4	144	\N	2019-02-28 17:19:44.476626-05	2019-02-28 17:19:44.476626-05	t
+408	4	109	\N	2019-02-28 17:20:13.809579-05	2019-02-28 17:20:13.809579-05	t
+409	4	152	\N	2019-02-28 17:20:47.542002-05	2019-02-28 17:20:47.542002-05	t
+410	4	155	\N	2019-02-28 17:20:56.190339-05	2019-02-28 17:20:56.190339-05	t
+411	4	141	\N	2019-02-28 17:21:23.168728-05	2019-02-28 17:21:23.168728-05	t
+412	4	98	\N	2019-02-28 17:21:38.394025-05	2019-02-28 17:21:38.394025-05	t
+413	4	88	\N	2019-02-28 17:21:39.789654-05	2019-02-28 17:21:39.789654-05	t
+414	4	151	\N	2019-02-28 17:21:41.205379-05	2019-02-28 17:21:41.205379-05	t
+415	4	139	\N	2019-02-28 17:21:43.817829-05	2019-02-28 17:21:43.817829-05	t
+416	4	85	\N	2019-02-28 17:21:45.775062-05	2019-02-28 17:21:45.775062-05	t
+417	4	115	\N	2019-02-28 17:22:22.1587-05	2019-02-28 17:22:22.1587-05	t
+418	4	154	\N	2019-02-28 17:22:24.295414-05	2019-02-28 17:22:24.295414-05	t
+419	4	156	\N	2019-02-28 17:22:25.720428-05	2019-02-28 17:22:25.720428-05	t
+420	4	128	\N	2019-02-28 17:22:26.713255-05	2019-02-28 17:22:26.713255-05	t
+421	4	143	\N	2019-02-28 17:22:27.989092-05	2019-02-28 17:22:27.989092-05	t
+422	4	112	\N	2019-02-28 17:22:35.658742-05	2019-02-28 17:22:35.658742-05	t
+423	4	137	\N	2019-02-28 17:22:37.891727-05	2019-02-28 17:22:37.891727-05	t
+424	4	90	\N	2019-02-28 17:22:38.768158-05	2019-02-28 17:22:38.768158-05	t
+425	4	104	\N	2019-02-28 17:22:41.845781-05	2019-02-28 17:22:41.845781-05	t
+426	4	113	\N	2019-02-28 17:22:43.746977-05	2019-02-28 17:22:43.746977-05	t
+427	4	86	\N	2019-02-28 17:23:03.014034-05	2019-02-28 17:23:03.014034-05	t
+428	4	129	\N	2019-02-28 17:23:52.155742-05	2019-02-28 17:23:52.155742-05	t
+429	2	123	\N	2019-02-28 17:26:50.885582-05	2019-02-28 17:26:50.885582-05	t
+430	2	89	\N	2019-02-28 17:26:58.973977-05	2019-02-28 17:26:58.973977-05	t
+431	2	82	\N	2019-02-28 17:27:04.508753-05	2019-02-28 17:27:04.508753-05	t
+432	2	142	\N	2019-02-28 17:27:16.807962-05	2019-02-28 17:27:16.807962-05	t
+433	2	95	\N	2019-02-28 21:09:54.321289-05	2019-02-28 21:09:54.321289-05	t
+434	5	92	1	2019-02-28 22:06:22.692431-05	2019-03-01 14:56:38.142913-05	f
+435	5	110	1	2019-02-28 22:06:22.717777-05	2019-02-28 22:06:22.717777-05	f
+436	5	117	1	2019-02-28 22:06:22.742143-05	2019-02-28 22:06:22.742143-05	f
+437	5	132	1	2019-02-28 22:06:22.794825-05	2019-02-28 22:06:22.794825-05	f
+438	5	94	\N	2019-02-28 22:06:23.164588-05	2019-02-28 22:06:23.164588-05	t
+439	5	151	\N	2019-03-01 14:42:28.372785-05	2019-03-01 14:42:28.372785-05	t
+440	5	142	\N	2019-03-01 14:43:04.764361-05	2019-03-01 14:43:04.764361-05	t
+441	5	82	\N	2019-03-01 14:43:07.250898-05	2019-03-01 14:43:07.250898-05	t
+442	5	89	\N	2019-03-01 14:44:02.915585-05	2019-03-01 14:44:02.915585-05	t
+443	5	128	-1	2019-03-01 14:56:38.17924-05	2019-03-01 14:56:38.17924-05	f
+444	5	130	1	2019-03-01 14:56:38.192582-05	2019-03-01 14:56:38.192582-05	f
+445	5	87	\N	2019-03-01 14:56:38.502073-05	2019-03-01 14:56:38.502073-05	t
+446	5	99	1	2019-03-01 15:20:52.958551-05	2019-03-01 15:23:02.896888-05	t
+447	5	136	-1	2019-03-01 15:20:52.970346-05	2019-03-01 15:20:52.970346-05	f
+448	5	146	\N	2019-03-01 15:20:53.220587-05	2019-03-01 15:20:53.220587-05	t
+449	5	109	\N	2019-03-01 15:20:54.522935-05	2019-03-01 15:20:54.522935-05	t
+450	5	140	\N	2019-03-01 15:22:42.693811-05	2019-03-01 15:22:42.693811-05	t
+451	5	147	-1	2019-03-01 15:28:49.984983-05	2019-03-01 15:28:49.984983-05	f
+452	2	93	\N	2019-03-01 15:59:26.462353-05	2019-03-01 15:59:26.462353-05	t
+453	2	105	\N	2019-03-01 16:01:30.609218-05	2019-03-01 16:01:30.609218-05	t
+454	2	116	\N	2019-03-01 16:11:08.089669-05	2019-03-01 16:11:08.089669-05	t
+455	2	133	-1	2019-03-01 16:13:17.899511-05	2019-03-01 16:13:17.899511-05	f
+456	2	109	\N	2019-03-01 16:13:18.119789-05	2019-03-01 16:13:18.119789-05	t
+457	6	92	-1	2019-03-01 16:22:26.681591-05	2019-03-01 16:22:26.681591-05	f
+458	6	117	1	2019-03-01 16:22:26.693279-05	2019-03-01 16:22:26.693279-05	f
+459	6	131	1	2019-03-01 16:22:26.701196-05	2019-03-01 16:22:26.701196-05	f
+460	6	140	\N	2019-03-01 16:22:26.932701-05	2019-03-01 16:22:26.932701-05	t
+461	2	108	\N	2019-03-01 17:00:30.994059-05	2019-03-01 17:00:30.994059-05	f
+462	2	108	\N	2019-03-01 17:02:33.84212-05	2019-03-01 17:02:33.84212-05	f
+463	2	115	\N	2019-03-01 17:03:15.127828-05	2019-03-06 18:24:54.037369-05	t
+464	2	115	\N	2019-03-01 17:04:18.894703-05	2019-03-01 17:04:18.894703-05	f
+465	2	115	\N	2019-03-01 17:05:29.593918-05	2019-03-01 17:05:29.593918-05	f
+466	2	115	\N	2019-03-01 17:10:38.234216-05	2019-03-01 17:10:38.234216-05	f
+467	2	115	\N	2019-03-01 17:11:04.229754-05	2019-03-01 17:11:04.229754-05	f
+468	2	115	\N	2019-03-01 17:12:14.128373-05	2019-03-01 17:12:14.128373-05	f
+469	2	115	\N	2019-03-01 17:14:34.69659-05	2019-03-01 17:14:34.69659-05	f
+470	2	115	\N	2019-03-01 17:14:44.07188-05	2019-03-01 17:14:44.07188-05	f
+471	2	115	\N	2019-03-01 17:16:24.161382-05	2019-03-01 17:16:24.161382-05	f
+472	2	115	\N	2019-03-01 17:16:25.194766-05	2019-03-01 17:16:25.194766-05	f
+473	2	115	\N	2019-03-01 17:16:28.552178-05	2019-03-01 17:16:28.552178-05	f
+474	2	115	\N	2019-03-01 17:17:51.938129-05	2019-03-01 17:17:51.938129-05	f
+475	2	115	\N	2019-03-01 17:17:55.631269-05	2019-03-01 17:17:55.631269-05	f
+476	2	115	\N	2019-03-01 17:18:45.691063-05	2019-03-01 17:18:45.691063-05	f
+477	2	115	\N	2019-03-01 17:23:05.59098-05	2019-03-01 17:23:05.59098-05	f
+478	2	115	\N	2019-03-01 17:24:10.145306-05	2019-03-01 17:24:10.145306-05	f
+479	2	115	\N	2019-03-01 17:24:36.118251-05	2019-03-01 17:24:36.118251-05	f
+480	2	115	\N	2019-03-01 17:25:09.972887-05	2019-03-01 17:25:09.972887-05	f
+481	2	115	\N	2019-03-01 17:30:57.946388-05	2019-03-01 17:30:57.946388-05	f
+482	2	115	\N	2019-03-01 17:32:37.616341-05	2019-03-01 17:32:37.616341-05	f
+483	2	115	\N	2019-03-01 17:32:39.096503-05	2019-03-01 17:32:39.096503-05	f
+484	2	115	\N	2019-03-01 17:32:47.71933-05	2019-03-01 17:32:47.71933-05	f
+485	2	115	\N	2019-03-01 17:32:48.958692-05	2019-03-01 17:32:48.958692-05	f
+486	2	115	\N	2019-03-01 17:33:20.119746-05	2019-03-01 17:33:20.119746-05	f
+487	2	115	\N	2019-03-01 17:33:44.888779-05	2019-03-01 17:33:44.888779-05	f
+488	2	115	\N	2019-03-01 17:33:54.056527-05	2019-03-01 17:33:54.056527-05	f
+489	2	115	\N	2019-03-01 17:33:58.110483-05	2019-03-01 17:33:58.110483-05	f
+490	2	115	\N	2019-03-01 17:34:25.936693-05	2019-03-01 17:34:25.936693-05	f
+491	2	115	\N	2019-03-01 17:34:36.483189-05	2019-03-01 17:34:36.483189-05	f
+492	2	115	\N	2019-03-01 17:38:16.284554-05	2019-03-01 17:38:16.284554-05	f
+493	2	115	\N	2019-03-01 17:39:20.101547-05	2019-03-01 17:39:20.101547-05	f
+494	2	125	1	2019-03-01 17:44:58.01499-05	2019-03-01 17:44:59.841157-05	f
+495	2	118	\N	2019-03-01 17:45:10.942688-05	2019-03-01 17:45:10.942688-05	f
+496	2	129	1	2019-03-01 17:49:25.277871-05	2019-03-01 17:49:26.494136-05	f
+497	2	102	1	2019-03-01 17:50:29.591145-05	2019-03-01 17:50:31.938946-05	f
+498	7	128	1	2019-03-02 14:57:52.891239-05	2019-03-02 14:57:52.891239-05	f
+499	7	130	-1	2019-03-02 14:57:52.930521-05	2019-03-02 14:57:52.930521-05	f
+500	7	94	1	2019-03-02 14:57:53.279934-05	2019-03-02 14:58:01.620063-05	t
+501	7	94	\N	2019-03-02 14:57:59.25167-05	2019-03-02 14:57:59.25167-05	f
+502	7	96	1	2019-03-02 14:58:34.229943-05	2019-03-02 14:58:34.229943-05	f
+503	7	99	1	2019-03-02 14:58:34.243188-05	2019-03-02 14:58:34.243188-05	f
+504	7	135	-1	2019-03-02 14:58:34.255738-05	2019-03-02 14:58:34.255738-05	f
+505	7	140	\N	2019-03-02 14:58:34.556975-05	2019-03-02 14:58:34.556975-05	t
+506	7	140	\N	2019-03-02 14:58:47.331396-05	2019-03-02 14:58:47.331396-05	f
+507	8	100	-1	2019-03-03 16:38:16.579281-05	2019-03-03 16:38:16.579281-05	f
+508	8	110	1	2019-03-03 16:38:16.597592-05	2019-03-03 16:38:16.597592-05	f
+509	8	128	-1	2019-03-03 16:38:16.655529-05	2019-03-03 16:38:16.655529-05	f
+510	8	130	-1	2019-03-03 16:38:16.679617-05	2019-03-03 16:38:16.679617-05	f
+511	8	132	1	2019-03-03 16:38:16.699167-05	2019-03-03 16:38:16.699167-05	f
+512	8	133	1	2019-03-03 16:38:16.712346-05	2019-03-03 16:38:16.712346-05	f
+513	8	150	1	2019-03-03 16:38:16.725898-05	2019-03-03 16:38:16.725898-05	f
+514	8	94	1	2019-03-03 16:38:16.973507-05	2019-03-03 16:38:41.914374-05	t
+515	8	94	\N	2019-03-03 16:38:28.908677-05	2019-03-03 16:38:28.908677-05	f
+516	8	101	1	2019-03-03 16:39:26.807073-05	2019-03-03 16:39:35.14068-05	f
+517	8	131	1	2019-03-03 16:40:27.698892-05	2019-03-03 16:40:27.698892-05	f
+518	8	102	\N	2019-03-03 16:40:28.018281-05	2019-03-03 16:40:28.018281-05	t
+519	8	102	\N	2019-03-03 16:40:36.820074-05	2019-03-03 16:40:36.820074-05	f
+520	3	92	1	2019-03-06 14:08:42.718039-05	2019-03-06 14:08:42.718039-05	f
+521	3	130	-1	2019-03-06 14:08:42.735512-05	2019-03-06 14:08:42.735512-05	f
+522	3	109	1	2019-03-06 14:08:43.022081-05	2019-03-06 14:14:27.16725-05	t
+523	3	109	\N	2019-03-06 14:08:48.824937-05	2019-03-06 14:08:48.824937-05	f
+524	3	109	\N	2019-03-06 14:14:25.414313-05	2019-03-06 14:14:25.414313-05	f
+525	3	96	-1	2019-03-06 14:15:27.214709-05	2019-03-06 14:15:27.214709-05	f
+526	3	110	1	2019-03-06 14:15:27.240656-05	2019-03-06 14:15:27.240656-05	f
+527	3	117	-1	2019-03-06 14:15:27.271523-05	2019-03-06 14:15:27.271523-05	f
+528	3	131	1	2019-03-06 14:15:27.301939-05	2019-03-06 14:15:27.301939-05	f
+529	3	132	1	2019-03-06 14:15:27.33486-05	2019-03-06 14:15:27.33486-05	f
+530	3	133	-1	2019-03-06 14:15:27.356146-05	2019-03-06 14:15:27.356146-05	f
+531	3	94	\N	2019-03-06 14:15:27.645145-05	2019-03-06 14:15:27.645145-05	t
+532	3	94	\N	2019-03-06 14:15:36.700631-05	2019-03-06 14:15:36.700631-05	f
+533	2	82	\N	2019-03-06 14:25:20.761204-05	2019-03-06 14:25:20.761204-05	f
+534	2	82	\N	2019-03-06 14:25:32.8948-05	2019-03-06 14:25:32.8948-05	f
+535	9	96	1	2019-03-06 14:55:49.248816-05	2019-03-06 14:55:49.248816-05	f
+536	9	99	1	2019-03-06 14:55:49.273565-05	2019-03-06 14:55:49.273565-05	f
+537	9	130	-1	2019-03-06 14:55:49.293879-05	2019-03-06 14:55:49.293879-05	f
+538	9	131	-1	2019-03-06 14:55:49.322864-05	2019-03-06 14:55:49.322864-05	f
+539	9	136	-1	2019-03-06 14:55:49.344681-05	2019-03-06 14:55:49.344681-05	f
+540	9	100	1	2019-03-06 14:55:49.785085-05	2019-03-06 14:57:59.155805-05	t
+541	9	100	\N	2019-03-06 14:57:46.558555-05	2019-03-06 14:57:46.558555-05	f
+542	9	100	\N	2019-03-06 14:57:59.214102-05	2019-03-06 14:57:59.214102-05	f
+543	9	100	\N	2019-03-06 14:58:05.883219-05	2019-03-06 14:58:05.883219-05	f
+544	9	99	\N	2019-03-06 14:58:10.467416-05	2019-03-06 14:58:10.467416-05	f
+545	9	96	\N	2019-03-06 14:58:30.019539-05	2019-03-06 14:58:30.019539-05	f
+546	10	109	\N	2019-03-06 15:03:13.612354-05	2019-03-06 15:03:13.612354-05	t
+547	3	92	\N	2019-03-06 15:17:04.630344-05	2019-03-06 15:17:04.630344-05	f
+548	3	121	\N	2019-03-06 15:17:10.284545-05	2019-03-06 15:17:10.284545-05	f
+549	11	99	1	2019-03-06 15:19:04.404524-05	2019-03-06 15:19:04.404524-05	f
+550	11	131	-1	2019-03-06 15:19:04.42992-05	2019-03-06 15:19:04.42992-05	f
+551	11	88	\N	2019-03-06 15:19:04.711628-05	2019-03-06 15:19:04.711628-05	t
+552	11	88	\N	2019-03-06 15:19:13.576737-05	2019-03-06 15:19:13.576737-05	f
+553	2	83	\N	2019-03-06 18:24:33.988386-05	2019-03-06 18:24:33.988386-05	f
+554	2	99	\N	2019-03-06 18:25:01.20315-05	2019-03-06 18:25:01.20315-05	f
+555	12	96	-1	2019-03-06 18:42:55.623775-05	2019-03-06 18:42:55.623775-05	f
+556	12	99	-1	2019-03-06 18:42:55.756827-05	2019-03-06 18:42:55.756827-05	f
+557	12	128	-1	2019-03-06 18:42:55.781023-05	2019-03-06 18:42:55.781023-05	f
+558	12	131	1	2019-03-06 18:42:55.817559-05	2019-03-06 18:42:55.817559-05	f
+559	12	132	1	2019-03-06 18:42:55.854-05	2019-03-06 18:42:55.854-05	f
+560	12	136	1	2019-03-06 18:42:55.888763-05	2019-03-06 18:42:55.888763-05	f
+561	12	130	1	2019-03-06 18:42:57.33284-05	2019-03-06 18:44:49.106551-05	t
+562	12	130	\N	2019-03-06 18:44:36.708749-05	2019-03-06 18:44:36.708749-05	f
+563	12	130	\N	2019-03-06 18:44:49.480349-05	2019-03-06 18:44:49.480349-05	f
+564	12	117	\N	2019-03-06 18:45:34.565028-05	2019-03-06 18:45:34.565028-05	f
+565	12	124	1	2019-03-06 18:46:44.750556-05	2019-03-06 18:46:44.750556-05	f
+566	12	133	-1	2019-03-06 18:46:44.793633-05	2019-03-06 18:46:44.793633-05	f
+567	12	147	1	2019-03-06 18:46:45.130884-05	2019-03-06 18:46:45.130884-05	f
+568	12	113	\N	2019-03-06 18:46:45.589163-05	2019-03-06 18:46:45.589163-05	t
+569	3	84	1	2019-03-06 19:53:43.573989-05	2019-03-06 20:02:14.252115-05	f
+570	3	84	\N	2019-03-06 20:02:17.038684-05	2019-03-06 20:02:17.038684-05	f
+571	3	84	\N	2019-03-06 20:02:23.641125-05	2019-03-06 20:02:23.641125-05	f
+572	3	112	\N	2019-03-06 20:02:32.368518-05	2019-03-06 20:02:32.368518-05	f
+573	3	112	\N	2019-03-06 20:03:43.867884-05	2019-03-06 20:03:43.867884-05	f
+574	3	112	\N	2019-03-06 20:04:23.028865-05	2019-03-06 20:04:23.028865-05	f
+575	3	112	\N	2019-03-06 20:06:31.43255-05	2019-03-06 20:06:31.43255-05	f
+576	3	99	-1	2019-03-06 21:34:06.648631-05	2019-03-07 15:08:55.65656-05	f
+577	3	158	1	2019-03-06 21:34:07.676316-05	2019-03-06 21:35:08.675031-05	t
+578	3	158	\N	2019-03-06 21:34:13.889452-05	2019-03-06 21:34:13.889452-05	f
+579	3	158	\N	2019-03-06 21:35:09.374952-05	2019-03-06 21:35:09.374952-05	f
+580	3	85	\N	2019-03-06 21:35:17.459249-05	2019-03-06 21:35:17.459249-05	f
+581	3	128	-1	2019-03-07 15:08:55.737081-05	2019-03-07 15:08:55.737081-05	f
+582	3	94	\N	2019-03-07 15:09:44.716129-05	2019-03-07 15:09:44.716129-05	f
+583	3	83	1	2019-03-07 15:10:08.261851-05	2019-03-07 15:11:19.459974-05	f
+584	3	83	\N	2019-03-07 15:11:00.681634-05	2019-03-07 15:11:00.681634-05	f
+585	3	83	\N	2019-03-07 15:11:19.644459-05	2019-03-07 15:11:19.644459-05	f
+586	3	83	\N	2019-03-07 15:11:25.585944-05	2019-03-07 15:11:25.585944-05	f
+587	3	88	1	2019-03-08 15:38:38.087208-05	2019-03-08 15:38:40.090592-05	f
+588	3	88	\N	2019-03-08 15:38:40.149544-05	2019-03-08 15:38:40.149544-05	f
+589	3	142	1	2019-03-08 15:39:22.198757-05	2019-03-08 15:43:58.173655-05	f
+590	3	142	\N	2019-03-08 15:48:15.94942-05	2019-03-08 15:48:15.94942-05	f
+591	3	114	1	2019-03-08 15:48:24.308988-05	2019-03-08 15:48:27.024403-05	f
+592	3	82	1	2019-03-08 15:48:27.063158-05	2019-03-08 15:48:53.01994-05	f
+593	3	82	\N	2019-03-08 15:48:50.669823-05	2019-03-08 15:48:50.669823-05	f
+594	3	82	\N	2019-03-08 15:48:53.053389-05	2019-03-08 15:48:53.053389-05	f
+595	3	144	1	2019-03-08 15:49:01.036086-05	2019-03-08 15:49:03.478155-05	f
+596	3	144	\N	2019-03-08 15:49:03.546261-05	2019-03-08 15:49:03.546261-05	f
+597	13	92	1	2019-03-30 22:58:29.019892-04	2019-03-30 22:58:29.019892-04	f
+598	13	96	1	2019-03-30 22:58:29.037548-04	2019-03-30 22:58:29.037548-04	f
+599	13	99	1	2019-03-30 22:58:29.05517-04	2019-03-30 22:58:29.05517-04	f
+600	13	131	-1	2019-03-30 22:58:29.068026-04	2019-03-30 22:58:29.068026-04	f
+601	13	132	-1	2019-03-30 22:58:29.080912-04	2019-03-30 22:58:29.080912-04	f
+602	13	135	-1	2019-03-30 22:58:29.093431-04	2019-03-30 22:58:29.093431-04	f
+603	13	109	\N	2019-03-30 22:58:29.416121-04	2019-03-30 22:58:29.416121-04	t
+604	3	100	1	2019-04-03 16:37:09.754921-04	2019-04-03 16:37:09.754921-04	f
+605	3	136	-1	2019-04-03 16:37:09.764185-04	2019-04-03 16:37:09.764185-04	f
+606	3	147	\N	2019-04-03 16:37:10.033463-04	2019-04-03 16:37:10.033463-04	t
+607	14	92	-1	2019-04-03 21:44:18.621131-04	2019-04-03 21:44:18.621131-04	f
+608	14	96	1	2019-04-03 21:44:18.63094-04	2019-04-04 18:13:10.213676-04	f
+609	14	99	1	2019-04-03 21:44:18.641194-04	2019-04-04 18:46:15.360814-04	f
+610	14	100	-1	2019-04-03 21:44:18.65259-04	2019-04-03 21:44:18.65259-04	f
+611	14	117	1	2019-04-03 21:44:18.666485-04	2019-04-03 21:44:18.666485-04	f
+612	14	128	-1	2019-04-03 21:44:18.680993-04	2019-04-03 21:44:18.680993-04	f
+613	14	132	1	2019-04-03 21:44:18.692508-04	2019-04-03 21:44:18.692508-04	f
+614	14	135	1	2019-04-03 21:44:18.704025-04	2019-04-03 21:44:18.704025-04	f
+615	14	150	1	2019-04-03 21:44:18.716819-04	2019-04-04 16:55:11.785184-04	f
+616	14	130	-1	2019-04-03 21:44:19.142037-04	2019-04-04 18:46:15.368675-04	t
+617	14	147	-1	2019-04-04 16:54:10.897306-04	2019-04-04 16:55:11.77616-04	f
+618	14	113	\N	2019-04-04 16:54:11.378507-04	2019-04-04 16:54:11.378507-04	t
+619	14	102	\N	2019-04-04 18:13:10.62419-04	2019-04-04 18:13:10.62419-04	t
+620	14	140	\N	2019-04-04 18:16:11.431556-04	2019-04-04 18:16:11.431556-04	t
+621	14	83	\N	2019-04-04 18:46:15.708792-04	2019-04-04 18:46:15.708792-04	t
+622	15	99	1	2019-04-06 19:56:57.764129-04	2019-04-06 19:56:57.764129-04	f
+623	15	110	1	2019-04-06 19:56:57.783023-04	2019-04-06 19:56:57.783023-04	f
+624	15	131	-1	2019-04-06 19:56:57.799043-04	2019-04-06 19:56:57.799043-04	f
+625	15	94	\N	2019-04-06 19:56:58.268451-04	2019-04-06 19:56:58.268451-04	t
+626	16	99	1	2019-04-10 14:35:33.857479-04	2019-04-10 14:35:33.857479-04	f
+627	16	100	-1	2019-04-10 14:35:33.867759-04	2019-04-10 14:35:33.867759-04	f
+628	16	130	\N	2019-04-10 14:35:34.160877-04	2019-04-10 14:35:34.160877-04	t
+629	17	100	1	2019-04-10 16:36:16.49042-04	2019-04-10 16:36:16.49042-04	f
+630	17	130	-1	2019-04-10 16:36:16.505696-04	2019-04-10 17:48:59.857986-04	t
+631	17	147	-1	2019-04-10 16:36:16.522889-04	2019-04-10 16:36:16.522889-04	f
+632	17	144	\N	2019-04-10 16:36:16.84019-04	2019-04-10 16:36:16.84019-04	t
+633	17	132	-1	2019-04-10 16:37:33.726371-04	2019-04-13 14:03:51.019262-04	f
+634	17	94	\N	2019-04-10 16:37:34.002841-04	2019-04-10 16:37:34.002841-04	t
+635	17	99	1	2019-04-10 17:48:59.418979-04	2019-04-10 17:48:59.418979-04	f
+636	17	131	-1	2019-04-10 17:48:59.434472-04	2019-04-10 17:48:59.434472-04	f
+637	17	136	1	2019-04-10 17:48:59.449977-04	2019-04-10 17:48:59.449977-04	f
+638	17	142	\N	2019-04-13 14:03:51.333082-04	2019-04-13 14:03:51.333082-04	t
+639	2	155	\N	2019-04-19 15:04:12.911503-04	2019-04-19 15:04:12.911503-04	t
+\.
+
+
+--
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.schema_migrations (version) FROM stdin;
+20190221152313
+20190221152528
+20190221152636
+20190221152731
+20190221152751
+20190221153159
+20190222154516
+20190222160332
+20190222203857
+20190223165829
+20190224001833
+20190225160717
+20190226013911
+20190226155219
+20190226193059
+20190227140001
+20190227160445
+20190228015636
+20190301145005
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.users (id, email, encrypted_password, reset_password_token, reset_password_sent_at, remember_created_at, created_at, updated_at, admin_access, provider, uid, image) FROM stdin;
+2	test@test.com	$2a$11$emB1kC/sfC9PMdmruO00SOoK/QdCdPcakddsHUUMYsAeCL5bG9SfG	\N	\N	\N	2019-02-26 00:07:44.700121-05	2019-02-26 00:07:44.700121-05	f	\N	\N	\N
+3	ajohnson.uva@gmail.com	$2a$11$6V5wsKodoe6VoIo..9vbhO4XDrWauGRkHl8vd.5hQW3K5WoW.YKOS	\N	\N	\N	2019-02-28 02:43:04.09603-05	2019-02-28 02:51:13.657618-05	t	facebook	10104811805994026	http://graph.facebook.com/v2.10/10104811805994026/picture
+4	test2@test.com	$2a$11$0HMXM7d8hRgDIeU1miNwVeaHO4sbmPWS6VcphHsg9zC3zsRTd.9H6	\N	\N	\N	2019-02-28 17:07:24.761781-05	2019-02-28 17:07:24.761781-05	f	\N	\N	\N
+5	nwolters1121@gmail.com	$2a$11$6ekZc5hUCzvIWRvBumfR4.0t8wlJfHUMrZn7T53z7wbADPnXfFCX6	\N	\N	\N	2019-02-28 22:05:02.595442-05	2019-02-28 22:05:02.595442-05	f	\N	\N	\N
+6	newtest@test.com	$2a$11$weVT56LNnkzweMb8f1HDBuHNEBvfkNg/9mbcBWf9i6yo6L94H0iqe	\N	\N	\N	2019-03-01 16:21:53.421987-05	2019-03-01 16:21:53.421987-05	f	\N	\N	\N
+7	test3@test.com	$2a$11$bAKwJEWg0tgsbs7Bnf8glOfWhF4vErACVuyo0IA5HxyYanoqibnVi	\N	\N	\N	2019-03-02 14:56:39.86818-05	2019-03-02 14:56:39.86818-05	f	\N	\N	\N
+8	testuser@test.com	$2a$11$SQeokOW04YU9YCuCEbgcUejFJKUswpxzCKRBPyHtlIs8IAU/6GsGG	\N	\N	\N	2019-03-03 16:37:22.401826-05	2019-03-03 16:37:22.401826-05	f	\N	\N	\N
+9	testytesttest@test.com	$2a$11$WUpjjo4pGp0wa.HD0FLUOO16tAnGPp3wVu5ReG8iZ2YgckWcCDLKm	\N	\N	\N	2019-03-06 14:54:26.638051-05	2019-03-06 14:54:26.638051-05	f	\N	\N	\N
+10	nickybear@nickybear.com	$2a$11$L9qGNWLPiQ6xfWNvOFtls.CEdHqg1YHoz9XycVO0oLgj1qEVIsvJK	\N	\N	\N	2019-03-06 15:03:01.218488-05	2019-03-06 15:03:01.218488-05	f	\N	\N	\N
+11	brandnew@new.com	$2a$11$EQcpryEIlsVwJRDHoO5yJuV7mZygUNp0X/iP5dGJq.DxltA1pb3yu	\N	\N	\N	2019-03-06 15:18:23.25375-05	2019-03-06 15:18:23.25375-05	f	\N	\N	\N
+12	project@review.com	$2a$11$Ek8b5fxjxyR6vMWMQOLiNOf7XIE1ZxD6520XRBPliEdwt.TVIjGLa	\N	\N	\N	2019-03-06 18:40:01.125689-05	2019-03-06 18:40:01.125689-05	f	\N	\N	\N
+13	benos@test.com	$2a$11$8iNLzMuwyhDPJ/umwH1S2u9eUxyTaiqERs7kIAmkdAW8dJ3liB5p2	\N	\N	\N	2019-03-30 22:57:29.736188-04	2019-03-30 22:57:29.736188-04	f	\N	\N	\N
+14	js@test.com	$2a$11$Gn1oYLfUPHh5t0G0tw99kuV/crYrT7Ok4TrchHFhZ5N1MrlpF0DwC	\N	\N	\N	2019-04-03 21:43:18.372824-04	2019-04-03 21:43:18.372824-04	f	\N	\N	\N
+15	walkthrough@test.com	$2a$11$39x3qGXORgnO52bDKU/DSeCTdnN4CQ4Ekw/IDIOx7G8zTu7b3n4FS	\N	\N	\N	2019-04-06 19:55:20.448523-04	2019-04-06 19:55:20.448523-04	f	\N	\N	\N
+16	brony@test.com	$2a$11$/ysXQCqAi/1V0mkX4w7rQegfIyb04cU64ywpo4Mffzf5Oix2ayToi	\N	\N	\N	2019-04-10 14:35:17.975566-04	2019-04-10 14:35:17.975566-04	f	\N	\N	\N
+17	newnewnew@test.com	$2a$11$vMoYIqIeHim5vKRWBNY.nOioAXM3BHk8zRAakSLpYA.CoLFp1SK/m	\N	\N	\N	2019-04-10 16:35:54.07861-04	2019-04-10 16:35:54.07861-04	f	\N	\N	\N
+\.
+
+
+--
+-- Name: drinks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.drinks_id_seq', 160, true);
+
+
+--
+-- Name: flavor_profiles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.flavor_profiles_id_seq', 5, true);
+
+
+--
+-- Name: ingredients_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.ingredients_id_seq', 237, true);
+
+
+--
+-- Name: quiz_ratings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.quiz_ratings_id_seq', 465, true);
+
+
+--
+-- Name: quizzes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.quizzes_id_seq', 126, true);
+
+
+--
+-- Name: ratings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.ratings_id_seq', 639, true);
+
+
+--
+-- Name: schema_migrations idx_16389_sqlite_autoindex_schema_migrations_1; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schema_migrations
+    ADD CONSTRAINT idx_16389_sqlite_autoindex_schema_migrations_1 PRIMARY KEY (version);
+
+
+--
+-- Name: ar_internal_metadata idx_16395_sqlite_autoindex_ar_internal_metadata_1; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ar_internal_metadata
+    ADD CONSTRAINT idx_16395_sqlite_autoindex_ar_internal_metadata_1 PRIMARY KEY (key);
+
+
+--
+-- Name: drinks idx_16403_drinks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drinks
+    ADD CONSTRAINT idx_16403_drinks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ratings idx_16413_ratings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ratings
+    ADD CONSTRAINT idx_16413_ratings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: flavor_profiles idx_16420_flavor_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.flavor_profiles
+    ADD CONSTRAINT idx_16420_flavor_profiles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ingredients idx_16429_ingredients_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ingredients
+    ADD CONSTRAINT idx_16429_ingredients_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users idx_16436_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT idx_16436_users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: measures idx_16445_measures_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.measures
+    ADD CONSTRAINT idx_16445_measures_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: quizzes idx_16453_quizzes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.quizzes
+    ADD CONSTRAINT idx_16453_quizzes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: quiz_ratings idx_16460_quiz_ratings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.quiz_ratings
+    ADD CONSTRAINT idx_16460_quiz_ratings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: idx_16413_index_ratings_on_drink_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_16413_index_ratings_on_drink_id ON public.ratings USING btree (drink_id);
+
+
+--
+-- Name: idx_16413_index_ratings_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_16413_index_ratings_on_user_id ON public.ratings USING btree (user_id);
+
+
+--
+-- Name: idx_16429_index_ingredients_on_flavor_profile_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_16429_index_ingredients_on_flavor_profile_id ON public.ingredients USING btree (flavor_profile_id);
+
+
+--
+-- Name: idx_16436_index_users_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_16436_index_users_on_email ON public.users USING btree (email);
+
+
+--
+-- Name: idx_16436_index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_16436_index_users_on_reset_password_token ON public.users USING btree (reset_password_token);
+
+
+--
+-- Name: idx_16445_index_measures_on_drink_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_16445_index_measures_on_drink_id ON public.measures USING btree (drink_id);
+
+
+--
+-- Name: idx_16445_index_measures_on_ingredient_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_16445_index_measures_on_ingredient_id ON public.measures USING btree (ingredient_id);
+
+
+--
+-- Name: idx_16453_index_quizzes_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_16453_index_quizzes_on_user_id ON public.quizzes USING btree (user_id);
+
+
+--
+-- Name: idx_16460_index_quiz_ratings_on_drink_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_16460_index_quiz_ratings_on_drink_id ON public.quiz_ratings USING btree (drink_id);
+
+
+--
+-- Name: idx_16460_index_quiz_ratings_on_quiz_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_16460_index_quiz_ratings_on_quiz_id ON public.quiz_ratings USING btree (quiz_id);
+
+
+--
+-- Name: ingredients ingredients_flavor_profile_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ingredients
+    ADD CONSTRAINT ingredients_flavor_profile_id_fkey FOREIGN KEY (flavor_profile_id) REFERENCES public.flavor_profiles(id);
+
+
+--
+-- Name: quiz_ratings quiz_ratings_drink_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.quiz_ratings
+    ADD CONSTRAINT quiz_ratings_drink_id_fkey FOREIGN KEY (drink_id) REFERENCES public.drinks(id);
+
+
+--
+-- Name: quiz_ratings quiz_ratings_quiz_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.quiz_ratings
+    ADD CONSTRAINT quiz_ratings_quiz_id_fkey FOREIGN KEY (quiz_id) REFERENCES public.quizzes(id);
+
+
+--
+-- Name: quizzes quizzes_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.quizzes
+    ADD CONSTRAINT quizzes_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: ratings ratings_drink_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ratings
+    ADD CONSTRAINT ratings_drink_id_fkey FOREIGN KEY (drink_id) REFERENCES public.drinks(id);
+
+
+--
+-- Name: ratings ratings_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ratings
+    ADD CONSTRAINT ratings_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
