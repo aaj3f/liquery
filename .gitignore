@@ -31,6 +31,8 @@
 /config/master.key
 
 .env
+.dump
+.py
 
 /public/packs
 /public/packs-test
