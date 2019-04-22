@@ -83,6 +83,6 @@ function getDrinks(path) {
           ${resp.ingredients.map((i, index) => "<li>" + resp.measures[index].size + " " + resp.measures[index].measurement_type + " " + i.name + "</li>").join('')}
         </ul></p>`)
         $('.modal-preparation').html(`<p><strong>Preparation</strong></p><p>${resp.preparation}</p>`)
-        $('#showModal').modal()
+        $('#showModal').modal('show')
       })
     }
