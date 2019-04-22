@@ -79,10 +79,10 @@ function getDrinks(path) {
     $.get("/drinks/" + drinkId + ".json")
       .then(function(resp) {
         $('.modal-title').text(resp.name)
-        $('.modal-ingredients').html(`<p><strong>Ingredients</strong></p><p><ul style="list-style-type:none;">
+        $('.modal-ingredients').html(`<strong>Ingredients</strong><ul style="list-style-type:none;">
           ${resp.ingredients.map((i, index) => "<li>" + resp.measures[index].size + " " + resp.measures[index].measurement_type + " " + i.name + "</li>").join('')}
-        </ul></p>`)
-        $('.modal-preparation').html(`<p><strong>Preparation</strong></p><p>${resp.preparation}</p>`)
+        </ul>`)
+        $('.modal-preparation').html(`<strong>Preparation</strong><br>${resp.preparation}`)
         $('#showModal').modal('show')
       })
     }
