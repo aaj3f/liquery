@@ -2,8 +2,8 @@
 <div id="ac-wrapper" style='display:none'>
     <div class="col-10 offset-1 col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 mt-5" id="popup">
         <div class="popup-div text-center text-dark">
-             <div class="my-5"><h2><%= modal_header %></h2></div>
-             <div class="mb-2"><h4><%= modal_text %></h4></div>
+             <div class="my-5"><h2><%=h modal_header %></h2></div>
+             <div class="mb-2"><h4><%=h modal_text %></h4></div>
             <div class="container submit-container my-5"><input class="btn btn-lg btn-info shadow" type="submit" name="submit" value="Okurrr??" onClick="PopUp('hide')" /></div>
         </div>
     </div>
@@ -150,7 +150,7 @@
       </div>
 
       <div class="container submit-container d-flex justify-content-center">
-        <%= f.submit "Finished? We may or may not have one more question...", class: "btn btn-lg btn-success", disabled: "disabled" %>
+        <%= f.submit "Finished? Let's see...", class: "btn btn-lg btn-success", disabled: "disabled" %>
       </div>
 
     </div>
@@ -191,6 +191,11 @@
       e.preventDefault();
       document.querySelector('section#quiz-one').setAttribute('style', 'display:none')
       document.querySelector('section#quiz-two').setAttribute('style', 'display:block')
+      window.scroll({
+        top: 2500,
+        left: 0,
+        behavior: 'smooth'
+      })
     })
 
     $('form').submit(function(e) {
@@ -211,6 +216,11 @@
         }
         let html = template(context)
         document.querySelector('section.pricing').innerHTML = html
+        window.scroll({
+          top: 2500,
+          left: 0,
+          behavior: 'smooth'
+        })
       })
     })
   });
