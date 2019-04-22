@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   get 'welcome/index'
   root 'welcome#index'
 
+  get 'privacy', to: 'privacy#show'
+
   # resources :admin do
   #   resources :drinks, only %i(new)
   # end
