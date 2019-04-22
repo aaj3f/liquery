@@ -1,5 +1,5 @@
 
-<div class="container-fluid">
+<div class="container-fluid bg-image">
   <div class="row no-gutter">
     <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
     <div class="col-12 col-md-8 col-lg-6">
@@ -9,11 +9,14 @@
             <div id="small-welcome-image" class="col-5">
               <img src="https://www.savoringthegood.com/wp-content/uploads/2017/11/Pomegranate-Lime-Gin-Cocktail-Recipe-5.jpg" alt="Sample Cocktail">
             </div>
-            <div class="col-md-9 col-lg-8 col-7 mx-auto mb-5">
+            <div class="col-md-9 col-lg-8 col-7 mx-auto mb-5 py-3 text-center rounded login-card">
+
               <h3 class="login-heading mb-8">Welcome to Liquery!</h3>
               <br>
               <h3 class="login-heading my-2">Begin by <%= link_to "Registering", new_user_registration_path %> and taking our Drinks Quiz!</h3>
+              <br>
               <h3 class="login-heading my-2">Or <%= link_to "Sign In", user_session_path %> if you're a returning guest!</h3>
+
             </div>
           </div>
         </div>

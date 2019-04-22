@@ -345,6 +345,21 @@ box-shadow: #64686e 0px 0px 3px 3px;
   #small-welcome-image {
     display: none;
   }
+  .container-fluid.bg-image {
+    background-image: url('https://www.savoringthegood.com/wp-content/uploads/2017/11/Pomegranate-Lime-Gin-Cocktail-Recipe-5.jpg')
+  }
+  .login-card {
+    background-color: white;
+  }
+}
+
+@media (min-width: 496px) {
+  .container-fluid.bg-image {
+    background-image: none;
+  }
+  .login-card {
+    background-color: inherit;
+  }
 }
 @media (max-width: 576px) {
     div.card-text {
@@ -361,6 +376,7 @@ box-shadow: #64686e 0px 0px 3px 3px;
     .pricing hr {
       margin: 0.25em;
     }
+
 }
 @media (min-width: 768px) {
     #drinks-row .drink-list img {
