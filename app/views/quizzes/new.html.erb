@@ -191,11 +191,7 @@
       e.preventDefault();
       document.querySelector('section#quiz-one').setAttribute('style', 'display:none')
       document.querySelector('section#quiz-two').setAttribute('style', 'display:block')
-      window.scroll({
-        top: 2500,
-        left: 0,
-        behavior: 'smooth'
-      })
+      window.scrollTo(0, 0)
     })
 
     $('form').submit(function(e) {
@@ -216,11 +212,7 @@
         }
         let html = template(context)
         document.querySelector('section.pricing').innerHTML = html
-        window.scroll({
-          top: 2500,
-          left: 0,
-          behavior: 'smooth'
-        })
+        window.scrollTo(0, 0)
       })
     })
   });
